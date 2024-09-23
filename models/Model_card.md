@@ -135,6 +135,10 @@ Carbon emissions can be estimated using the [Machine Learning Impact calculator]
 
 ## Citation (opt)
 
+Kaggle link of the model: https://www.kaggle.com/models/google/mobilenet-v2
+
+Model card template: https://github.com/huggingface/huggingface_hub/blob/main/src/huggingface_hub/templates/modelcard_template.md
+
 ### BibTeX
 
 ### APA
