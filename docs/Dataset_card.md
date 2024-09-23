@@ -114,4 +114,6 @@ khosla@csail.mit.edu)
 
 ### Citation Information
 
+Dataset card template: https://github.com/huggingface/datasets/blob/main/templates/README_guide.md
+
 ### Contributors
