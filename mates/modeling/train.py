@@ -1,29 +1,44 @@
-from pathlib import Path
-
 import typer
-from loguru import logger
-from tqdm import tqdm
+import mlflow
+import pickle as pk
+import tensorflow as tf
+import tf_keras
 
-from mates.config import MODELS_DIR, PROCESSED_DATA_DIR
+from mates.config import EPOCHS, INPUT_SHAPE, MODELS_DIR
+from mates.features import create_model, load_data
 
 app = typer.Typer()
 
 
 @app.command()
-def main(
-    # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
-    features_path: Path = PROCESSED_DATA_DIR / "features.csv",
-    labels_path: Path = PROCESSED_DATA_DIR / "labels.csv",
-    model_path: Path = MODELS_DIR / "model.pkl",
-    # -----------------------------------------
+def train(
+    experiment_name: str,
+    model_name: str,
+    epochs: int = EPOCHS,
+    save_model: bool = True,
 ):
-    # ---- REPLACE THIS WITH YOUR OWN CODE ----
-    logger.info("Training some model...")
-    for i in tqdm(range(10), total=10):
-        if i == 5:
-            logger.info("Something happened for iteration 5.")
-    logger.success("Modeling training complete.")
-    # -----------------------------------------
+    """
+    """
+    
+    mlflow.set_experiment(experiment_name)
+    mlflow.sklearn.autolog(log_model_signatures=True, log_datasets=True)
+
+    with mlflow.start_run():
+        train_data, valid_data, output_shape = load_data(is_train=True)
+        model = create_model(input_shape=INPUT_SHAPE, output_shape=output_shape)
+
+        early_stopping = tf_keras.callbacks.EarlyStopping(monitor='val_accuracy', patience=3)
+
+        model.fit(x=train_data, 
+            epochs=epochs, 
+            validation_data=valid_data, 
+            validation_freq=1,
+            callbacks=[early_stopping]
+            )
+        
+        if save_model:
+            with open(MODELS_DIR / f"{model_name}.pkl", "wb") as f:
+                pk.dump(model, f)
 
 
 if __name__ == "__main__":
