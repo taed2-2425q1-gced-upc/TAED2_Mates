@@ -1,12 +1,12 @@
 import os
 import typer
+import pickle as pk
 import pandas as pd
 import tensorflow as tf
 from pathlib import Path
-import pickle as pk
 from sklearn.model_selection import train_test_split
 
-from mates.config import IMG_SIZE, RAW_DATA_DIR, BATCH_SIZE, PROCESSED_DATA_DIR
+from mates.config import IMG_SIZE, RAW_DATA_DIR, PROCESSED_DATA_DIR
 
 app = typer.Typer()
 
@@ -79,9 +79,9 @@ def get_label_image(img_path, label):
 
 @app.command()
 def create_batches(
+    batch_size: int,
     X: list,
     y: list = None,
-    batch_size: int = BATCH_SIZE,
     valid_data: bool = False,
     test_data: bool = False,
 ):

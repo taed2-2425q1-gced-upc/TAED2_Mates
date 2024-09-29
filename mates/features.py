@@ -4,8 +4,7 @@ import tf_keras
 import pickle as pk
 
 
-from mates.config import MODEL_URL, IMG_SIZE, PROCESSED_DATA_DIR
-from mates.utils import read_data, create_batches
+from mates.config import IMG_SIZE, PROCESSED_DATA_DIR
 
 app = typer.Typer()
 
@@ -14,11 +13,11 @@ app = typer.Typer()
 def create_model(
     input_shape: list,
     output_shape: int,
+    model_url: str,
     loss_function = tf_keras.losses.CategoricalCrossentropy(),
     optimizer = tf_keras.optimizers.Adam(),
     activation_function: str = 'softmax',
     metrics: list = ['accuracy'],
-    model_url: str = MODEL_URL,
 ):
     """
     """
