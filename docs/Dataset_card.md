@@ -264,7 +264,6 @@ Lastly, if images were labeled by humans, personal biases could have influenced 
 
 Many dogs are mixed-breed, which may not be accurately represented in a dataset focused on purebred classifications. This can lead to poor performance on mixed breeds or overconfidence in assigning a breed. Moreover, there can be significant variability within a single breed due to genetic and physical diversity, as well as differences due to signs of aging, health conditions or grooming.
 
-
 ## Additional Information
 
 ### Dataset Curators
