@@ -1,11 +1,10 @@
 import typer
 import tensorflow_hub as hub
-import tensorflow.keras as tfk
 import tf_keras
-from sklearn.model_selection import train_test_split 
+import pickle as pk
 
 
-from mates.config import MODEL_URL, IMG_SIZE
+from mates.config import MODEL_URL, IMG_SIZE, PROCESSED_DATA_DIR
 from mates.utils import read_data, create_batches
 
 app = typer.Typer()
@@ -39,25 +38,19 @@ def create_model(
     return model
 
 
-@app.command()
-def load_data(
-    is_train: bool = True,
-    test_size: float = 0.3,
-    seed: int = 42,
-    # save_processed: bool = False,
-): 
+def load_processed_data(
+        
+):
     """
     """
-
-    X, y, encoding_labels = read_data(is_train)
+    try:
+        with open(PROCESSED_DATA_DIR / 'train_data.pkl', 'rb') as f:
+            train_data = pk.load(f)
+        with open(PROCESSED_DATA_DIR / 'valid_data.pkl', 'rb') as f:
+            valid_data = pk.load(f)
+        with open(PROCESSED_DATA_DIR / 'output_shape.pkl', 'rb') as f:
+            output_shape = pk.load(f)
+    except Exception as e:
+        raise Exception(f"Error loading processed data: {e}")
     
-    if is_train:
-        output_shape = len(encoding_labels)
-        X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=test_size, random_state=seed)
-
-        train_data = create_batches(X_train, y_train)
-        valid_data = create_batches(X_val, y_val, valid_data=True)
-        return train_data, valid_data, output_shape
-
-    test_data = create_batches(X, y)
-    return test_data, None, None
+    return train_data, valid_data, output_shape

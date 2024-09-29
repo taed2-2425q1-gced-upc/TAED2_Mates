@@ -5,7 +5,7 @@ import tensorflow as tf
 import tf_keras
 
 from mates.config import EPOCHS, INPUT_SHAPE, MODELS_DIR
-from mates.features import create_model, load_data
+from mates.features import create_model, load_processed_data
 
 app = typer.Typer()
 
@@ -24,9 +24,9 @@ def train(
     mlflow.sklearn.autolog(log_model_signatures=True, log_datasets=True)
 
     with mlflow.start_run():
-        train_data, valid_data, output_shape = load_data(is_train=True)
+        train_data, valid_data, output_shape = load_processed_data()
         model = create_model(input_shape=INPUT_SHAPE, output_shape=output_shape)
-
+    
         early_stopping = tf_keras.callbacks.EarlyStopping(monitor='val_accuracy', patience=3)
 
         model.fit(x=train_data, 
