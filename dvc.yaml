@@ -1,0 +1,17 @@
+stages:
+  prepare:
+    cmd: python -m mates.modeling.prepare.py
+    deps:
+    - data/raw/labels.csv
+    - data/raw/test
+    - data/raw/train
+    - modeling/prepare.py
+    params:
+    - prepare.is_train
+    - prepare.save_processed
+    - prepare.seed
+    - prepare.split_size
+    outs:
+    - data/processed/output_shape.pkl
+    - data/processed/train_data.pkl
+    - data/processed/valid_data.pkl
