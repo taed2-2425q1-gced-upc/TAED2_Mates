@@ -1,0 +1,12 @@
+prepare:
+  is_train: True
+  save_processed: True
+  seed: 42
+  split_size: 0.3
+  batch_size: 32
+train:
+  save_model: True
+  epochs: 20
+  experiment_name: "xxx"
+  model_name: "xxx"
+  model_url: "https://kaggle.com/models/google/mobilenet-v2/TensorFlow2/035-128-classification/1"

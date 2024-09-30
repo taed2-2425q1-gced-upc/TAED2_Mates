@@ -1,10 +1,9 @@
 import typer
 import mlflow
 import pickle as pk
-import tensorflow as tf
 import tf_keras
 
-from mates.config import EPOCHS, INPUT_SHAPE, MODELS_DIR
+from mates.config import INPUT_SHAPE, MODELS_DIR
 from mates.features import create_model, load_processed_data
 
 app = typer.Typer()
@@ -14,7 +13,7 @@ app = typer.Typer()
 def train(
     experiment_name: str,
     model_name: str,
-    epochs: int = EPOCHS,
+    epochs: int,
     save_model: bool = True,
 ):
     """

@@ -23,8 +23,5 @@ FIGURES_DIR = REPORTS_DIR / "figures"
 
 
 # Model parameters
-EPOCHS = 20
 IMG_SIZE = 128
-BATCH_SIZE = 32
 INPUT_SHAPE = [None, IMG_SIZE, IMG_SIZE, 3]
-MODEL_URL = "https://kaggle.com/models/google/mobilenet-v2/TensorFlow2/035-128-classification/1"
