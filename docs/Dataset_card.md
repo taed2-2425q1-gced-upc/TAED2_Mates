@@ -237,7 +237,7 @@ This dataset has been built using images and annotation from ImageNet for the ta
 
 Sensitive information is data that must be protected from unauthorized access to safeguard the privacy or security of an individual or organization. This information encompasses the types of data where exposure could lead to detrimental consequences for the welfare and security of individuals and organizations.
 
-The dataset contains, indeed, identitiy categories. However, we cannot state that this identification falls under the concept of sensitive information as these categories do not refer to humans.
+The dataset contains, indeed, identity categories. However, we cannot state that this identification falls under the concept of sensitive information as these categories do not refer to humans.
 
 ## Considerations for Using the Data
 
