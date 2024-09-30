@@ -25,7 +25,7 @@ The Stanford Dogs dataset contains images of 120 breeds of dogs from around the 
 
 ### Supported Tasks and Leaderboards
 
-- ```mobilenet_v2```: The dataset can be used to train the model [Mobilenet v2](https://www.kaggle.com/models/google/mobilenet-v2), which consists of an SSD-based object detection model trained on Open Images V4 with ImageNet pre-trained MobileNet V2 as image feature extractor.
+This dataset can be used in various models which perform an image classification task. It is important to mention that it was found in Kaggle's [Playground Prediction Competition](https://www.kaggle.com/competitions/dog-breed-identification/overview), which was held from September 29th 2017 to February 28th 2018. 7,525 entrants, 1,405 participants, 1,280 teams and 8,708 submission are some of the most relevant details of this competition as well as the models used: ```mobilenet_v2``` from Google and ```resent_50``` from TensorFlow. 
 
 ### Languages
 American English
@@ -217,7 +217,7 @@ The dataset was likely created to support accurate breed identification for anim
 
 ### Source Data
 
-The source data are images of different breed dogs in diverse contexts and situations, which allows a more wide representation of the animal.
+The source data are images of different dog breeds in diverse contexts and situations, which allows for a wider representation of the animal.
 
 #### Initial Data Collection and Normalization
 
@@ -235,25 +235,25 @@ This dataset has been built using images and annotation from ImageNet for the ta
 
 ### Personal and Sensitive Information
 
-The dataset contains, indeed, identitiy categories. This information comes from labelling the different images. 
+Sensitive information is data that must be protected from unauthorized access to safeguard the privacy or security of an individual or organization. This information encompasses the types of data where exposure could lead to detrimental consequences for the welfare and security of individuals and organizations.
 
-However, we cannot state if this identification falls under the concept of sensitive information.
+The dataset contains, indeed, identitiy categories. However, we cannot state that this identification falls under the concept of sensitive information as these categories do not refer to humans.
 
 ## Considerations for Using the Data
 
 ### Social Impact of Dataset
 
-- **Animal Welfare and Breed Identification**: This dataset can help in accurately identifying dog breeds, which could assist shelters, vets, and animal control in quickly recognizing lost or stray dogs. Breed identification is also valuable for ensuring breed-specific health care and dietary recommendations.
+This dataset can help in accurately identifying dog breeds, which could assist shelters, vets, and animal control in quickly recognizing lost or stray dogs. Breed identification is also valuable for ensuring breed-specific health care and dietary recommendations.
 
-- **Pet Adoption and Misinformation**: By improving breed identification, it can support more accurate categorization of dogs for adoption, avoiding cases where a breed is misidentified, which can affect adoption chances.
+By improving breed identification, it can support more accurate categorization of dogs for adoption, avoiding cases where a breed is misidentified, which can affect adoption chances. Moreover, the dataset can also be used in commercial applications like breed detection for pet-related services or in AR apps for dog enthusiasts.
 
-- **Commercial and Entertainment Uses**: The dataset can also be used in commercial applications like breed detection for pet-related services or in AR apps for dog enthusiasts.
-
-- **Potential Negative Effects**: If misused, it could reinforce breed stereotypes or be used in ways that unintentionally promote breed-specific biases. For instance, if an image misclassification leads to incorrect information on a dog’s behavior or temperament, it could negatively impact perceptions of certain breeds.
+On the other hand, if misused, it could reinforce breed stereotypes or be used in ways that unintentionally promote breed-specific biases. For instance, if an image misclassification leads to incorrect information on a dog’s behavior or temperament, it could negatively impact perceptions of certain breeds.
 
 ### Discussion of Biases
 
-If the dataset is unbalanced, the model might perform better on frequently represented breeds, leading to biased results. Related with that and geographically speaking, it may favor dog breeds that are more common in certain regions. For example, breeds like Akita (breed from Japan) are not represented in the dataset as they are not found easily around the globe.
+We see that dataset is quite unbalanced (see image below), so the model might perform better on frequently represented breeds, leading to biased results. Related with that and geographically speaking, it may favor dog breeds that are more common in certain regions. For example, breeds like Akita (breed from Japan) are not represented in the dataset as they are not found easily around the globe.
+
+![Imbalnced Dataset Image](imbalanced_dataset.png)
 
 More technically, lighting, image quality, and background variations can introduce biases, as certain breeds may be photographed under different conditions (e.g., show dogs vs. everyday pets).
 
