@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import typer
-from loguru import logger
 from tqdm import tqdm
 
 from mates.config import PROCESSED_DATA_DIR, RAW_DATA_DIR

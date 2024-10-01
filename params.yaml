@@ -6,7 +6,12 @@ prepare:
   batch_size: 32
 train:
   save_model: True
-  epochs: 20
-  experiment_name: "xxx"
-  model_name: "xxx"
+  epochs: 15
+  batch_size: 32
+  experiment_name: "batch_32_rmsprop"
+  model_name: "mobilenet"
   model_url: "https://kaggle.com/models/google/mobilenet-v2/TensorFlow2/035-128-classification/1"
+  optimizer: rmsprop
+  metrics: ["accuracy"]
+  monitor: "val_accuracy"
+  patience: 5
