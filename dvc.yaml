@@ -33,6 +33,8 @@ stages:
     - train.experiment_name
     - train.model_name
     - train.model_url
+    - train.optimizer
+    - train.metrics
     - train.monitor
     - train.patience
     outs:

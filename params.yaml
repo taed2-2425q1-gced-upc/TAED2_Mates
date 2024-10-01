@@ -11,5 +11,7 @@ train:
   experiment_name: "xxx"
   model_name: "xxx"
   model_url: "https://kaggle.com/models/google/mobilenet-v2/TensorFlow2/035-128-classification/1"
+  optimizer: adamw
+  metrics: ["accuracy"]
   monitor: "val_accuracy"
   patience: 5

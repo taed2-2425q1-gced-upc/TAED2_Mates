@@ -20,6 +20,19 @@ def load_processed_data(
     batch_size: int
 ):
     """
+    Function to load processed data. Loads processed data and creates batches.
+
+    Parameters
+    ----------
+    batch_size : int
+        Batch size for the data.
+
+    Returns
+    -------
+    train_data : tf.data.Dataset
+        Training data.
+    valid_data : tf.data.Dataset
+        Validation data.
     """
     with open(PROCESSED_DATA_DIR / 'output_shape.pkl', 'rb') as f:
         output_shape = pk.load(f)
@@ -43,6 +56,17 @@ def load_params(
     stage: str
 ) -> dict:
     """
+    Load parameters from the params.yaml file.
+
+    Parameters
+    ----------
+    stage : str
+        Stage of the pipeline.
+    
+    Returns
+    -------
+    params : dict
+        Parameters for the specified stage.
     """
     params_path = Path("params.yaml")
 
@@ -60,29 +84,71 @@ def load_params(
 def load_model(
     model_name: str
 ):
-    """"""
+    """
+    Load a model from the MODELS_DIR directory.
+    
+    Parameters
+    ----------
+    model_name : str
+        Name of the model to load.
+        
+    Returns
+    -------
+        model : tf.keras.Model
+    """
     with open(MODELS_DIR / f"{model_name}.pkl", "rb") as f:
         model = pk.load(f)
     return model
     
-
 
 @app.command()
 def create_model(
     input_shape: list,
     output_shape: int,
     model_url: str,
+    optimizer: str,
+    metrics: list,
     loss_function = tf_keras.losses.CategoricalCrossentropy(),
-    optimizer = tf_keras.optimizers.Adam(),
     activation_function: str = 'softmax',
-    metrics: list = ['accuracy'],
 ):
     """
+    Create a model using a pre-trained model from TensorFlow Hub.
+
+    Parameters
+    ----------
+    input_shape : list
+        Input shape of the model.
+    output_shape : int
+        Output shape of the model.
+    model_url : str
+        URL of the pre-trained model.
+    optimizer : str
+        Optimizer to use.
+    metrics : list
+        List of metrics to use.
+    loss_function : tf.keras.losses
+        Loss function to use.
+    activation_function : str
+        Activation function to use.
+
+    Returns
+    -------
+    model : tf.keras.Model
+        Compiled model.
     """
     model = tf_keras.Sequential()
     model.add(hub.KerasLayer(model_url, input_shape=(IMG_SIZE, IMG_SIZE, 3)))
     model.add(tf_keras.layers.Dense(output_shape, activation=activation_function))
     
+    if optimizer == 'adam':
+        optimizer = tf_keras.optimizers.Adam()
+    elif optimizer == 'sgd':
+        optimizer = tf_keras.optimizers.SGD()
+    elif optimizer == 'rmsprop':
+        optimizer = tf_keras.optimizers.RMSprop()
+    elif optimizer == 'adamw':
+        optimizer = tf_keras.optimizers.AdamW()
+
     model.compile(
         loss=loss_function, 
         optimizer=optimizer,
@@ -142,8 +208,20 @@ def process_image(
     img_size: int = IMG_SIZE,
 ):
     """
-    """
+    Process an image. Read the image, decode it, convert it to float32, and resize it.
 
+    Parameters
+    ----------
+    img_path : Path
+        Path to the image.
+    img_size : int
+        Size of the image.
+
+    Returns
+    -------
+    img : tf.Tensor
+        Processed image.
+    """
     img = tf.io.read_file(img_path)
     img = tf.image.decode_jpeg(img, channels=3)
     img = tf.image.convert_image_dtype(img, tf.float32)
@@ -153,10 +231,22 @@ def process_image(
 
 
 @app.command()
-def get_label_image(img_path, label):
+def get_label_image(img_path: Path, label: int):
     """
+    Get the label and image for a given image path.
+
+    Parameters
+    ----------
+    img_path : Path
+        Path to the image.
+    label : int
+        Label for the image.
+
+    Returns
+    -------
+    img : tf.Tensor
+        Processed image.
     """
-    
     return process_image(img_path), label
 
 
@@ -169,6 +259,25 @@ def create_batches(
     test_data: bool = False,
 ):
     """
+    Create batches of data.
+
+    Parameters
+    ----------
+    batch_size : int
+        Batch size.
+    X : list
+        List of image paths.
+    y : list
+        List of labels.
+    valid_data : bool
+        Whether the data is validation data.
+    test_data : bool
+        Whether the data is test data.
+
+    Returns
+    -------
+    data_batch : tf.data.Dataset
+        Batched data.
     """
     if test_data:
         data = tf.data.Dataset.from_tensor_slices(tf.constant([str(x) for x in X]))

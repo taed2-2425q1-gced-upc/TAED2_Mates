@@ -20,8 +20,8 @@ stages:
       nfiles: 10222
     - path: mates/modeling/prepare.py
       hash: md5
-      md5: 60ac4fd0fe3c47379c72c668b0e4b883
-      size: 3915
+      md5: 232f7b6db808dc2187d516ae5d46f0c5
+      size: 1258
       isexec: true
     params:
       params.yaml:
