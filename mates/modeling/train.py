@@ -3,6 +3,7 @@ import mlflow
 import tf_keras
 import pickle as pk
 import pandas as pd
+from pathlib import Path
 from loguru import logger
 from codecarbon import EmissionsTracker
 
@@ -74,6 +75,9 @@ def train(
             metric_name = metrics[0]
             metric_values = metrics[1][0]
             mlflow.log_metric(f"train_{metric_name}", metric_values, step=epoch)
+
+        # Save the model as a pickle file
+        Path("models").mkdir(exist_ok=True)
 
         logger.success("Model training complete.")
         if params["save_model"]:
