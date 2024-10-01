@@ -3,8 +3,8 @@
 ## Dataset Description
 
 - **Homepage**: http://vision.stanford.edu/aditya86/ImageNetDogs/
-- **Repository**:
-- **Paper**:
+- **Repository**: https://www.kaggle.com/models/ameyjoshi0209/dog-breed-classification
+- **Paper**: https://www.kaggle.com/models/google/mobilenet-v2
 
 Primary: 
 
@@ -24,6 +24,8 @@ Secondary:
 The Stanford Dogs dataset contains images of 120 breeds of dogs from around the world. This dataset has been built using images and annotation from ImageNet for the task of fine-grained image categorization.
 
 ### Supported Tasks and Leaderboards
+
+This dataset can be used in various models which perform an image classification task. It is important to mention that it was found in Kaggle's [Playground Prediction Competition](https://www.kaggle.com/competitions/dog-breed-identification/overview), which was held from September 29th 2017 to February 28th 2018. 7,525 entrants, 1,405 participants, 1,280 teams and 8,708 submission are some of the most relevant details of this competition as well as the models used: ```mobilenet_v2``` from Google and ```resent_50``` from TensorFlow. 
 
 ### Languages
 American English
@@ -211,11 +213,19 @@ Images and annotations for each of the classes.
 
 ### Curation Rationale
 
+The dataset was likely created to support accurate breed identification for animal welfare, research, educational purposes, commercial applications, and to improve breed-specific understanding in both scientific and public contexts.
+
 ### Source Data
+
+The source data are images of different dog breeds in diverse contexts and situations, which allows for a wider representation of the animal.
 
 #### Initial Data Collection and Normalization
 
 #### Who are the source language producers?
+
+This dataset has been built using images and annotation from ImageNet for the task of fine-grained image categorization.
+
+[ImageNet](https://www.image-net.org/index.php) is an image database organized according to the [WordNet](https://wordnet.princeton.edu/) hierarchy (currently only the nouns), in which each node of the hierarchy is depicted by hundreds and thousands of images. The project, developed by Princeton, has been instrumental in advancing computer vision and deep learning research. More than 14 million images have been hand-annotated by the project to indicate what objects are pictured and in at least one million of the images, bounding boxes are also provided. The data is available for free to researchers for non-commercial use.
 
 ### Annotations
 
@@ -225,13 +235,34 @@ Images and annotations for each of the classes.
 
 ### Personal and Sensitive Information
 
+Sensitive information is data that must be protected from unauthorized access to safeguard the privacy or security of an individual or organization. This information encompasses the types of data where exposure could lead to detrimental consequences for the welfare and security of individuals and organizations.
+
+The dataset contains, indeed, identity categories. However, we cannot state that this identification falls under the concept of sensitive information as these categories do not refer to humans.
+
 ## Considerations for Using the Data
 
 ### Social Impact of Dataset
 
+This dataset can help in accurately identifying dog breeds, which could assist shelters, vets, and animal control in quickly recognizing lost or stray dogs. Breed identification is also valuable for ensuring breed-specific health care and dietary recommendations.
+
+By improving breed identification, it can support more accurate categorization of dogs for adoption, avoiding cases where a breed is misidentified, which can affect adoption chances. Moreover, the dataset can also be used in commercial applications like breed detection for pet-related services or in AR apps for dog enthusiasts.
+
+On the other hand, if misused, it could reinforce breed stereotypes or be used in ways that unintentionally promote breed-specific biases. For instance, if an image misclassification leads to incorrect information on a dog’s behavior or temperament, it could negatively impact perceptions of certain breeds.
+
 ### Discussion of Biases
 
+We see that dataset is quite unbalanced (see image below), so the model might perform better on frequently represented breeds, leading to biased results. Related with that and geographically speaking, it may favor dog breeds that are more common in certain regions. For example, breeds like Akita (breed from Japan) are not represented in the dataset as they are not found easily around the globe.
+
+![Imbalnced Dataset Image](imbalanced_dataset.png)
+
+More technically, lighting, image quality, and background variations can introduce biases, as certain breeds may be photographed under different conditions (e.g., show dogs vs. everyday pets).
+
+Lastly, if images were labeled by humans, personal biases could have influenced breed labels, particularly for mixed-breed dogs or dogs that don’t fit typical breed standards.
+
+
 ### Other Known Limitations
+
+Many dogs are mixed-breed, which may not be accurately represented in a dataset focused on purebred classifications. This can lead to poor performance on mixed breeds or overconfidence in assigning a breed. Moreover, there can be significant variability within a single breed due to genetic and physical diversity, as well as differences due to signs of aging, health conditions or grooming.
 
 ## Additional Information
 
