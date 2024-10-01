@@ -6,7 +6,7 @@ prepare:
   batch_size: 32
 train:
   save_model: True
-  epochs: 2
+  epochs: 1
   batch_size: 32
   experiment_name: "xxx"
   model_name: "xxx"

@@ -20,22 +20,22 @@ stages:
   train:
     cmd: python -m mates.modeling.train
     deps:
-    - data/processed/output_shape.pkl
     - data/processed/X_train.pkl
-    - data/processed/y_train.pkl
     - data/processed/X_valid.pkl
+    - data/processed/output_shape.pkl
+    - data/processed/y_train.pkl
     - data/processed/y_valid.pkl
     - mates/modeling/train.py
     params:
-    - train.save_model
-    - train.epochs
     - train.batch_size
+    - train.epochs
     - train.experiment_name
+    - train.metrics
     - train.model_name
     - train.model_url
-    - train.optimizer
-    - train.metrics
     - train.monitor
+    - train.optimizer
     - train.patience
+    - train.save_model
     outs:
     - models/

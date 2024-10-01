@@ -42,6 +42,7 @@ loguru = "^0.7.2"
 tensorflow-hub = "^0.16.1"
 tensorflow = "^2.17.0"
 keras = "^3.5.0"
+codecarbon = "2.6"
 
 
 [tool.poetry.group.dev.dependencies]
