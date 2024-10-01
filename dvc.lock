@@ -1,0 +1,57 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python -m mates.modeling.prepare
+    deps:
+    - path: data/raw/labels.csv
+      hash: md5
+      md5: ebee41cd1271c6ea9d3b54f6dd8531ce
+      size: 482063
+      isexec: true
+    - path: data/raw/test
+      hash: md5
+      md5: 93e54535952a6b266546a86c00140112.dir
+      size: 363049350
+      nfiles: 10357
+    - path: data/raw/train
+      hash: md5
+      md5: 579bdd4abc67bb771a1b19f831387360.dir
+      size: 361700370
+      nfiles: 10222
+    - path: mates/modeling/prepare.py
+      hash: md5
+      md5: 60ac4fd0fe3c47379c72c668b0e4b883
+      size: 3915
+      isexec: true
+    params:
+      params.yaml:
+        prepare.is_train: true
+        prepare.save_processed: true
+        prepare.seed: 42
+        prepare.split_size: 0.3
+    outs:
+    - path: data/processed/X_train.pkl
+      hash: md5
+      md5: 8b9390e68cae6319ce9ac1d2c3fe59c0
+      size: 529668
+      isexec: true
+    - path: data/processed/X_valid.pkl
+      hash: md5
+      md5: 774acd2dee202badac800c10ebbddae1
+      size: 227103
+      isexec: true
+    - path: data/processed/output_shape.pkl
+      hash: md5
+      md5: a23f97d662b4cf358458561f819839fe
+      size: 5
+      isexec: true
+    - path: data/processed/y_train.pkl
+      hash: md5
+      md5: cb88937c8de0e9daafe458746dfc9f77
+      size: 858762
+      isexec: true
+    - path: data/processed/y_valid.pkl
+      hash: md5
+      md5: e3dc06e769617b526db89a0c5b2d479a
+      size: 368202
+      isexec: true

@@ -6,7 +6,9 @@ prepare:
   batch_size: 32
 train:
   save_model: True
-  epochs: 20
+  epochs: 10
   experiment_name: "xxx"
   model_name: "xxx"
   model_url: "https://kaggle.com/models/google/mobilenet-v2/TensorFlow2/035-128-classification/1"
+  monitor: "val_accuracy"
+  patience: 5

@@ -1,9 +1,11 @@
+import yaml
 import typer
-import tensorflow_hub as hub
 import tf_keras
 import pickle as pk
+from pathlib import Path
+import tensorflow_hub as hub
 
-
+from mates.modeling.prepare import create_batches
 from mates.config import IMG_SIZE, PROCESSED_DATA_DIR
 
 app = typer.Typer()
@@ -38,18 +40,36 @@ def create_model(
 
 
 def load_processed_data(
-        
 ):
     """
     """
-    try:
-        with open(PROCESSED_DATA_DIR / 'train_data.pkl', 'rb') as f:
-            train_data = pk.load(f)
-        with open(PROCESSED_DATA_DIR / 'valid_data.pkl', 'rb') as f:
-            valid_data = pk.load(f)
-        with open(PROCESSED_DATA_DIR / 'output_shape.pkl', 'rb') as f:
-            output_shape = pk.load(f)
-    except Exception as e:
-        raise Exception(f"Error loading processed data: {e}")
-    
-    return train_data, valid_data, output_shape
+    with open(PROCESSED_DATA_DIR / 'output_shape.pkl', 'wb') as f:
+        output_shape = pk.load(f)
+    with open(PROCESSED_DATA_DIR / 'X_train.pkl', 'wb') as f:
+        X_train = pk.load(f)
+    with open(PROCESSED_DATA_DIR / 'y_train.pkl', 'wb') as f:
+        y_train = pk.load(f)
+    with open(PROCESSED_DATA_DIR / 'X_valid.pkl', 'wb') as f:
+        X_valid = pk.load(f)
+    with open(PROCESSED_DATA_DIR / 'y_valid.pkl', 'wb') as f:
+        y_valid = pk.load(f)
+
+    return create_batches(X_train, y_train), create_batches(X_valid, y_valid), output_shape
+
+
+def load_params(
+    stage: str
+) -> dict:
+    """
+    """
+    params_path = Path("params.yaml")
+
+    # Read data preparation parameters
+    with open(params_path, "r") as params_file:
+        try:
+            params = yaml.safe_load(params_file)
+            params = params[stage]
+        except yaml.YAMLError as exc:
+            print(exc)
+
+    return params
