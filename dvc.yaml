@@ -38,4 +38,4 @@ stages:
     - train.monitor
     - train.patience
     outs:
-    - data/models/
+    - models/

@@ -29,7 +29,10 @@ def train(
         logger.info("Training model...")
         model = create_model(input_shape=INPUT_SHAPE,
                              output_shape=output_shape,
-                             model_url=params["model_url"])
+                             model_url=params["model_url"],
+                             optimizer=params["optimizer"],
+                             metrics=params["metrics"]
+                            )
     
         early_stopping = tf_keras.callbacks.EarlyStopping(monitor=params["monitor"],
                                                           patience=params["patience"])
