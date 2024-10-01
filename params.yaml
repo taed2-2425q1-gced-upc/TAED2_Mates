@@ -8,8 +8,8 @@ train:
   save_model: True
   epochs: 1
   batch_size: 32
-  experiment_name: "xxx"
-  model_name: "xxx"
+  experiment_name: "batch_test"
+  model_name: "mobilenet"
   model_url: "https://kaggle.com/models/google/mobilenet-v2/TensorFlow2/035-128-classification/1"
   optimizer: adamw
   metrics: ["accuracy"]

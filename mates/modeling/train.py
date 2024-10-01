@@ -52,7 +52,7 @@ def train(
                                    )
         try:
             tracker.start()
-            model.fit(x=train_data, 
+            history = model.fit(x=train_data, 
                 epochs=params["epochs"],
                 validation_data=valid_data, 
                 validation_freq=1,
@@ -67,6 +67,13 @@ def train(
         emissions_params = emissions.iloc[-1, 13:].to_dict()
         mlflow.log_params(emissions_params)
         mlflow.log_metrics(emissions_metrics)
+
+        # Log additional metrics from the History object
+        log = list(history.history.items())
+        for epoch, metrics in enumerate(log):
+            metric_name = metrics[0]
+            metric_values = metrics[1][0]
+            mlflow.log_metric(f"train_{metric_name}", metric_values, step=epoch)
 
         logger.success("Model training complete.")
         if params["save_model"]:
