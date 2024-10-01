@@ -21,7 +21,8 @@ def train(
     mlflow.sklearn.autolog(log_model_signatures=True, log_datasets=True)
 
     with mlflow.start_run():
-        train_data, valid_data, output_shape = load_processed_data()
+        train_data, valid_data, output_shape = load_processed_data(params["batch_size"])
+
         model = create_model(input_shape=INPUT_SHAPE,
                              output_shape=output_shape,
                              model_url=params["model_url"])
@@ -35,9 +36,11 @@ def train(
             validation_freq=1,
             callbacks=[early_stopping]
             )
-        
+
+        print("SO FAAAAAAAAAAARRRRRRRRRRRRR 4")
+
         if params["save_model"]:
-            with open(MODELS_DIR / f"{params["model_name"]}.pkl", "wb") as f:
+            with open(MODELS_DIR / f"{params['model_name']}.pkl", "wb") as f:
                 pk.dump(model, f)
 
 
