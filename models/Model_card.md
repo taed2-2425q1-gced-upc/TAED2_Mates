@@ -121,7 +121,10 @@ Carbon emissions can be estimated using the [Machine Learning Impact calculator]
 - **Hours used**:
 - **Cloud Provider**:
 - **Compute Region**:
-- **Carbon Emitted**:
+- **Carbon Emitted**: Different experiments have been run and the results regarding the emissions can be seen in the following plot.
+![Carbon emissions](emissions_image.png)
+
+We can see that the experiment with the highest emission is the one using the Adam optimizer.
 
 ## Technical Specifications (opt)
 
