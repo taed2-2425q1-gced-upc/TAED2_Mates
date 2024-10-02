@@ -26,10 +26,10 @@ clean:
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
 
-## Lint using flake8 and black (use `make format` to do formatting)
+## Lint using pylint
 .PHONY: lint
 lint:
-	flake8 mates
+	poetry run pylint mates > linter.txt
 	isort --check --diff --profile black mates
 	black --check --config pyproject.toml mates
 

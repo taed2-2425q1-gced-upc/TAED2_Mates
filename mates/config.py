@@ -1,3 +1,5 @@
+"""Module providing configuration to train the model."""
+
 from pathlib import Path
 
 from dotenv import load_dotenv

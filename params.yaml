@@ -15,3 +15,6 @@ train:
   metrics: ["accuracy"]
   monitor: "val_accuracy"
   patience: 5
+predict:
+  model_name: "mobilenet"
+  batch_size: 32
