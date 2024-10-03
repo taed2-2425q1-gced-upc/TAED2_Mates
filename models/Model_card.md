@@ -100,21 +100,62 @@ The checkpoint exported into this model was ```mobilenet_v2_0.35_128/mobilenet_v
 
 #### Testing Data
 
+To test the model, four different batch configurations have been built as well as various optimizations functions. The resulting combinations are:
+
+- ```Batch 32```
+- ```Batch 64```
+- ```Batch 32``` with ```Adam``` optimizer
+- ```Batch 32``` with ```Rmsprop``` optimizer
+
 #### Factors
 
 #### Metrics
 
-| Metric | Value |
-| ------ | ----- |
-|mAP on Open Images V4 test set (OpenImages Challenge metric) | 0.34 |
+The metrics considered when evaluating the model can be divided into two main categories. The first one refers to model performance while the second is used to environmental. These last will be addressed in the section below.
+
+The performance metrics considered are *Train accuracy*, *Train validation accuracy*, *Train validation loss* and *Train loss*.
 
 ### Results
 
+The Batch 32 Rmsprop configuration appears to strike an optimal balance between accuracy and
+emissions, making it a strong candidate for deployment. In contrast, Batch 64 shows potential for
+slightly better RAM usage but does not offer significant improvements in accuracy, suggesting that
+adjustments to batch size need to be made cautiously based on specific use-case requirements.
+The consistent CPU power consumption across batches indicates that further exploration of GPU
+utilization could enhance performance, particularly if large datasets or complex models are consid-
+ered in future experiments. Given the low emissions and energy metrics, these configurations are
+environmentally sustainable, allowing for their use in scenarios where energy efficiency is paramount.
+
 #### Summary
+
+The table below, summarizes all the performance metrics considered when evaluating the model.
+
+| Metric | Batch 32 |Batch 64 | Batch 32 Adam | Batch 32 Rmsprop |
+| ------ | ----- | ----- | ----- | ----- |
+|Train accuracy | 0.28498 | 0.26010| 0.26010 | 0.28861 |
+|Train validation accuracy | 0.39909 | 0.39517| 0.39517 | 0.41669 |
+|Train loss | 3.16361 | 3.33960| 3.33960 | 3.12644 |
+|Train validation loss | 3.16361 | 3.33960| 3.33960 | 3.12644 |
 
 ## Model Examination (opt)
 
 ## Environmental Impact
+
+The next table shows the results of the environmental metrics avaluated.
+
+| Metric | Batch 32 |Batch 64 | Batch 32 Adam | Batch 32 Rmsprop |
+| ------ | ----- | ----- | ----- | ----- |
+| Emissions | 0.00023 | 0.00011 | 0.00011 | 0.00025 |
+| Emissions rate | 6.98e-07 | 6.99e-07 | 6.99e-07 | 6.98e-07 |
+| CPU power | 14.0000 | 14.0000 | 14.0000 | 14.0000 |
+| GPU power | 0.00000 | 0.00000 | 0.00000 | 0.00000 |
+| RAM power | 0.46661 | 0.49706 | 0.49706 | 0.45724 |
+| CPU energy | 0.00127 | 0.00064 | 0.00064 | 0.00137 |
+| GPU energy | 0.00000 | 0.00002 | 0.00002 | 0.00004 |
+| RAM energy | 0.00131 | 0.00066 | 0.00066 | 0.00142 |
+| Energy consumed | 2.36840 | 2.35004 | 2.35004 | 2.30601 |
+
+
 Carbon emissions can be estimated using the [Machine Learning Impact calculator](https://mlco2.github.io/impact/#compute) presented in [Lacoste et al. (2019)](https://arxiv.org/abs/1910.09700).
 
 - **Hardware Type**:
@@ -136,7 +177,7 @@ We can see that the experiment with the highest emission is the one using the Ad
 
 #### Software
 
-## Citation (opt)
+## Citation
 
 Kaggle link of the model: https://www.kaggle.com/models/google/mobilenet-v2
 
