@@ -90,7 +90,12 @@ The checkpoint exported into this model was ```mobilenet_v2_0.35_128/mobilenet_v
 
 #### Training Hyperparameters
 
-- **Training regime**:
+Four different batch configurations have been built as well as various optimization functions. The resulting combinations are:
+
+- ```Batch 32```
+- ```Batch 64```
+- ```Batch 32``` with ```Adam``` optimizer
+- ```Batch 32``` with ```Rmsprop``` optimizer
 
 #### Speeds, Sizes, Times (opt)
 
@@ -100,12 +105,7 @@ The checkpoint exported into this model was ```mobilenet_v2_0.35_128/mobilenet_v
 
 #### Testing Data
 
-To test the model, four different batch configurations have been built as well as various optimizations functions. The resulting combinations are:
 
-- ```Batch 32```
-- ```Batch 64```
-- ```Batch 32``` with ```Adam``` optimizer
-- ```Batch 32``` with ```Rmsprop``` optimizer
 
 #### Factors
 
