@@ -1,11 +1,37 @@
+"""
+Module for loading, processing, and managing machine learning data and models.
+
+This module provides a set of commands to load processed data, parameters,
+and models, as well as to create and process images for training machine
+learning models. It utilizes TensorFlow and its Keras API to build
+neural networks with pre-trained models from TensorFlow Hub.
+
+Commands available:
+- load_processed_data: Load training and validation data from pickle files and create batches.
+- load_params: Load parameters for a specified stage from a YAML configuration file.
+- load_model: Load a pre-trained model from the models directory.
+- create_model: Build a new model using a specified pre-trained model from TensorFlow Hub.
+- read_data: Load image paths and labels from a specified directory.
+- process_image: Preprocess an image for input into the model.
+- get_label_image: Retrieve the label and processed image for a given image path.
+- create_batches: Generate batches of data for training or validation.
+
+Dependencies:
+- TensorFlow
+- TensorFlow Hub
+- Typer
+- Pandas
+- YAML
+"""
+
 import os
+import pickle as pk
+from pathlib import Path
 import yaml
 import typer
 import tf_keras
-import pickle as pk
 import pandas as pd
 import tensorflow as tf
-from pathlib import Path
 import tensorflow_hub as hub
 
 
@@ -36,17 +62,17 @@ def load_processed_data(
     """
     with open(PROCESSED_DATA_DIR / 'output_shape.pkl', 'rb') as f:
         output_shape = pk.load(f)
-    with open(PROCESSED_DATA_DIR / 'X_train.pkl', 'rb') as f:
-        X_train = pk.load(f)
+    with open(PROCESSED_DATA_DIR / 'x_train.pkl', 'rb') as f:
+        x_train = pk.load(f)
     with open(PROCESSED_DATA_DIR / 'y_train.pkl', 'rb') as f:
         y_train = pk.load(f)
-    with open(PROCESSED_DATA_DIR / 'X_valid.pkl', 'rb') as f:
-        X_valid = pk.load(f)
+    with open(PROCESSED_DATA_DIR / 'x_valid.pkl', 'rb') as f:
+        x_valid = pk.load(f)
     with open(PROCESSED_DATA_DIR / 'y_valid.pkl', 'rb') as f:
         y_valid = pk.load(f)
 
-    train_data = create_batches(batch_size, X_train, y_train)
-    valid_data = create_batches(batch_size, X_valid, y_valid, valid_data=True)
+    train_data = create_batches(batch_size, x_train, y_train)
+    valid_data = create_batches(batch_size, x_valid, y_valid, valid_data=True)
 
     return train_data, valid_data, output_shape
 
@@ -62,7 +88,7 @@ def load_params(
     ----------
     stage : str
         Stage of the pipeline.
-    
+
     Returns
     -------
     params : dict
@@ -70,7 +96,7 @@ def load_params(
     """
     params_path = Path("params.yaml")
 
-    with open(params_path, "r") as params_file:
+    with open(params_path, "r", encoding='utf-8') as params_file:
         try:
             params = yaml.safe_load(params_file)
             params = params[stage]
@@ -96,10 +122,10 @@ def load_model(
     -------
         model : tf.keras.Model
     """
-    with open(MODELS_DIR / f"{model_name}.pkl", "rb") as f:
-        model = pk.load(f)
+    model = tf_keras.models.load_model(MODELS_DIR / f"{model_name}.h5",
+                                       custom_objects={'KerasLayer': hub.KerasLayer})
     return model
-    
+
 
 @app.command()
 def create_model(
@@ -139,7 +165,7 @@ def create_model(
     model = tf_keras.Sequential()
     model.add(hub.KerasLayer(model_url, input_shape=(IMG_SIZE, IMG_SIZE, 3)))
     model.add(tf_keras.layers.Dense(output_shape, activation=activation_function))
-    
+
     if optimizer == 'adam':
         optimizer = tf_keras.optimizers.Adam()
     elif optimizer == 'sgd':
@@ -150,13 +176,13 @@ def create_model(
         optimizer = tf_keras.optimizers.AdamW()
 
     model.compile(
-        loss=loss_function, 
+        loss=loss_function,
         optimizer=optimizer,
         metrics=metrics
     )
-    
+
     model.build(input_shape)
-    
+
     return model
 
 
@@ -178,19 +204,19 @@ def read_data(
 
     Returns
     -------
-    X : list
+    x : list
         List of image paths.
     y : list
         List of labels. None if train_data is False.
     encoding_labels : list
         List of encoding labels. None if train_data is False.
     """
-    
+
     data_type = 'train' if train_data else 'test'
     imgs = os.listdir(dir_path / f'{data_type}/')
-    
-    X = [dir_path / f'{data_type}/' / f for f in imgs]
-    
+
+    x = [dir_path / f'{data_type}/' / f for f in imgs]
+
     if train_data:
         labels = pd.read_csv(dir_path / 'labels.csv')
         y = pd.get_dummies(labels['breed']).to_numpy()
@@ -198,8 +224,8 @@ def read_data(
     else:
         y = None
         encoding_labels = None
-    
-    return X, y, encoding_labels
+
+    return x, y, encoding_labels
 
 
 @app.command()
@@ -226,7 +252,7 @@ def process_image(
     img = tf.image.decode_jpeg(img, channels=3)
     img = tf.image.convert_image_dtype(img, tf.float32)
     img = tf.image.resize(img, size=[img_size, img_size])
-    
+
     return img
 
 
@@ -253,7 +279,7 @@ def get_label_image(img_path: Path, label: int):
 @app.command()
 def create_batches(
     batch_size: int,
-    X: list,
+    x: list,
     y: list = None,
     valid_data: bool = False,
     test_data: bool = False,
@@ -265,7 +291,7 @@ def create_batches(
     ----------
     batch_size : int
         Batch size.
-    X : list
+    x : list
         List of image paths.
     y : list
         List of labels.
@@ -280,14 +306,17 @@ def create_batches(
         Batched data.
     """
     if test_data:
-        data = tf.data.Dataset.from_tensor_slices(tf.constant([str(x) for x in X]))
+        data = tf.data.Dataset.from_tensor_slices(
+            tf.constant([str(x) for x in x]))
         data_batch = data.map(process_image).batch(batch_size)
     elif valid_data:
-        data = tf.data.Dataset.from_tensor_slices((tf.constant([str(x) for x in X]), tf.constant(y)))
+        data = tf.data.Dataset.from_tensor_slices(
+            (tf.constant([str(x) for x in x]), tf.constant(y)))
         data_batch = data.map(get_label_image).batch(batch_size)
     else:
-        data = tf.data.Dataset.from_tensor_slices((tf.constant([str(x) for x in X]), tf.constant(y)))
-        data = data.shuffle(buffer_size=len(X))
+        data = tf.data.Dataset.from_tensor_slices(
+            (tf.constant([str(x) for x in x]), tf.constant(y)))
+        data = data.shuffle(buffer_size=len(x))
         data_batch = data.map(get_label_image).batch(batch_size)
-    
+
     return data_batch

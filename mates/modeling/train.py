@@ -1,15 +1,17 @@
-import typer
-import mlflow
-import tf_keras
-import pickle as pk
-import pandas as pd
+"""
+Module to train a model.
+"""
+
 from pathlib import Path
-from loguru import logger
+import mlflow
+import pandas as pd
+import tf_keras
+import typer
 from codecarbon import EmissionsTracker
+from loguru import logger
 
-
-from mates.config import INPUT_SHAPE, MODELS_DIR, METRICS_DIR
-from mates.features import create_model, load_processed_data, load_params
+from mates.config import INPUT_SHAPE, METRICS_DIR, MODELS_DIR
+from mates.features import create_model, load_params, load_processed_data
 
 app = typer.Typer()
 
@@ -21,7 +23,7 @@ def train(
     Function to train a model. Loads processed data, trains a model, and saves the model.
     """
     params = load_params("train")
-    
+
     mlflow.set_experiment(params["experiment_name"])
     mlflow.tensorflow.autolog()
 
@@ -36,7 +38,7 @@ def train(
                              optimizer=params["optimizer"],
                              metrics=params["metrics"]
                             )
-    
+
         early_stopping = tf_keras.callbacks.EarlyStopping(monitor=params["monitor"],
                                                           patience=params["patience"])
 
@@ -53,9 +55,9 @@ def train(
                                    )
         try:
             tracker.start()
-            history = model.fit(x=train_data, 
+            history = model.fit(x=train_data,
                 epochs=params["epochs"],
-                validation_data=valid_data, 
+                validation_data=valid_data,
                 validation_freq=1,
                 callbacks=[early_stopping]
                 )
@@ -81,9 +83,7 @@ def train(
 
         logger.success("Model training complete.")
         if params["save_model"]:
-            with open(MODELS_DIR / f"{params['model_name']}.pkl", "wb") as f:
-                pk.dump(model, f)
-            
+            model.save(MODELS_DIR / f"{params['model_name']}.h5")
             mlflow.tensorflow.log_model(model, params['model_name'])
 
 
