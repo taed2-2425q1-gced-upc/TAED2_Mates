@@ -1,4 +1,4 @@
-# mates
+# Mates
 
 <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
@@ -9,33 +9,29 @@ A short description of the project.
 ## Project Organization
 
 ```
-├── LICENSE            <- Open-source license if one is chosen
 ├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
-├── README.md          <- The top-level README for developers using this project.
+├── README.md          <- Top level description of the project
+├── .dvc               <- DVC configuration files
 ├── data
-│   ├── external       <- Data from third party sources.
-│   ├── interim        <- Intermediate data that has been transformed.
-│   ├── processed      <- The final, canonical data sets for modeling.
-│   └── raw            <- The original, immutable data dump.
+│   ├── output         <- Final predictions and other outputs
+│   ├── processed      <- Processed data ready for modeling
+│   └── raw            <- Raw data coming from the source
 │
-├── docs               <- A default mkdocs project; see www.mkdocs.org for details
+├── docs               <- Documentation for the project
 │
-├── models             <- Trained and serialized models, model predictions, or model summaries
+├── models             <- Trained and serialized models
 │
-├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`.
+├── notebooks          <- Jupyter notebooks for exploratory analysis
 │
 ├── pyproject.toml     <- Project configuration file with package metadata for 
 │                         mates and configuration for tools like black
 │
-├── references         <- Data dictionaries, manuals, and all other explanatory materials.
+├── metrics            <- Metrics for model evaluation and comparison
 │
-├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
+├── mlruns             <- MLflow tracking logs
+│
+├── reports            <- Generated analysis
 │   └── figures        <- Generated graphics and figures to be used in reporting
-│
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-│                         generated with `pip freeze > requirements.txt`
 │
 ├── setup.cfg          <- Configuration file for flake8
 │
@@ -43,19 +39,24 @@ A short description of the project.
     │
     ├── __init__.py             <- Makes mates a Python module
     │
-    ├── config.py               <- Store useful variables and configuration
-    │
-    ├── dataset.py              <- Scripts to download or generate data
+    ├── config.py               <- Store settings and configurations
     │
     ├── features.py             <- Code to create features for modeling
     │
     ├── modeling                
     │   ├── __init__.py 
     │   ├── predict.py          <- Code to run model inference with trained models          
+    │   └── prepare.py          <- Code to prepare data for modeling
     │   └── train.py            <- Code to train models
     │
-    └── plots.py                <- Code to create visualizations
 ```
 
 --------
 
+## Project Description
+
+Strong software engineering practices are essential for ensuring the reliability and scalability of modern data science and machine learning projects. This project aims at providing hands-on experience in software engineering and good software practices, specifically regarding ML projects.
+
+To put this into practice, our team has chosen to fine-tune an existing model in the task of dog breed classification. For this, the MobileNetV2 model was used as a based model.
+
+This project will not only strengthen our technical proficiency in model fine-tuning and machine learning workflows but will also provide valuable experience in applying high-quality standard software engineering practices. By integrating principles such as version control, continuous integration, and code modularity, we aim to deliver a scalable and maintainable solution.
