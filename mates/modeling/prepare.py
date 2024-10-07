@@ -1,13 +1,13 @@
 """Module providing a function to prepare the data."""
 
 import pickle as pk
+
 import typer
 from loguru import logger
 from sklearn.model_selection import train_test_split
 
 from mates.config import PROCESSED_DATA_DIR
 from mates.features import load_params, read_data
-
 
 app = typer.Typer()
 

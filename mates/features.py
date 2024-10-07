@@ -27,16 +27,15 @@ Dependencies:
 import os
 import pickle as pk
 from pathlib import Path
-import yaml
-import typer
-import tf_keras
+
 import pandas as pd
 import tensorflow as tf
 import tensorflow_hub as hub
+import tf_keras
+import typer
+import yaml
 
-
-from mates.config import IMG_SIZE, PROCESSED_DATA_DIR, RAW_DATA_DIR, MODELS_DIR
-
+from mates.config import IMG_SIZE, MODELS_DIR, PROCESSED_DATA_DIR, RAW_DATA_DIR
 
 app = typer.Typer()
 
