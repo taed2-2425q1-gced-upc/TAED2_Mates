@@ -134,8 +134,6 @@ def create_model(
     model_url: str,
     optimizer: str,
     metrics: list,
-    loss_function = tf_keras.losses.CategoricalCrossentropy(),
-    activation_function: str = 'softmax',
 ):
     """
     Create a model using a pre-trained model from TensorFlow Hub.
@@ -164,7 +162,7 @@ def create_model(
     """
     model = tf_keras.Sequential()
     model.add(hub.KerasLayer(model_url, input_shape=(IMG_SIZE, IMG_SIZE, 3)))
-    model.add(tf_keras.layers.Dense(output_shape, activation=activation_function))
+    model.add(tf_keras.layers.Dense(output_shape, activation='softmax'))
 
     if optimizer == 'adam':
         optimizer = tf_keras.optimizers.Adam()
@@ -176,7 +174,7 @@ def create_model(
         optimizer = tf_keras.optimizers.AdamW()
 
     model.compile(
-        loss=loss_function,
+        loss=tf_keras.losses.CategoricalCrossentropy(),
         optimizer=optimizer,
         metrics=metrics
     )

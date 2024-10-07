@@ -1,4 +1,33 @@
-"""Module providing configuration to train the model."""
+"""
+Module for configuring paths and model parameters for training.
+
+This module provides the configuration settings necessary for loading data, saving models,
+and defining key parameters for the machine learning model. It utilizes **pathlib** to manage
+file paths and **dotenv** to load environment variables from a .env file.
+
+Commands available:
+- PROJ_ROOT: Root path of the project directory.
+- DATA_DIR: Main directory for storing data.
+- RAW_DATA_DIR: Directory for storing raw data.
+- INTERIM_DATA_DIR: Directory for storing interim processed data.
+- PROCESSED_DATA_DIR: Directory for storing fully processed data.
+- EXTERNAL_DATA_DIR: Directory for storing external data.
+- MODELS_DIR: Directory for saving and loading machine learning models.
+- METRICS_DIR: Directory for storing model metrics.
+- REPORTS_DIR: Directory for generating reports, including visualizations.
+- FIGURES_DIR: Directory for storing generated figures.
+  
+Model parameters:
+- IMG_SIZE: Defines the size of the images used in the model (128x128).
+- INPUT_SHAPE: Defines the input shape for the model, with a batch size (None)
+    and the specified image dimensions (128x128) in 3 color channels (RGB).
+
+Dependencies:
+- dotenv
+- loguru
+- pathlib
+"""
+
 
 from pathlib import Path
 

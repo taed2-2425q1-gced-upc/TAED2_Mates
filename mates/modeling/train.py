@@ -1,6 +1,39 @@
 """
-Module to train a model.
+Module for training a machine learning model using processed data and tracking emissions.
+
+This module provides a command-line interface (CLI) to load processed data, train a model, 
+and save the model and its metrics. It also tracks CO2 emissions during the training process 
+using the CodeCarbon library and logs relevant metrics to MLflow for experiment tracking.
+
+Commands available:
+- `train`: Loads processed data, trains the model, tracks emissions, logs metrics to MLflow, 
+  and saves the model if specified in the parameters.
+
+Workflow:
+1. Load training parameters from a YAML configuration file.
+2. Set up an MLflow experiment and enable automatic logging for TensorFlow.
+3. Load the processed training and validation datasets.
+4. Build a machine learning model using a pre-trained model URL and specified parameters.
+5. Train the model using the loaded data, with early stopping based on validation performance.
+6. Track and log CO2 emissions during the training process using CodeCarbon.
+7. Log the training metrics, CO2 emissions, and model parameters to MLflow.
+8. Optionally, save the trained model as an HDF5 file and log it to MLflow.
+
+Dependencies:
+- mlflow
+- pandas
+- tf_keras
+- typer
+- codecarbon
+- loguru
+- pathlib
+
+Additional module imports:
+- INPUT_SHAPE, METRICS_DIR, MODELS_DIR from mates.config: Paths and model shape settings.
+- create_model, load_params, load_processed_data from mates.features: Functions for loading
+    data, model parameters, and creating models.
 """
+
 
 from pathlib import Path
 import mlflow
@@ -66,10 +99,8 @@ def train(
 
         # Log CO2 with mlflow
         emissions = pd.read_csv(METRICS_DIR / out_file)
-        emissions_metrics = emissions.iloc[-1, 4:13].to_dict()
-        emissions_params = emissions.iloc[-1, 13:].to_dict()
-        mlflow.log_params(emissions_params)
-        mlflow.log_metrics(emissions_metrics)
+        mlflow.log_params(emissions.iloc[-1, 13:].to_dict())
+        mlflow.log_metrics(emissions.iloc[-1, 4:13].to_dict())
 
         # Log additional metrics from the History object
         log = list(history.history.items())
