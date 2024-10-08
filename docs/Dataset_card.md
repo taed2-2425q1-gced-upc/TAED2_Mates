@@ -34,7 +34,7 @@ American English
 
 ### Data Instances
 
-There are a total of 20,580 images; ~150 images per class. Moreover, there is an annotation for each instance (image).
+There are a total of 20,580 images; ~150 images per class. Moreover, there is an label for each instance (image).
 
 The list of breeds is as follows:
 
@@ -162,39 +162,22 @@ yorkshire_terrier
 
 ```
 
-This is an example of an annotation of an image of class chihuahua:
+All labels are stored in a separate csv, which has the attributes ```image_id``` and ```class```. As can be understood, each image is associated to an unique *image_id*.
 
-```
-<annotation>
-	<folder>02085620</folder>
-	<filename>n02085620_7</filename>
-	<source>
-		<database>ImageNet database</database>
-	</source>
-	<size>
-		<width>250</width>
-		<height>188</height>
-		<depth>3</depth>
-	</size>
-	<segment>0</segment>
-	<object>
-		<name>Chihuahua</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>71</xmin>
-			<ymin>1</ymin>
-			<xmax>192</xmax>
-			<ymax>180</ymax>
-		</bndbox>
-	</object>
-</annotation>
-```
+For instance, this are some lines of such file:
 
-On the other hand, this is an example of an image of this same class:
+|id|breed|
+|------|-----|
+|000bec180eb18c7604dcecc8fe0dba07| boston_bull|
+|001513dfcb2ffafc82cccf4d8bbaba97|dingo|
+|001cdf01b096e06d78e9e5112d419397|pakinese|
+|00214f311d5d2247d5dfe24b2303d|bluetick|
+|0021f9ceb3235effd7fcde7f7538ed62|golden_retriever|
 
-![Chihuahua](example_image.jpg)
+
+On the other hand, this is an example of an image that could be the one shown in the first entrance of the csv. It is an image of a *Boston Bull*:
+
+![Chihuahua](example_image2.jpg)
 
 Each image has a filename that is its unique ```id```. 
 
