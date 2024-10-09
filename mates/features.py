@@ -159,6 +159,8 @@ def create_model(
     model : tf.keras.Model
         Compiled model.
     """
+    # import ipdb
+    # ipdb.set_trace(context=3)
     model = tf_keras.Sequential()
     model.add(hub.KerasLayer(model_url, input_shape=(IMG_SIZE, IMG_SIZE, 3)))
     model.add(tf_keras.layers.Dense(output_shape, activation='softmax'))
@@ -210,15 +212,15 @@ def read_data(
     """
 
     data_type = 'train' if train_data else 'test'
-    imgs = os.listdir(dir_path / f'{data_type}/')
-
-    x = [dir_path / f'{data_type}/' / f for f in imgs]
-
+    
     if train_data:
         labels = pd.read_csv(dir_path / 'labels.csv')
         y = pd.get_dummies(labels['breed']).to_numpy()
+        x = [dir_path / f'{data_type}/' / f'{id}.jpg' for id in labels['id']]
         encoding_labels = labels['breed'].unique()
     else:
+        imgs = os.listdir(dir_path / f'{data_type}/')
+        x = [dir_path / f'{data_type}/' / f for f in imgs]
         y = None
         encoding_labels = None
 
