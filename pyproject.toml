@@ -47,6 +47,7 @@ pynblint = "^0.1.6"
 pylint = "^3.3.1"
 pyyaml = "^6.0.2"
 ipdb = "^0.13.13"
+deepchecks = {extras = ["vision"], version = "^0.18.1"}
 
 
 [tool.poetry.group.dev.dependencies]

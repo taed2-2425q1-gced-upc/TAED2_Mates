@@ -53,6 +53,8 @@ METRICS_DIR = PROJ_ROOT / "metrics"
 REPORTS_DIR = PROJ_ROOT / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
 
+PORT = 5000
+
 
 # Model parameters
 IMG_SIZE = 128
