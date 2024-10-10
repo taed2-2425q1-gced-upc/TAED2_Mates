@@ -45,6 +45,8 @@ keras = "^3.5.0"
 codecarbon = "2.6"
 pynblint = "^0.1.6"
 pylint = "^3.3.1"
+pyyaml = "^6.0.2"
+ipdb = "^0.13.13"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -52,7 +54,18 @@ black = "^24.8.0"
 pylint = "^3.2.7"
 pytest = "^8.3.3"
 pytest-cov = "^5.0.0"
+pytest-mock = "^3.14.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.coverage.run]
+omit = ["mates/modeling/predict.py", "mates/modeling/train.py"]
+
+[tool.pytest.ini_options]
+pythonpath = "."
+testpaths = "tests"
+addopts = "--junitxml=tests/tests-report.xml --cov=mates --cov-report=html:reports/coverage"
+
+
