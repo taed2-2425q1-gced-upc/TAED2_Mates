@@ -3,15 +3,15 @@ prepare:
   save_processed: True
   seed: 42
   split_size: 0.3
-  batch_size: 32
+  batch_size: 62
 train:
   save_model: True
-  epochs: 8
-  batch_size: 32
-  experiment_name: "exp_batch_32"
+  epochs: 6
+  batch_size: 62
+  experiment_name: "exp_batch_62"
   model_name: "mobilenet"
   model_url: "https://www.kaggle.com/models/google/mobilenet-v2/TensorFlow2/130-224-feature-vector/2"
-  optimizer: adam
+  optimizer: rmsprop
   metrics: ["accuracy"]
   monitor: "accuracy"
   patience: 5
