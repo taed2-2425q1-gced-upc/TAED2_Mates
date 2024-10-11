@@ -194,7 +194,7 @@ This is an example of an annotation of an image of class chihuahua:
 
 On the other hand, this is an example of an image of this same class:
 
-![Chihuahua](example_image.jpg)
+![Chihuahua](../reports/figures/example_image.jpg)
 
 Each image has a filename that is its unique ```id```. 
 
@@ -253,7 +253,7 @@ On the other hand, if misused, it could reinforce breed stereotypes or be used i
 
 We see that dataset is quite unbalanced (see image below), so the model might perform better on frequently represented breeds, leading to biased results. Related with that and geographically speaking, it may favor dog breeds that are more common in certain regions. For example, breeds like Akita (breed from Japan) are not represented in the dataset as they are not found easily around the globe.
 
-![Imbalnced Dataset Image](imbalanced_dataset.png)
+![Imbalnced Dataset Image](../reports/figures/imbalanced_dataset.png)
 
 More technically, lighting, image quality, and background variations can introduce biases, as certain breeds may be photographed under different conditions (e.g., show dogs vs. everyday pets).
 
