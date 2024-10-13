@@ -32,29 +32,20 @@ This model can be used with the ```hub.KerasLayer``` as follows. It *cannot* be 
 ```
 import tensorflow_hub as hub
 m = tf.keras.Sequential([
-    hub.KerasLayer("https://www.kaggle.com/models/google/mobilenet-v2/TensorFlow2/035-128-classification/2")
+    hub.KerasLayer("https://www.kaggle.com/models/google/mobilenet-v2/TensorFlow2/130-224-feature-vector/2",
+                   trainable=False),  # Can be True, see below.
+    tf.keras.layers.Dense(num_classes, activation='softmax')
 ])
-m.build([None, 128, 128, 3])  # Batch input shape.
+m.build([None, 224, 224, 3])  # Batch input shape.
+
 ```
-
-The output is a batch of logits vectors. The indices into the logits are the ```num_classes = 1001``` classes of the classification from the original training (see training). The mapping from indices to class labels can be found in the file at [download.tensorflow.org/data/ImageNetLabels.txt](https://storage.googleapis.com/download.tensorflow.org/data/ImageNetLabels.txt) (with class 0 for "background", followed by 1000 actual ImageNet classes).
-
-
 #### Inputs
 
-A three-channel image of variable size - the model does *NOT* support batching. The input tensor is a ```tf.float32``` tensor with shape ```[1, height, width, 3]``` with values in ```[0.0, 1.0]```.
-
-The input images are expected to have color values in the range [0,1], following the common image input conventions. For this model, the size of the input images is fixed to ```height``` x ```width``` = 128 x 128 pixels.
+The input ```images``` are expected to have color values in the range [0,1], following the [common image](https://www.tensorflow.org/hub/common_signatures/images#input) input conventions. For this model, the size of the input images is fixed to ```height``` x ```width``` = 224 x 224 pixels.
 
 #### Outputs
 
-The output dictionary contains:
-
-- ```detection_boxes```: a ```tf.float32``` tensor of shape ```[N, 4]``` containing bounding box coordinates in the following order: ```[ymin, xmin, ymax, xmax]```.
-- ```detection_class_entities```: a ```tf.string``` tensor of shape ```[N]``` containing detection class names as Freebase MIDs.
-- ```detection_class_names```: a ```tf.string``` tensor of shape ```[N]``` containing human-readable detection class names.
-- ```detection_class_labels```: a ```tf.int64``` tensor of shape ```[N]``` with class indices.
-- ```detection_scores```: a ```tf.float32``` tensor of shape ```[N]``` containing detection scores.
+The output is a batch of feature vectors. For each input image, the feature vector has size ```num_features``` = 1664.
 
 ### Downstream Use (opt)
 
@@ -82,7 +73,7 @@ class_names = detector_output["detection_class_names"]
 
 The MobileNet V2 feature extractor was trained on [Open Images V4](https://storage.googleapis.com/openimages/web/index.html).
 
-The checkpoint exported into this model was ```mobilenet_v2_0.35_128/mobilenet_v2_0.35_128.ckpt``` downloaded from [MobileNet V2 pre-trained models](https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet/README.md). Its weights were originally obtained by training on the ILSVRC-2012-CLS dataset for image classification ("Imagenet").
+The checkpoint exported into this model was ```mobilenet_v2_1.3_224/mobilenet_v2_1.3_224.ckpt``` downloaded from [MobileNet V2 pre-trained models](https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet/README.md). Its weights were originally obtained by training on the ILSVRC-2012-CLS dataset for image classification ("Imagenet").
 
 ### Training Procedure
 
@@ -104,8 +95,6 @@ Four different batch configurations have been built as well as various optimizat
 ### Testing Data, Factors & Metrics
 
 #### Testing Data
-
-
 
 #### Factors
 
