@@ -28,17 +28,23 @@ Additional module imports:
     data processing, model loading, and batching.
 """
 
-
 import os
-from PIL import Image
-import tensorflow as tf
 
-import typer
-import pandas as pd
 import numpy as np
+import pandas as pd
+import tensorflow as tf
+import tf_keras
+import typer
+from PIL import Image
 
-from mates.config import RAW_DATA_DIR, OUTPUT_DATA_DIR, IMG_SIZE
-from mates.features import create_batches, load_model, load_params, read_data, read_labels
+from mates.config import IMG_SIZE, OUTPUT_DATA_DIR, RAW_DATA_DIR
+from mates.features import (
+    create_batches,
+    load_model,
+    load_params,
+    read_data,
+    read_labels,
+)
 
 app = typer.Typer()
 
@@ -66,7 +72,7 @@ def predict_test(
 
 
 def predict_single(
-    model: tf.keras.Model,
+    model: tf_keras.Model,
     encoding_labels: list,
     image: Image.Image,
 ):
@@ -74,7 +80,7 @@ def predict_single(
 
     # Preprocess image
     image = image.resize((IMG_SIZE, IMG_SIZE))
-    image = tf.keras.preprocessing.image.img_to_array(image)
+    image = tf_keras.preprocessing.image.img_to_array(image)
     image = tf.expand_dims(image, axis=0)
 
     # Make prediction

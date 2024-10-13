@@ -1,21 +1,19 @@
-from loguru import logger
+"""API module for the Mates application."""
+
 import logging
 from contextlib import asynccontextmanager
 from http import HTTPStatus
 from typing import List
+
 import pandas as pd
-
-
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
-from mates.features import load_model
-from mates.config import MODELS_DIR
+from loguru import logger
 from PIL import Image
 
-
+from mates.config import MODELS_DIR, RAW_DATA_DIR
+from mates.features import load_model, read_labels
 from mates.modeling.predict import predict_single
-from mates.features import read_labels
-from mates.config import RAW_DATA_DIR
 
 # Global variable to store models
 models_dict = {}
