@@ -57,5 +57,5 @@ PORT = 5000
 
 
 # Model parameters
-IMG_SIZE = 128
+IMG_SIZE = 224
 INPUT_SHAPE = [None, IMG_SIZE, IMG_SIZE, 3]
