@@ -16,5 +16,5 @@ train:
   monitor: "accuracy"
   patience: 5
 predict:
-  model_name: "mobilenet"
+  model_name: "mobilenet_exp_batch_32"
   batch_size: 32
