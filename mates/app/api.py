@@ -1,4 +1,79 @@
-"""API module for the Mates application."""
+"""
+API module for the Mates application.
+
+This module provides a REST API for dog breed classification using pre-trained models.
+Users can upload images to the API and receive predictions for the dog's breed. The 
+API is built with FastAPI and leverages TensorFlow/Keras models for predictions.
+
+Key Features:
+1. FastAPI Integration: 
+   - Provides an efficient and scalable REST API for real-time predictions and batch 
+     processing of images.
+   
+2. Model Loading and Management: 
+   - Automatically loads all pre-trained models from a specified directory (MODELS_DIR)
+     during the API startup, and stores them in a global dictionary for quick access.
+   
+3. Image Upload and Processing: 
+   - Users can upload dog images in common formats (JPEG, PNG), and the API processes 
+     the image (resizing and scaling) before feeding it into the model for prediction.
+   
+4. Prediction with Pre-trained Models: 
+   - Leverages a fine-tuned MobileNetV3 model for dog breed classification across 
+     over 120 breeds. The predicted breed is returned to the user.
+
+5. Command-line Interface (CLI): 
+   - Additionally, it includes a CLI to batch process test datasets for model 
+     predictions, saving the results as a CSV file for further evaluation.
+
+Dependencies:
+- FastAPI: For building the API and managing requests.
+- Pandas: For handling data outputs and saving results.
+- PIL (Pillow): For image loading and processing.
+- TensorFlow/Keras: For loading pre-trained models and making predictions.
+- Loguru: For structured logging and tracking.
+- Typer: For creating the CLI.
+
+API Workflow:
+1. Model Initialization:
+   - At startup, all `.h5` model files in the MODELS_DIR are loaded into memory and 
+     stored in the `models_dict` dictionary. Labels (dog breeds) associated with 
+     each model are also loaded and stored globally for prediction use.
+   
+2. Image Prediction:
+   - Upon receiving an image via the `/predict` endpoint, the image is preprocessed 
+     (resized to IMG_SIZE, scaled) and passed through the selected pre-trained model 
+     for classification.
+   - The predicted breed label is returned to the client as a JSON response.
+
+3. Error Handling:
+   - If an invalid model name is provided or the uploaded image is corrupt/unsupported, 
+     appropriate error messages are returned using HTTP status codes.
+
+4. Model Listing:
+   - The `/models` endpoint provides a list of all available pre-trained models 
+     for users to select from.
+
+CLI Features:
+- The command-line interface (CLI) allows users to generate predictions on a batch 
+  of test images by specifying a pre-trained model, processing test data, and saving 
+  the results as a CSV file for further analysis.
+
+Key Functions:
+- `predict_test`: 
+   - Loads a specified pre-trained model, processes the test dataset in batches, 
+     generates predictions, and saves the predictions as a CSV file in the output 
+     directory.
+
+- `predict_single`: 
+   - Takes a single image as input, processes it, and returns the predicted dog breed.
+
+API Endpoints:
+- `/`: Root endpoint that returns a welcome message and checks API health.
+- `/models`: Returns a list of all available models for classification.
+- `/predict`: Takes an image and the name of the selected model and returns the 
+  predicted dog breed as a JSON response.
+"""
 
 import logging
 from contextlib import asynccontextmanager
