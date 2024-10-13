@@ -3,6 +3,8 @@ import logging
 from contextlib import asynccontextmanager
 from http import HTTPStatus
 from typing import List
+import pandas as pd
+
 
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
@@ -11,14 +13,20 @@ from mates.config import MODELS_DIR
 from PIL import Image
 
 
+from mates.modeling.predict import predict_single
+from mates.features import read_labels
+from mates.config import RAW_DATA_DIR
+
 # Global variable to store models
 models_dict = {}
+encoding_labels = []
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Loads all model files from MODELS_DIR and adds them to models_dict."""
     global models_dict
+    global encoding_labels
 
     # Load all models from MODELS_DIR
     model_paths = [
@@ -28,12 +36,15 @@ async def lifespan(app: FastAPI):
     ]
 
     for model_name in model_paths:
-        models_dict[model_name] = load_model(model_name)
+        models_dict[model_name] = {"model": load_model(model_name)}
+
+    # Load labels
+    _, encoding_labels = read_labels(RAW_DATA_DIR)
 
     yield
 
-    # Clean up models
     models_dict.clear()
+    encoding_labels = []
 
 
 logger.info(f"Initalizing FastAPI application...")
@@ -58,6 +69,7 @@ async def _index():
     }
     return response
 
+
 @app.get("/models", response_model=List[str], tags=["Models"])
 async def _get_models():
     """Endpoint to list all available models"""
@@ -74,27 +86,27 @@ async def _predict_dog_breed(model_name: str, file: UploadFile = File(...)):
             detail=f"Model {model_name} not found. Please choose from available models."
         )
 
-#     try:
-#         image = Image.open(file.file)
-#     except Exception as e:
-#         raise HTTPException(
-#             status_code=HTTPStatus.BAD_REQUEST,
-#             detail=f"Invalid image format: {e}"
-#         )
+    try:
+        image = Image.open(file.file)
+    except Exception as e:
+        raise HTTPException(
+            status_code=HTTPStatus.BAD_REQUEST,
+            detail=f"Invalid image format: {e}"
+        )
 
-#     # Predict breed using the selected model
-#     try:
-#         prediction = predict_breed(models_dict[model_name], image)
-#         return JSONResponse(
-#             status_code=HTTPStatus.OK,
-#             content={
-#                 "model": model_name,
-#                 "prediction": prediction
-#             }
-#         )
-#     except Exception as e:
-#         logger.error(f"Error during prediction: {e}")
-#         raise HTTPException(
-#             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-#             detail="An error occurred during prediction."
-#         )
+    # Predict breed using the selected model
+    try:
+        prediction = predict_single(models_dict[model_name]["model"], encoding_labels, image)
+        return JSONResponse(
+            status_code=HTTPStatus.OK,
+            content={
+                "model": model_name,
+                "prediction": prediction
+            }
+        )
+    except Exception as e:
+        logger.error(f"Error during prediction: {e}")
+        raise HTTPException(
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
+            detail="An error occurred during prediction."
+        )

@@ -23,25 +23,28 @@ Dependencies:
 - typer: For building the command-line interface.
 
 Additional module imports:
-- EXTERNAL_DATA_DIR from mates.config: Path to the directory where predictions are saved.
+- OUTPUT_DATA_DIR from mates.config: Path to the directory where predictions are saved.
 - create_batches, load_model, load_params, read_data from mates.features: Functions for
     data processing, model loading, and batching.
 """
 
 
 import os
-import pickle as pk
+from PIL import Image
+import tensorflow as tf
 
 import typer
+import pandas as pd
+import numpy as np
 
-from mates.config import EXTERNAL_DATA_DIR
-from mates.features import create_batches, load_model, load_params, read_data
+from mates.config import RAW_DATA_DIR, OUTPUT_DATA_DIR, IMG_SIZE
+from mates.features import create_batches, load_model, load_params, read_data, read_labels
 
 app = typer.Typer()
 
 
 @app.command()
-def predict(
+def predict_test(
 ):
     """
     Function to predict on test data. Loads the model and predicts on the test data.
@@ -53,10 +56,33 @@ def predict(
 
     y_pred = model.predict(test_data)
 
-    os.makedirs(EXTERNAL_DATA_DIR, exist_ok=True)
+    _, encoding_labels = read_labels(RAW_DATA_DIR)
+    y_pred = [encoding_labels[np.argmax(pred)] for pred in y_pred]
 
-    with open(EXTERNAL_DATA_DIR / 'y_test.pkl', 'wb') as f:
-        pk.dump(y_pred, f)
+    os.makedirs(OUTPUT_DATA_DIR, exist_ok=True)
+
+    y_pred_df = pd.DataFrame(y_pred, index=[x.stem for x in x_test], columns=["breed"])
+    y_pred_df.to_csv(OUTPUT_DATA_DIR / "predictions_test.csv")
+
+
+def predict_single(
+    model: tf.keras.Model,
+    encoding_labels: list,
+    image: Image.Image,
+):
+    """Predict function for a single image."""
+
+    # Preprocess image
+    image = image.resize((IMG_SIZE, IMG_SIZE))
+    image = tf.keras.preprocessing.image.img_to_array(image)
+    image = tf.expand_dims(image, axis=0)
+
+    # Make prediction
+    prediction = model.predict(image)
+
+    # Get predicted label
+    predicted_label = encoding_labels[np.argmax(prediction[0])]
+    return predicted_label
 
 
 if __name__ == "__main__":
