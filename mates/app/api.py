@@ -97,7 +97,25 @@ encoding_labels = []
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Loads all model files from MODELS_DIR and adds them to models_dict."""
+    """
+    Context manager for the FastAPI application lifespan.
+
+    During application startup, this function:
+    - Loads all pre-trained models from the specified MODELS_DIR into the global 
+      `models_dict`, making them accessible for predictions.
+    - Loads the corresponding breed labels from the RAW_DATA_DIR.
+
+    At shutdown, it clears the `models_dict` and `encoding_labels` to free up memory.
+
+    Parameters:
+    ----------
+    app : FastAPI
+        The FastAPI application instance.
+
+    Yields:
+    -------
+    None
+    """
     global models_dict
     global encoding_labels
 
@@ -133,8 +151,18 @@ app = FastAPI(
 
 @app.get("/", tags=["General"])
 async def _index():
-    """Root endpoint."""
+    """
+    Root endpoint for API health check.
 
+    Returns a welcome message and confirms that the API is operational.
+    
+    Returns:
+    --------
+    dict: A dictionary containing:
+        - message: HTTP status phrase ("OK").
+        - status-code: HTTP status code (200).
+        - data: A welcome message string.
+    """
     response = {
         "message": HTTPStatus.OK.phrase,
         "status-code": HTTPStatus.OK,
@@ -145,14 +173,45 @@ async def _index():
 
 @app.get("/models", response_model=List[str], tags=["Models"])
 async def _get_models():
-    """Endpoint to list all available models"""
+    """
+    Endpoint to list all available pre-trained models.
+
+    Retrieves the model names currently loaded in memory from the MODELS_DIR.
+
+    Returns:
+    --------
+    List[str]: A list of available model names.
+    """
     return list(models_dict.keys())
 
 
 @app.post("/predict", tags=["Prediction"])
 async def _predict_dog_breed(model_name: str, file: UploadFile = File(...)):
-    """Endpoint to upload an image and get a dog breed prediction"""
+    """
+    Predicts the dog breed from an uploaded image using a specified pre-trained model.
 
+    This endpoint accepts an image file, processes it, and runs it through the 
+    selected model to predict the breed of the dog in the image.
+
+    Parameters:
+    ----------
+    model_name : str
+        The name of the pre-trained model to use for prediction.
+    file : UploadFile
+        The image file to be processed and classified (JPEG/PNG format).
+
+    Returns:
+    --------
+    JSONResponse: 
+        - model: The name of the model used for prediction.
+        - prediction: The predicted dog breed.
+    
+    Raises:
+    -------
+    HTTPException:
+        - 400 BAD REQUEST: If the model is not found or if the image is invalid.
+        - 500 INTERNAL SERVER ERROR: If an error occurs during prediction.
+    """
     if model_name not in models_dict:
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
