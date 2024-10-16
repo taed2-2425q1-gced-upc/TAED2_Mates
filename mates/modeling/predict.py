@@ -115,15 +115,17 @@ def predict_single(
     predicted_label : str
         Predicted dog breed.
     """
+    # Preprocess image: resize, convert to array, normalize and add batch dimension
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
 
-    # Preprocess image: resize, convert to array, and add batch dimension
-    image = image.resize((IMG_SIZE, IMG_SIZE))
-    image = tf_keras.preprocessing.image.img_to_array(image)
-    image = tf.expand_dims(image, axis=0)
-
-    # Make prediction
-    prediction = model.predict(image)
-
+    img = image.resize((IMG_SIZE, IMG_SIZE))
+    img = tf_keras.preprocessing.image.img_to_array(img)
+    img = img / 255.0
+    img = tf.expand_dims(img, axis=0)
+    img = tf.image.convert_image_dtype(img, tf.float32) 
+    
+    prediction = model.predict(img)
     # Get the predicted label (dog breed)
     predicted_label = encoding_labels[np.argmax(prediction[0])]
     return predicted_label
