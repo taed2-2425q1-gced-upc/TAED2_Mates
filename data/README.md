@@ -1,4 +1,6 @@
-Overview
+# Data
+
+## Overview
 
 This directory contains all data related to the project, organized in the following subdirectories:
 
@@ -7,7 +9,7 @@ This directory contains all data related to the project, organized in the follow
 - **raw/**: Contains the raw data directly obtained from the source. No modifications or preprocessing applied.
 
 
-Usage
+## Usage
 
 - Using `make data` to download and prepare the data.
 - Raw data should not be modified manually. Using preprocessing scripts to modify data and save results to the `processed/` folder.

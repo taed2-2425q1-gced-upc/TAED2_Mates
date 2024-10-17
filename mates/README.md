@@ -1,4 +1,6 @@
-Overview
+# Mates
+
+## Overview
 
 This directory contains all the source code for the project. It is structured as a Python package:
 
@@ -15,7 +17,7 @@ This directory contains all the source code for the project. It is structured as
   - **predict.py**: Runs inference on new data using the trained models.
 
 
-Usage
+## Usage
 
 - Import modules from `mates` in your scripts or notebooks.
 - Make sure to update `config.py` with your specific settings before running the code.

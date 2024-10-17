@@ -1,4 +1,6 @@
-Overview
+# Docs
+
+## Overview
 
 This folder contains all the project documentation, including technical details, user guides, and other relevant reports or specifications.
 
@@ -6,7 +8,7 @@ This folder contains all the project documentation, including technical details,
 - Any API references, data dictionaries, and setup guides can also be included here.
 
 
-Usage
+## Usage
 
 - **Reading the Documentation**:
 - **Navigating Sections**: Check the document titles or headings (e.g., `# Installation`, `# Usage`, etc.) to find the information quickly.
