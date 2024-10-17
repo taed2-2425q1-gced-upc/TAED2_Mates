@@ -53,6 +53,7 @@ fastapi = "^0.115.0"
 uvicorn = {extras = ["standard"], version = "^0.31.1"}
 python-multipart = "^0.0.12"
 streamlit = "^1.39.0"
+torchvision = "^0.19.1"
 
 
 [tool.poetry.group.dev.dependencies]
