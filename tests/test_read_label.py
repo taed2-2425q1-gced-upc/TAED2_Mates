@@ -1,7 +1,6 @@
+""" Module to test function read_labels from modeling.features"""
 import pandas as pd
 import pytest
-from unittest import mock
-from pathlib import Path
 from mates.features import read_labels  # Replace with your actual module name
 
 @pytest.fixture

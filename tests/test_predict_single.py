@@ -1,11 +1,13 @@
-import numpy as np
+""" Module to test function predict_single from mates.modeling.predict"""
+
 from pathlib import Path
-from PIL import Image
 import pickle as pk
+import numpy as np
+from PIL import Image
 import pytest
 from mates.modeling.predict import predict_single
 from mates.config import PROCESSED_DATA_DIR
-from mates.features import load_processed_data, load_model
+from mates.features import load_model
 
 @pytest.fixture
 def dbc_model():
@@ -16,7 +18,7 @@ def test_dbc_model(dbc_model):
     """
     Test for dog breed classification model with predict_single function
     """
-    
+
     dog_breeds = [
         "affenpinscher", "afghan_hound", "african_hunting_dog", "airedale", 
         "american_staffordshire_terrier", "appenzeller", "australian_terrier", 
@@ -53,9 +55,9 @@ def test_dbc_model(dbc_model):
         "weimaraner", "welsh_springer_spaniel", "west_highland_white_terrier", 
         "whippet", "wire-haired_fox_terrier", "yorkshire_terrier"
     ]
-    
+
     # Create a mapping
-    dog_breed_mapping = {idx: breed for idx, breed in enumerate(dog_breeds)}
+    dog_breed_mapping = dict(enumerate(dog_breeds))
 
     # Load validation data
     with open(PROCESSED_DATA_DIR / 'y_valid.pkl', 'rb') as f:
@@ -63,7 +65,6 @@ def test_dbc_model(dbc_model):
     with open(PROCESSED_DATA_DIR / 'x_valid.pkl', 'rb') as f:
         x_valid = pk.load(f)
 
-    _, valid_data, _ = load_processed_data(32)
     expected = [dog_breed_mapping[np.argmax(y)] for y in y_valid]
 
     # Initialize counters
@@ -77,7 +78,6 @@ def test_dbc_model(dbc_model):
             # Predict the breed
             predicted_breed = predict_single(dbc_model, dog_breeds, image)
             assert predicted_breed in dog_breeds
-            
             if predicted_breed == expected[i]:
                 correct_predictions += 1
 
