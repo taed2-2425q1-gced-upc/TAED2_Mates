@@ -52,6 +52,7 @@ METRICS_DIR = PROJ_ROOT / "metrics"
 
 REPORTS_DIR = PROJ_ROOT / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
+FIGURES_APP_DIR = FIGURES_DIR / "streamlit"
 
 PORT = 5000
 

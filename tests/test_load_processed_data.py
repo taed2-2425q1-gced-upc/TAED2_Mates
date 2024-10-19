@@ -1,10 +1,10 @@
 """ Module to test function laod_processed_data from features """
 from unittest import mock
 import tensorflow as tf
-from mates.features import PROCESSED_DATA_DIR
+from mates.features.features import PROCESSED_DATA_DIR
 
 # Assume create_batches is defined in your module
-from mates.features import load_processed_data
+from mates.features.features import load_processed_data
 
 @mock.patch('mates.features.create_batches')
 @mock.patch('mates.features.pk.load')

@@ -2,7 +2,7 @@
 from pathlib import Path
 import tensorflow as tf
 import pytest
-from mates.features import process_image  # Adjust the import based on your actual module structure
+from mates.features.features import process_image  # Adjust the import based on your actual module structure
 
 # Mock data
 mock_image_data = tf.constant([[[0, 0, 0]]], dtype=tf.uint8)  # Mock image data for testing

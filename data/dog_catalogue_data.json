@@ -1,0 +1,137 @@
+[
+    {
+        "name": "Affenpinscher",
+        "image_path": "assistance_1.jpg",
+        "description": "The Affenpinscher is a small, toy breed known for its monkey-like expression and curious, feisty personality."
+    },
+    {
+        "name": "Basenji",
+        "image_path": "assistance_2.jpg",
+        "description": "The Basenji is a small, graceful hunting dog known for its quiet nature. It is often referred to as the 'barkless dog.'"
+    },
+    {
+        "name": "Bedlington Terrier",
+        "image_path": "assistance_3.jpg",
+        "description": "The Bedlington Terrier is known for its lamb-like appearance and gentle yet courageous personality. It excels as a companion dog."
+    },
+    {
+        "name": "Bluetick",
+        "image_path": "assistance_4.jpg",
+        "description": "The Bluetick is a breed of coonhound known for its excellent scent-tracking abilities and loyal personality."
+    },
+    {
+        "name": "Borzoi",
+        "image_path": "assistance_5.jpg",
+        "description": "The Borzoi is a graceful and elegant breed known for its speed and gentle disposition. They are independent yet affectionate."
+    },
+    {
+        "name": "Boston Bull",
+        "image_path": "assistance_6.jpg",
+        "description": "The Boston Bull is a compact, sturdy dog known for its friendly and lively personality. It's an excellent companion and family pet."
+    },
+    {
+        "name": "Boxer",
+        "image_path": "assistance_7.jpg",
+        "description": "The Boxer is a muscular and playful breed known for its affectionate and protective nature, making it a great family dog."
+    },
+    {
+        "name": "Cairn",
+        "image_path": "assistance_8.jpg",
+        "description": "The Cairn Terrier is a small, scrappy breed known for its bold personality and strong hunting instincts."
+    },
+    {
+        "name": "Coonhound",
+        "image_path": "assistance_9.jpg",
+        "description": "The Black-and-tan Coonhound is a large, powerful scent hound known for its tracking abilities and even temperament."
+    },
+    {
+        "name": "Deerhound",
+        "image_path": "assistance_10.jpg",
+        "description": "The Scottish Deerhound is a tall and elegant breed known for its endurance and gentle nature, originally bred to hunt deer."
+    },
+    {
+        "name": "Dingo",
+        "image_path": "assistance_11.jpg",
+        "description": "The Dingo is a wild dog found primarily in Australia. It's known for its adaptability and independent nature."
+    },
+    {
+        "name": "Dobermann",
+        "image_path": "assistance_12.jpg",
+        "description": "The Doberman is a sleek and powerful breed known for its loyalty and intelligence, often used in police and military work."
+    },
+    {
+        "name": "Fox Terrier",
+        "image_path": "assistance_13.jpg",
+        "description": "The Wire-haired Fox Terrier is a lively and fearless breed known for its strong hunting instincts and energetic personality."
+    },
+    {
+        "name": "Golden Retriever",
+        "image_path": "assistance_14.jpg",
+        "description": "Golden Retrievers are friendly, tolerant, and devoted. They are excellent family pets and great companions."
+    },
+    {
+        "name": "Hunting Dog",
+        "image_path": "assistance_15.jpg",
+        "description": "The African Hunting Dog, also known as the African Painted Dog, is a highly social and pack-oriented animal known for its hunting prowess."
+    },
+    {
+        "name": "Labrador Retriever",
+        "image_path": "assistance_16.jpg",
+        "description": "The Labrador Retriever is one of the most popular dog breeds. They are friendly, outgoing, and high-spirited companions."
+    },
+    {
+        "name": "Lakeland Terrier",
+        "image_path": "assistance_17.jpg",
+        "description": "The Lakeland Terrier is a sturdy and energetic breed known for its bold nature and excellent watchdog abilities."
+    },
+    {
+        "name": "Maltese Dog",
+        "image_path": "assistance_18.jpg",
+        "description": "The Maltese is a toy breed known for its long, silky white coat and playful, affectionate personality."
+    },
+    {
+        "name": "Norfolk Terrier",
+        "image_path": "assistance_19.jpg",
+        "description": "The Norfolk Terrier is a small but hardy breed known for its fearless nature and friendly disposition."
+    },
+    {
+        "name": "Otterhound",
+        "image_path": "assistance_20.jpg",
+        "description": "The Otterhound is a large, rough-coated breed known for its strong scenting abilities and love for water."
+    },
+    {
+        "name": "Pekinese",
+        "image_path": "assistance_21.jpg",
+        "description": "The Pekinese is a small, regal breed known for its distinctive lion-like appearance and dignified demeanor."
+    },
+    {
+        "name": "Redbone",
+        "image_path": "assistance_22.jpg",
+        "description": "The Redbone Coonhound is a friendly, determined breed known for its excellent tracking abilities and even temperament."
+    },
+    {
+        "name": "Schnauzer",
+        "image_path": "assistance_23.jpg",
+        "description": "The Standard Schnauzer is a medium-sized, robust breed known for its protective nature and distinctive bearded appearance."
+    },
+    {
+        "name": "Sheepdog",
+        "image_path": "assistance_24.jpg",
+        "description": "The Shetland Sheepdog, or Sheltie, is an intelligent, agile, and affectionate breed, making it a great companion and herder."
+    },
+    {
+        "name": "Walker Hound",
+        "image_path": "assistance_25.jpg",
+        "description": "The Walker Hound is a powerful and athletic breed known for its ability to track game over long distances with great stamina."
+    },
+    {
+        "name": "Water Spaniel",
+        "image_path": "assistance_26.jpg",
+        "description": "The Irish Water Spaniel is a curly-coated, lively breed known for its love of water and strong hunting skills."
+    },
+    {
+        "name": "Weimaraner",
+        "image_path": "assistance_27.jpg",
+        "description": "The Weimaraner is a large, sleek, and energetic breed known for its hunting abilities and close companionship with humans."
+    }
+]
