@@ -1,14 +1,17 @@
 """ Module to test function predict_single from mates.modeling.predict"""
 
-from pathlib import Path
 import pickle as pk
-import numpy as np
-from PIL import Image
-import pytest
+from pathlib import Path
 from unittest import mock
-from mates.modeling.predict import predict_single
-from mates.config import PROCESSED_DATA_DIR, IMG_SIZE
+
+import numpy as np
+import pytest
+from PIL import Image
+
+from mates.config import IMG_SIZE, PROCESSED_DATA_DIR
 from mates.features.features import load_model
+from mates.modeling.predict import predict_single
+
 
 @pytest.fixture
 def dbc_model():
@@ -94,7 +97,8 @@ def test_predict_single(dbc_model):
         with Image.open(img_path) as image:
             # Predict the breed
             predicted_breed = predict_single(dbc_model, dog_breeds, image)
-            assert predicted_breed in dog_breeds, f"Predicted breed '{predicted_breed}' is not in dog breeds list."
+            assert predicted_breed in dog_breeds, \
+                f"Predicted breed '{predicted_breed}' is not in dog breeds list."
             if predicted_breed == expected[i]:
                 correct_predictions += 1
 
@@ -104,14 +108,14 @@ def test_predict_single(dbc_model):
 @mock.patch('mates.modeling.predict.Image')
 def test_predict_single_image_conversion(mock_image, dbc_model):
     """
-    Test the `predict_single` function to ensure it converts images to RGB 
+    Test the `predict_single` function to ensure it converts images to RGB
     format when they are not already in that format.
 
     Parameters:
     -----------
     dbc_model : keras.Model
         The pre-trained model for dog breed classification.
-    
+
     Assertions:
     -----------
     - The predicted breed is valid and in the expected list.
@@ -129,4 +133,5 @@ def test_predict_single_image_conversion(mock_image, dbc_model):
     mock_image_instance.convert.assert_called_once_with('RGB')
 
     # Validate the prediction
-    assert predicted_breed in dog_breeds, f"Predicted breed '{predicted_breed}' is not in dog breeds list."
+    assert predicted_breed in dog_breeds, \
+        f"Predicted breed '{predicted_breed}' is not in dog breeds list."

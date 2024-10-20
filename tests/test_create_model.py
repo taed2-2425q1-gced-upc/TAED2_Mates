@@ -9,7 +9,7 @@ def mock_tf_components(mocker):
     """
     Fixture to mock TensorFlow components used in the model creation process.
 
-    This fixture ensures that the tests do not depend on the actual TensorFlow 
+    This fixture ensures that the tests do not depend on the actual TensorFlow
     implementation, allowing for isolated testing of the create_model function.
 
     Parameters
@@ -22,7 +22,7 @@ def mock_tf_components(mocker):
     dict
         A dictionary containing mocked TensorFlow components.
     """
-    mock_sequential = mocker.patch('mates.features.features.tf_keras.Sequential', 
+    mock_sequential = mocker.patch('mates.features.features.tf_keras.Sequential',
                                    new_callable=mock.Mock)
     mock_hub_keras_layer = mocker.patch('mates.features.features.hub.KerasLayer',
                                          new_callable=mock.Mock)
@@ -36,7 +36,7 @@ def mock_tf_components(mocker):
                              new_callable=mock.Mock)
     mock_rmsprop = mocker.patch('mates.features.features.tf_keras.optimizers.RMSprop',
                                 new_callable=mock.Mock)
-    mock_adamw = mocker.patch('mates.features.features.tf_keras.optimizers.AdamW', 
+    mock_adamw = mocker.patch('mates.features.features.tf_keras.optimizers.AdamW',
                                new_callable=mock.Mock)
     mock_categorical_crossentropy = mocker.patch(
         'mates.features.features.tf_keras.losses.CategoricalCrossentropy',
@@ -59,7 +59,7 @@ def test_create_model_rmsprop(mock_tf_components):
     """
     Test the create_model function using the RMSprop optimizer.
 
-    This test verifies that the model is created correctly with the specified 
+    This test verifies that the model is created correctly with the specified
     input shape, output shape, model URL, optimizer, and metrics.
 
     Parameters
@@ -109,7 +109,7 @@ def test_create_model_adam(mock_tf_components):
     """
     Test the create_model function using the Adam optimizer.
 
-    This test checks that the model is created correctly with the specified 
+    This test checks that the model is created correctly with the specified
     parameters, including the Adam optimizer.
 
     Parameters
@@ -159,7 +159,7 @@ def test_create_model_adamw(mock_tf_components):
     """
     Test the create_model function using the AdamW optimizer.
 
-    This test verifies that the model is created correctly with the specified 
+    This test verifies that the model is created correctly with the specified
     parameters, including the AdamW optimizer.
 
     Parameters
@@ -209,7 +209,7 @@ def test_create_model_sgd(mock_tf_components):
     """
     Test the create_model function using the SGD optimizer.
 
-    This test checks that the model is created correctly with the specified 
+    This test checks that the model is created correctly with the specified
     parameters, including the SGD optimizer.
 
     Parameters

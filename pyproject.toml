@@ -77,4 +77,7 @@ pythonpath = "."
 testpaths = "tests"
 addopts = "--junitxml=tests/tests-report.xml --cov=mates --cov-report=html:reports/coverage"
 
+[tool.pylint.'MESSAGES CONTROL']
+disable = ["W0621", "W0613"]
+
 

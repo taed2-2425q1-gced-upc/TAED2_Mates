@@ -1,9 +1,9 @@
-""" Module to test the load_params function from the features module. """
+""" Module to test the load_params function from the utils module. """
 
 from unittest import mock
 import pytest
 import yaml
-from mates.features.utils import load_params  # Adjust the import based on your actual module structure
+from mates.features.utils import load_params
 
 @pytest.fixture
 def patch_file_system_load_params(mocker):
@@ -97,7 +97,8 @@ def test_load_params_yaml_error(mocker):
     # Patch the open function to simulate file reading and raise a YAMLError
     mocker.patch('mates.features.utils.Path', return_value="parameters.yaml")
     mock_open = mocker.patch('builtins.open', new_callable=mock.mock_open)
-    mocker.patch('mates.features.utils.yaml.safe_load', side_effect=yaml.YAMLError("Error loading YAML"))
+    mocker.patch('mates.features.utils.yaml.safe_load', 
+                 side_effect=yaml.YAMLError("Error loading YAML"))
 
     # Call the function with an expected stage
     params = load_params("train")

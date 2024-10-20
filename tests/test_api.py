@@ -20,7 +20,7 @@ def api_client():
 
 
 @pytest.fixture
-def sample_image_file(name = "sample_image_file"):
+def sample_image_file():
     """Fixture to provide a valid image for testing."""
     with open('tests/bit.jpg', 'rb') as f:  # Adjust path as necessary
         image_data = BytesIO(f.read())
