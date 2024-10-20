@@ -20,8 +20,8 @@ stages:
       nfiles: 10222
     - path: mates/modeling/prepare.py
       hash: md5
-      md5: 2ed2a0fd17006e463390a3301fee6aea
-      size: 1380
+      md5: 7552d07d01db7b248cdc86ca04f76d8b
+      size: 1453
       isexec: true
     params:
       params.yaml:
@@ -85,26 +85,26 @@ stages:
       isexec: true
     - path: mates/modeling/train.py
       hash: md5
-      md5: b327ba3040d0c43e588b262f1c005067
-      size: 3185
+      md5: ffa20c1b50a59a1aaf8cd03d7b8cea71
+      size: 4587
       isexec: true
     params:
       params.yaml:
         train.batch_size: 32
-        train.epochs: 15
-        train.experiment_name: batch_32_rmsprop
+        train.epochs: 10
+        train.experiment_name: feture_mobilenet_batch_32
         train.metrics:
         - accuracy
         train.model_name: mobilenet
         train.model_url: 
-          https://kaggle.com/models/google/mobilenet-v2/TensorFlow2/035-128-classification/1
+          https://www.kaggle.com/models/google/mobilenet-v2/TensorFlow2/130-224-feature-vector/2
         train.monitor: val_accuracy
-        train.optimizer: rmsprop
+        train.optimizer: adam
         train.patience: 5
         train.save_model: true
     outs:
     - path: models/
       hash: md5
-      md5: b84bbdbbbbebbdf5fb780100380562d3.dir
-      size: 7990724
+      md5: e2a9da0d270772b9bbfb40a60b074ba8.dir
+      size: 17720056
       nfiles: 1

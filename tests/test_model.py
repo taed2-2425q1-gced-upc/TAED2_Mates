@@ -10,7 +10,7 @@ def dbc_model():
     """
     Load model to test
     """
-    return load_model("mobilenet")
+    return load_model("mobilenet_exp_batch_62")
 
 
 

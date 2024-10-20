@@ -58,10 +58,14 @@ def train(
     """
     params = load_params("train")
 
-    mlflow.set_experiment(params["experiment_name"])
     mlflow.tensorflow.autolog()
+    mlflow.set_experiment(params["experiment_name"])
 
-    with mlflow.start_run():
+    with mlflow.start_run(run_name=f"optimizer_{params['optimizer']}"):
+        mlflow.log_param("optimizer", params["optimizer"])
+        mlflow.log_param("model_url", params["model_url"])
+        mlflow.log_param("batch_size", params["batch_size"])
+        mlflow.log_param("epochs", params["epochs"])
         logger.info("Processing dataset...")
         train_data, valid_data, output_shape = load_processed_data(params["batch_size"])
 
@@ -105,17 +109,17 @@ def train(
 
         # Log additional metrics from the History object
         log = list(history.history.items())
-        for epoch, metrics in enumerate(log):
+        
+        for _, metrics in enumerate(log):
             metric_name = metrics[0]
-            metric_values = metrics[1][0]
-            mlflow.log_metric(f"train_{metric_name}", metric_values, step=epoch)
+            for epoch, metric_values in enumerate(metrics[1]):
+                mlflow.log_metric(metric_name, metric_values, step=epoch)
 
-        # Save the model as a pickle file
         Path("models").mkdir(exist_ok=True)
 
         logger.success("Model training complete.")
         if params["save_model"]:
-            model.save(MODELS_DIR / f"{params['model_name']}.h5")
+            model.save(MODELS_DIR / f"{params['model_name']}_{params['experiment_name']}.h5")
             mlflow.tensorflow.log_model(model, params['model_name'])
 
 

@@ -3,21 +3,17 @@
 #################################################################################
 
 PROJECT_NAME = mates
-PYTHON_VERSION = 3.10
-PYTHON_INTERPRETER = python
+PYTHON_VERSION = 3.11
+PYTHON_INTERPRETER = python$(PYTHON_VERSION)
 
 #################################################################################
 # COMMANDS                                                                      #
 #################################################################################
 
 
-## Install Python Dependencies
-.PHONY: requirements
-requirements:
-	$(PYTHON_INTERPRETER) -m pip install -U pip
-	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
-	
-
+.PHONY: dependencies
+dependencies:
+	poetry update
 
 
 ## Delete all compiled Python files
@@ -26,6 +22,7 @@ clean:
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
 
+
 ## Lint using pylint
 .PHONY: lint
 lint:
@@ -33,30 +30,28 @@ lint:
 	isort --check --diff --profile black mates
 	black --check --config pyproject.toml mates
 
-## Run tests
-.PHONY: test
-test:
-	pytest
-
 ## Format source code with black
 .PHONY: format
 format:
 	black --config pyproject.toml mates
 
 
-
-
-
-
 #################################################################################
 # PROJECT RULES                                                                 #
 #################################################################################
 
+## Run preprocessing
+.PHONY: prepare
+prepare:
+	$(PYTHON_INTERPRETER) -m mates.modeling.prepare
 
-## Make Dataset
-.PHONY: data
-data: requirements
-	$(PYTHON_INTERPRETER) mates/dataset.py
+.PHONY: train
+train:
+	$(PYTHON_INTERPRETER) -m mates.modeling.train
+
+.PHONY: predict
+predict:
+	$(PYTHON_INTERPRETER) -m mates.modeling.predict
 
 
 #################################################################################

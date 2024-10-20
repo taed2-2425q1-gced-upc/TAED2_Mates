@@ -45,7 +45,7 @@ DATA_DIR = PROJ_ROOT / "data"
 RAW_DATA_DIR = DATA_DIR / "raw"
 INTERIM_DATA_DIR = DATA_DIR / "interim"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
-EXTERNAL_DATA_DIR = DATA_DIR / "external"
+OUTPUT_DATA_DIR = DATA_DIR / "output"
 
 MODELS_DIR = PROJ_ROOT / "models"
 METRICS_DIR = PROJ_ROOT / "metrics"
@@ -53,7 +53,9 @@ METRICS_DIR = PROJ_ROOT / "metrics"
 REPORTS_DIR = PROJ_ROOT / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
 
+PORT = 5000
+
 
 # Model parameters
-IMG_SIZE = 128
+IMG_SIZE = 224
 INPUT_SHAPE = [None, IMG_SIZE, IMG_SIZE, 3]

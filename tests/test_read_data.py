@@ -10,7 +10,7 @@ mock_train_data = pd.DataFrame({
     'breed': ['affenpinscher', 'afghan_hound', 'affenpinscher']
 })
 
-mock_image_list = ['img4.jpg', 'img5.jpg', 'img6.jpg']
+mock_image_list = ['img1.jpg', 'img2.jpg', 'img3.jpg']
 
 @pytest.fixture
 def mock_file_operations(mocker):
@@ -30,6 +30,7 @@ def test_read_data_with_training_data(mock_file_operations):
     mock_dir_path = Path('mock/raw_data')  # Mock directory path
 
     x, y, encoding_labels = read_data(dir_path=mock_dir_path, train_data=True)
+
     # Expected values
     expected_x = [mock_dir_path / 'train' / f'{id}.jpg' for id in mock_train_data['id']]
     expected_y = pd.get_dummies(mock_train_data['breed']).to_numpy()
@@ -44,9 +45,9 @@ def test_read_data_with_training_data(mock_file_operations):
     assert y.shape == (3, 2), "Labels should have shape (3, 2) due to two unique breeds"
 
     assert y.tolist() == [
-        [True, False],  # bulldog
-        [False, True],  # bulldog
-        [True, False],  # beagle
+        [True, False],  # affenpinscher
+        [False, True],  # afghan_hound
+        [True, False],  # affenpinscher
     ], "Labels should match the expected one-hot encoding"
 
     assert encoding_labels is not None, \

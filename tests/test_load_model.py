@@ -9,7 +9,7 @@ def test_load_model(mock_load_model):
     """"
     Test function load_model
     """
-    model_name = "mobinet"
+    model_name = "mobilenet_exp_batch_32"
 
     model = load_model(model_name)
 

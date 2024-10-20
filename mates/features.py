@@ -1,27 +1,35 @@
 """
-Module for loading, processing, and managing machine learning data and models.
+Module for handling data processing, model creation, and batch generation.
 
-This module provides a set of commands to load processed data, parameters,
-and models, as well as to create and process images for training machine
-learning models. It utilizes TensorFlow and its Keras API to build
-neural networks with pre-trained models from TensorFlow Hub.
+This module provides various utility functions for loading and preprocessing data, 
+loading models, and generating batches of data for training, validation, and testing 
+purposes. It also includes functionalities for creating and compiling models using 
+pre-trained TensorFlow Hub modules.
 
 Commands available:
-- load_processed_data: Load training and validation data from pickle files and create batches.
-- load_params: Load parameters for a specified stage from a YAML configuration file.
-- load_model: Load a pre-trained model from the models directory.
-- create_model: Build a new model using a specified pre-trained model from TensorFlow Hub.
-- read_data: Load image paths and labels from a specified directory.
-- process_image: Preprocess an image for input into the model.
-- get_label_image: Retrieve the label and processed image for a given image path.
-- create_batches: Generate batches of data for training or validation.
+- load_processed_data: Loads pre-processed training and validation data, then creates 
+  batches for each.
+- load_params: Loads parameters from a YAML configuration file based on the pipeline stage.
+- load_model: Loads a pre-trained model from the specified directory.
+- create_model: Creates a new model with a pre-trained backbone, adds dense layers, and compiles it.
+- read_labels: Reads labels and encodings from a CSV file.
+- read_data: Reads image paths and labels for training or testing data.
+- process_image: Pre-processes images by reading, decoding, resizing, and converting them.
+- create_batches: Generates batches of images and labels for efficient training and evaluation.
 
 Dependencies:
-- TensorFlow
-- TensorFlow Hub
-- Typer
-- Pandas
-- YAML
+- os: For managing file paths and directories.
+- pathlib: For handling paths in a platform-independent way.
+- pickle: For loading serialized datasets.
+- pandas: For handling label data in DataFrame format.
+- tensorflow/keras: For model creation, image processing, and prediction.
+- TensorFlow Hub: For loading pre-trained models.
+- typer: For building the command-line interface (CLI).
+- yaml: For loading configuration parameters from YAML files.
+
+Additional module imports:
+- IMG_SIZE, MODELS_DIR, PROCESSED_DATA_DIR, RAW_DATA_DIR from mates.config: Constants for 
+  model paths, data paths, and image size used across the functions.
 """
 
 import os
@@ -45,7 +53,7 @@ def load_processed_data(
     batch_size: int
 ):
     """
-    Function to load processed data. Loads processed data and creates batches.
+    Function to load processed data and create batches for training and validation.
 
     Parameters
     ----------
@@ -55,9 +63,11 @@ def load_processed_data(
     Returns
     -------
     train_data : tf.data.Dataset
-        Training data.
+        Batched training data.
     valid_data : tf.data.Dataset
-        Validation data.
+        Batched validation data.
+    output_shape : tuple
+        Output shape of the dataset for model configuration.
     """
     with open(PROCESSED_DATA_DIR / 'output_shape.pkl', 'rb') as f:
         output_shape = pk.load(f)
@@ -81,17 +91,17 @@ def load_params(
     stage: str
 ) -> dict:
     """
-    Load parameters from the params.yaml file.
+    Load parameters from the params.yaml configuration file.
 
     Parameters
     ----------
     stage : str
-        Stage of the pipeline.
+        Stage of the pipeline (e.g., 'train', 'predict').
 
     Returns
     -------
     params : dict
-        Parameters for the specified stage.
+        Dictionary of parameters for the specified stage.
     """
     params_path = Path("params.yaml")
 
@@ -110,16 +120,17 @@ def load_model(
     model_name: str
 ):
     """
-    Load a model from the MODELS_DIR directory.
-    
+    Load a pre-trained model from the MODELS_DIR directory.
+
     Parameters
     ----------
     model_name : str
         Name of the model to load.
-        
+
     Returns
     -------
-        model : tf.keras.Model
+    model : tf.keras.Model
+        The loaded model.
     """
     model = tf_keras.models.load_model(MODELS_DIR / f"{model_name}.h5",
                                        custom_objects={'KerasLayer': hub.KerasLayer})
@@ -135,29 +146,25 @@ def create_model(
     metrics: list,
 ):
     """
-    Create a model using a pre-trained model from TensorFlow Hub.
+    Create and compile a model using a pre-trained backbone from TensorFlow Hub.
 
     Parameters
     ----------
     input_shape : list
-        Input shape of the model.
+        Input shape of the model (e.g., [None, 224, 224, 3]).
     output_shape : int
-        Output shape of the model.
+        Output shape (number of classes).
     model_url : str
-        URL of the pre-trained model.
+        URL of the pre-trained model to load from TensorFlow Hub.
     optimizer : str
-        Optimizer to use.
+        Optimizer to use for training (e.g., 'adam', 'sgd').
     metrics : list
-        List of metrics to use.
-    loss_function : tf.keras.losses
-        Loss function to use.
-    activation_function : str
-        Activation function to use.
+        List of metrics to use for model evaluation.
 
     Returns
     -------
     model : tf.keras.Model
-        Compiled model.
+        Compiled Keras model.
     """
     # import ipdb
     # ipdb.set_trace(context=3)
@@ -186,37 +193,62 @@ def create_model(
 
 
 @app.command()
+def read_labels(
+    dir_path: Path,
+):
+    """
+    Read labels from a CSV file and generate encoding labels.
+
+    Parameters
+    ----------
+    dir_path : Path
+        Path to the directory containing the labels CSV file.
+
+    Returns
+    -------
+    labels : pd.DataFrame
+        DataFrame of labels.
+    encoding_labels : list
+        List of unique label encodings (breeds).
+    """
+    labels = pd.read_csv(dir_path / 'labels.csv')
+    encoding_labels = pd.get_dummies(labels['breed']).columns
+
+    return labels, encoding_labels
+
+
+@app.command()
 def read_data(
     dir_path: Path = RAW_DATA_DIR,
     train_data: bool = True,
 ):
     """
-    Load training or test data.
-    Returns image paths, labels (if train_data), and encoding labels (if train_data).
+    Load image paths and labels for either training or testing data.
 
     Parameters
     ----------
     dir_path : Path
         Path to the data directory.
     train_data : bool
-        Whether to load training or test data.
+        Whether to load training data or test data.
 
     Returns
     -------
     x : list
         List of image paths.
     y : list
-        List of labels. None if train_data is False.
+        List of labels (if train_data is True).
     encoding_labels : list
-        List of encoding labels. None if train_data is False.
+        List of encoding labels (if train_data is True).
     """
-
     data_type = 'train' if train_data else 'test'
-    
+    imgs = os.listdir(dir_path / f'{data_type}/')
+
+    x = [dir_path / f'{data_type}/' / f for f in imgs]
+
     if train_data:
-        labels = pd.read_csv(dir_path / 'labels.csv')
+        labels, encoding_labels = read_labels(dir_path)
         y = pd.get_dummies(labels['breed']).to_numpy()
-        x = [dir_path / f'{data_type}/' / f'{id}.jpg' for id in labels['id']]
         encoding_labels = labels['breed'].unique()
     else:
         imgs = os.listdir(dir_path / f'{data_type}/')
@@ -233,19 +265,19 @@ def process_image(
     img_size: int = IMG_SIZE,
 ):
     """
-    Process an image. Read the image, decode it, convert it to float32, and resize it.
+    Pre-process an image by resizing and converting it to a tensor.
 
     Parameters
     ----------
     img_path : Path
-        Path to the image.
+        Path to the image file.
     img_size : int
-        Size of the image.
+        Size to resize the image to.
 
     Returns
     -------
     img : tf.Tensor
-        Processed image.
+        Preprocessed image as a TensorFlow tensor.
     """
     img = tf.io.read_file(img_path)
     img = tf.image.decode_jpeg(img, channels=3)
@@ -258,19 +290,19 @@ def process_image(
 @app.command()
 def get_label_image(img_path: Path, label: int):
     """
-    Get the label and image for a given image path.
+    Fetch the label and image for a given path.
 
     Parameters
     ----------
     img_path : Path
         Path to the image.
     label : int
-        Label for the image.
+        Label corresponding to the image.
 
     Returns
     -------
     img : tf.Tensor
-        Processed image.
+        Processed image tensor.
     """
     return process_image(img_path), label
 
@@ -284,7 +316,7 @@ def create_batches(
     test_data: bool = False,
 ):
     """
-    Create batches of data.
+    Create batches of data for training, validation, or testing.
 
     Parameters
     ----------

@@ -39,10 +39,9 @@ def test_create_model(mock_tf_components):
     Test for create_model function
     """
     # Unpack the mocked components from the fixture
-    components = mock_tf_components # Avoid name conflict
+    components = mock_tf_components
     mock_sequential = components['mock_sequential']
     mock_hub_keras_layer = components['mock_hub_keras_layer']
-    # mock_add = components['mock_add']
     mock_dense = components['mock_dense']
     mock_rmsprop = components['mock_rmsprop']
     mock_categorical_crossentropy = components['mock_categorical_crossentropy']
