@@ -45,7 +45,8 @@ from codecarbon import EmissionsTracker
 from loguru import logger
 
 from mates.config import INPUT_SHAPE, METRICS_DIR, MODELS_DIR
-from mates.features import create_model, load_params, load_processed_data
+from mates.features.features import create_model, load_processed_data
+from mates.features.utils import load_params
 
 app = typer.Typer()
 

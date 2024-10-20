@@ -1,7 +1,7 @@
 """ Module to test create_model function """
 from unittest import mock
 import pytest
-from mates.features import create_model, IMG_SIZE
+from mates.features.features import create_model, IMG_SIZE
 
 @pytest.fixture
 def mock_tf_components(mocker):

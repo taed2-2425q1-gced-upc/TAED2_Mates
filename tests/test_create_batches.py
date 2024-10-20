@@ -1,7 +1,7 @@
 """ Module to test function create_batches from features """
 import tensorflow as tf
 import pytest
-from mates.features import create_batches  # Adjust the import based on your actual module structure
+from mates.features.features import create_batches  # Adjust the import based on your actual module structure
 
 # Mock functions
 def mock_process_image(image):

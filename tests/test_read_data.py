@@ -2,7 +2,7 @@
 from pathlib import Path
 import pytest
 import pandas as pd
-from mates.features import read_data  # Adjust the import based on your actual module structure
+from mates.features.features import read_data  # Adjust the import based on your actual module structure
 
 
 mock_train_data = pd.DataFrame({

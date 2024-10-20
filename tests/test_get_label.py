@@ -2,7 +2,7 @@
 from pathlib import Path
 import tensorflow as tf
 import pytest
-from mates.features import get_label_image
+from mates.features.features import get_label_image
 
 # Mock data
 mock_processed_image = tf.zeros((128, 128, 3), dtype=tf.float32)  # Mock processed image tensor

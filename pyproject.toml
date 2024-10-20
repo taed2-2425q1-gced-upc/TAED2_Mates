@@ -48,11 +48,13 @@ scipy = "^1.9.3"
 pylint = "^3.3.1"
 pyyaml = "^6.0.2"
 ipdb = "^0.13.13"
-deepchecks = {extras = ["vision"], version = "^0.18.1"}
 fastapi = "^0.115.0"
 uvicorn = {extras = ["standard"], version = "^0.31.1"}
 python-multipart = "^0.0.12"
 streamlit = "^1.39.0"
+torchvision = "^0.19.1"
+deepchecks = {extras = ["vision"], version = "^0.18.1"}
+starlette = ">=0.40.0"
 
 
 [tool.poetry.group.dev.dependencies]
