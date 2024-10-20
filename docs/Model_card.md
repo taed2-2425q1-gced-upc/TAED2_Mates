@@ -95,6 +95,7 @@ The two batches are ones using a 32 batch and a 64 batch and the optimizers cons
 
 The chosen combination of batch and optimizer is **Batch 32 using AdamW**, as it is the one with best accuracy.
 
+Moreover, the model has a total of 3965848 parameters, with only 199800 of them being trainable.
 
 ## Evaluation
 
