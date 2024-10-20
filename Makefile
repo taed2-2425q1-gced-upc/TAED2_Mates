@@ -30,6 +30,10 @@ lint:
 	isort --check --diff --profile black mates
 	black --check --config pyproject.toml mates
 
+.PHONY: test
+test:
+	pytest
+
 ## Format source code with black
 .PHONY: format
 format:
