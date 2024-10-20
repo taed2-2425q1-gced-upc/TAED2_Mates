@@ -17,8 +17,6 @@
 The model is [publicly available](https://github.com/tensorflow/models/blob/master/research/object_detection/samples/configs/faster_rcnn_inception_resnet_v2_atrous_oid.config) as part of [TensorFlow Object Detection API](https://github.com/tensorflow/models/tree/master/research/object_detection). The MobileNet V2 feature extractor was trained on ImageNet and fine-tuned with SSD head on [Open Images V4 dataset](https://storage.googleapis.com/openimages/web/index.html), containing 600 classes.
 
 - **Repository**: https://github.com/tensorflow/tfhub.dev/tree/master/assets/docs/google
-- **Paper (opt)**:
-- **Demo (opt)**:
 
 
 ## Uses
@@ -47,13 +45,20 @@ The input ```images``` are expected to have color values in the range [0,1], fol
 
 The output is a batch of feature vectors. For each input image, the feature vector has size ```num_features``` = 1664.
 
-### Downstream Use (opt)
 
 ### Out-of-Scope Use
 
+A different use of this model could be using it for tasks like object detection or image segmentation.
+
 ## Bias, Risks and Limitations
 
+Image classification models are powerful tools but come with challenges. These models can develop biases if the data used to train them is not representative of the general population, or if the algorithms themselves are inherently biased. 
+
+Furthermore, models have limitations such as difficulty generalizing to new data, lack of interpretability, and vulnerability to adversarial attacks. This means that models may not perform well on data that is different from what they were trained on, it can be difficult to understand why a model made a particular decision, and models can be tricked into misclassifying images.
+
 ### Recommendations
+
+To address these issues, it is crucial to use high-quality training data, employ bias reduction techniques, and conduct thorough evaluations of model fairness. Additionally, fostering transparency and collaboration among different disciplines is essential.
 
 ## How to Get Started with the Model
 
@@ -82,7 +87,6 @@ The training set from this data contains the 49.67% of the total data, which are
 
 ### Training Procedure
 
-#### Preprocessing (opt)
 
 #### Training Hyperparameters
 
@@ -91,7 +95,6 @@ The two batches are ones using a 32 batch and a 64 batch and the optimizers cons
 
 The chosen combination of batch and optimizer is **Batch 32 using AdamW**, as it is the one with best accuracy.
 
-#### Speeds, Sizes, Times (opt)
 
 ## Evaluation
 
@@ -131,8 +134,6 @@ The table below, summarizes all the performance metrics considered when evaluati
 |Train loss | 0.1097 | 0.0732| 0.7642 | 0.0414 |
 
 
-## Model Examination (opt)
-
 ## Environmental Impact
 
 The next table shows the results of the environmental metrics avaluated. Again, the focus is on Batch 32.
@@ -150,23 +151,16 @@ The next table shows the results of the environmental metrics avaluated. Again, 
 Carbon emissions can be estimated using the [Machine Learning Impact calculator](https://mlco2.github.io/impact/#compute) presented in [Lacoste et al. (2019)](https://arxiv.org/abs/1910.09700).
 
 - **Hardware Type**:
-- **Hours used**:
-- **Cloud Provider**:
-- **Compute Region**:
-- **Carbon Emitted**: Different experiments have been run and the results regarding the emissions can be seen in the following plot.
-![Carbon emissions](emissions_image.png)
 
-We can see that the experiment with the highest emission is the one using the Adam optimizer.
+CPU count = 8
 
-## Technical Specifications (opt)
+CPU Model: 11th Gen Intel(R) Core(TM) i5-1155G7 @ 2.50GHz
 
-### Model Architecture and Objective
+- **Hours used**: Looking at the table shown in the evaluation summary, we estimate that the Batch 32 used 43.3 minutes. Adding the 38.2 minutes used by the Batch 64 we get that the total used hours are **less than 1.5h**
+- **Cloud Provider**: NaN
+- **Compute Region**: NaN
+- **Carbon Emitted**: 0.390g
 
-### Compute Infrastructure
-
-#### Hardware
-
-#### Software
 
 ## Citation
 
@@ -174,14 +168,15 @@ Kaggle link of the model: https://www.kaggle.com/models/google/mobilenet-v2
 
 Model card template: https://github.com/huggingface/huggingface_hub/blob/main/src/huggingface_hub/templates/modelcard_template.md
 
-### BibTeX
-
-### APA
-
-## Glossary (opt)
-
-## More information (opt)
-
-## Model Card Authors (opt)
 
 ## Model Card Contact
+
+Noa Mediavilla - noa.mediavilla@estudiantat.upc.edu
+
+Matilde Simões - matilde.simoes@estudiantat.upc.edu
+
+Andrea Tomás - andrea.tomas@estudiantat.upc.edu
+
+Maria Tubella - maria.tubella@estudiantat.upc.edu
+
+Juan Pablo Zaldívar - juan.pablo.zaldivar@estudiantat.upc.edu
