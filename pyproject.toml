@@ -70,11 +70,14 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.coverage.run]
-omit = ["mates/modeling/predict.py", "mates/modeling/train.py"]
+omit = ["mates/modeling/train.py", "mates/streamlit.py", "mates/features/gaissa/*", "mates/features/deepchecks.py"]
 
 [tool.pytest.ini_options]
 pythonpath = "."
 testpaths = "tests"
 addopts = "--junitxml=tests/tests-report.xml --cov=mates --cov-report=html:reports/coverage"
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = ["W0621", "W0613"]
 
 
