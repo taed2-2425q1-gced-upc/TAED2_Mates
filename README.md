@@ -173,4 +173,10 @@ This project will not only strengthen our technical proficiency in model fine-tu
 ---
 
 ## Contact
-For any questions or issues regarding this dataset, please contact the dataset maintainer.
+For any questions or issues regarding this dataset, please contact:
+
+- [Noa Mediavilla](mailto:noa.mediavilla@estudiantat.upc.edu)
+- [Andrea Tomás](mailto:andrea.tomas@estudiantat.upc.edu)
+- [Maria Tubellas](mailto:maria.tubella@estudiantat.upc.edu)
+- [Matilde Simoes](mailto:matilde.simoes@estudiantat.upc.edu)
+- [JP. Zaldivar](mailto:juan.pablo.zaldivar@estudiantat.upc.edu)
