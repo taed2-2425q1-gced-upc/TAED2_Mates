@@ -3,7 +3,7 @@ import pickle as pk
 import pytest
 import numpy as np
 from mates.config import PROCESSED_DATA_DIR
-from mates.features import load_model, load_processed_data
+from mates.features.features import load_model, load_processed_data
 
 @pytest.fixture
 def dbc_model():

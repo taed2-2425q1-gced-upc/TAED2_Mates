@@ -43,13 +43,9 @@ import typer
 from PIL import Image
 
 from mates.config import IMG_SIZE, OUTPUT_DATA_DIR, RAW_DATA_DIR
-from mates.features import (
-    create_batches,
-    load_model,
-    load_params,
-    read_data,
-    read_labels,
-)
+from mates.features.utils import load_params
+from mates.features.features import create_batches, load_model, read_data, read_labels
+
 
 app = typer.Typer()
 

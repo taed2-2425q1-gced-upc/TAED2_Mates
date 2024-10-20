@@ -1,7 +1,7 @@
 """ Module to test function load_params from features """
 from unittest import mock
 import pytest
-from mates.features import load_params  # Adjust the import based on your actual module structure
+from mates.features.features import load_params  # Adjust the import based on your actual module structure
 
 @pytest.fixture
 def patch_file_system_load_params(mocker):

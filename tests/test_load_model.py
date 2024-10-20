@@ -1,7 +1,7 @@
 """ Module to test function load_model from features """
 from unittest import mock
 import tf_keras
-from mates.features import load_model, MODELS_DIR
+from mates.features.features import load_model, MODELS_DIR
 
 @mock.patch('mates.features.tf_keras.models.load_model',
             return_value=mock.Mock(spec=tf_keras.Model))

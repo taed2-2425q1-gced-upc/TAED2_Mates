@@ -75,19 +75,17 @@ API Endpoints:
   predicted dog breed as a JSON response.
 """
 
-import logging
 from contextlib import asynccontextmanager
 from http import HTTPStatus
 from typing import List
 
-import pandas as pd
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 from loguru import logger
 from PIL import Image
 
 from mates.config import MODELS_DIR, RAW_DATA_DIR
-from mates.features import load_model, read_labels
+from mates.features.features import load_model, read_labels
 from mates.modeling.predict import predict_single
 
 # Global variable to store models
@@ -138,7 +136,7 @@ async def lifespan(app: FastAPI):
     encoding_labels = []
 
 
-logger.info(f"Initalizing FastAPI application...")
+logger.info("Initalizing FastAPI application...")
 
 # Define application
 app = FastAPI(

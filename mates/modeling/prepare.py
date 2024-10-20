@@ -40,7 +40,8 @@ from loguru import logger
 from sklearn.model_selection import train_test_split
 
 from mates.config import PROCESSED_DATA_DIR
-from mates.features import load_params, read_data
+from mates.features.features import read_data
+from mates.features.utils import load_params
 
 app = typer.Typer()
 
