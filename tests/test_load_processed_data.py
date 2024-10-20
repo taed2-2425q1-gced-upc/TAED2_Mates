@@ -1,17 +1,18 @@
-""" Module to test function laod_processed_data from features """
+""" Module to test the load_processed_data function from features. """
+
 from unittest import mock
 import tensorflow as tf
-from mates.features.features import PROCESSED_DATA_DIR
+from mates.features.features import PROCESSED_DATA_DIR, load_processed_data
 
-# Assume create_batches is defined in your module
-from mates.features.features import load_processed_data
-
-@mock.patch('mates.features.create_batches')
-@mock.patch('mates.features.pk.load')
+@mock.patch('mates.features.features.create_batches')
+@mock.patch('mates.features.features.pk.load')
 @mock.patch('builtins.open', new_callable=mock.mock_open)
-def test_load_processed_data( mock_open, mock_pk_load, mock_create_batches):
-    """"
-    Test for load_processed_data
+def test_load_processed_data(mock_open, mock_pk_load, mock_create_batches):
+    """
+    Test for load_processed_data.
+
+    This test verifies that the load_processed_data function correctly loads
+    processed data and prepares it for training and validation.
     """
     # Sample data to be returned by pk.load
     mock_output_shape = 2  # Example output shape
@@ -29,15 +30,11 @@ def test_load_processed_data( mock_open, mock_pk_load, mock_create_batches):
         mock_y_valid        # Fifth call returns y_valid
     ]
 
-    # Configure mock for pk.load to return values as if they were read from files
-    mock_pk_load.return_value = [mock_output_shape, mock_x_train,
-                                 mock_y_train, mock_x_valid, mock_y_valid]
-
-    # Mock create_batches to return a dummy TensorFlow Dataset
+    # Mock create_batches to return dummy TensorFlow Datasets
     mock_train_data = tf.data.Dataset.from_tensor_slices(
-        (tf.constant([str(x) for x in mock_x_train]), tf.constant(mock_y_train)))
+        (tf.constant(mock_x_train), tf.constant(mock_y_train)))
     mock_valid_data = tf.data.Dataset.from_tensor_slices(
-        (tf.constant([str(x) for x in mock_x_valid]), tf.constant(mock_y_valid)))
+        (tf.constant(mock_x_valid), tf.constant(mock_y_valid)))
     mock_create_batches.side_effect = [mock_train_data, mock_valid_data]
 
     # Call the function under test

@@ -38,6 +38,8 @@ def load_params(
     """
     params_path = Path("params.yaml")
 
+    params = {}
+    
     with open(params_path, "r", encoding='utf-8') as params_file:
         try:
             params = yaml.safe_load(params_file)
