@@ -210,11 +210,6 @@ This dataset has been built using images and annotation from ImageNet for the ta
 
 [ImageNet](https://www.image-net.org/index.php) is an image database organized according to the [WordNet](https://wordnet.princeton.edu/) hierarchy (currently only the nouns), in which each node of the hierarchy is depicted by hundreds and thousands of images. The project, developed by Princeton, has been instrumental in advancing computer vision and deep learning research. More than 14 million images have been hand-annotated by the project to indicate what objects are pictured and in at least one million of the images, bounding boxes are also provided. The data is available for free to researchers for non-commercial use.
 
-### Annotations
-
-#### Annotation process
-
-#### Who are the annotators?
 
 ### Personal and Sensitive Information
 
@@ -265,4 +260,3 @@ khosla@csail.mit.edu)
 
 Dataset card template: https://github.com/huggingface/datasets/blob/main/templates/README_guide.md
 
-### Contributors
