@@ -69,11 +69,16 @@ class_names = detector_output["detection_class_names"]
 
 ## Training Details
 
-### Training Data
-
 The MobileNet V2 feature extractor was trained on [Open Images V4](https://storage.googleapis.com/openimages/web/index.html).
 
 The checkpoint exported into this model was ```mobilenet_v2_1.3_224/mobilenet_v2_1.3_224.ckpt``` downloaded from [MobileNet V2 pre-trained models](https://github.com/tensorflow/models/blob/master/research/slim/nets/mobilenet/README.md). Its weights were originally obtained by training on the ILSVRC-2012-CLS dataset for image classification ("Imagenet").
+
+
+### Training Data
+
+More specifically, this model card has been completed by extracting results from running the model with the data from [Stanford Dogs Dataset](http://vision.stanford.edu/aditya86/ImageNetDogs/).
+
+The training set from this data contains the 49.67% of the total data, which are approximately 10223 images.
 
 ### Training Procedure
 
@@ -81,12 +86,10 @@ The checkpoint exported into this model was ```mobilenet_v2_1.3_224/mobilenet_v2
 
 #### Training Hyperparameters
 
-Four different batch configurations have been built as well as various optimization functions. The resulting combinations are:
+Different batch configurations have been built as well as various optimization functions. 
+The two batches are ones using a 32 batch and a 64 batch and the optimizers considered are *Rmsprop*, *Adam*, *AdamW* and *SGD*.
 
-- ```Batch 32```
-- ```Batch 64```
-- ```Batch 32``` with ```Adam``` optimizer
-- ```Batch 32``` with ```Rmsprop``` optimizer
+The chosen combination of batch and optimizer is **Batch 32 using AdamW**, as it is the one with best accuracy.
 
 #### Speeds, Sizes, Times (opt)
 
@@ -96,7 +99,11 @@ Four different batch configurations have been built as well as various optimizat
 
 #### Testing Data
 
+The data set corresponding to test contains 50.33% of the total images. This means that approximately 10358 images have been used for this part.
+
 #### Factors
+
+The factors taken into account for the model evaluation are *Accuracy* and *Loss*.
 
 #### Metrics
 
@@ -106,43 +113,38 @@ The performance metrics considered are *Train accuracy*, *Train validation accur
 
 ### Results
 
-The Batch 32 Rmsprop configuration appears to strike an optimal balance between accuracy and
-emissions, making it a strong candidate for deployment. In contrast, Batch 64 shows potential for
-slightly better RAM usage but does not offer significant improvements in accuracy, suggesting that
-adjustments to batch size need to be made cautiously based on specific use-case requirements.
-The consistent CPU power consumption across batches indicates that further exploration of GPU
-utilization could enhance performance, particularly if large datasets or complex models are consid-
-ered in future experiments. Given the low emissions and energy metrics, these configurations are
-environmentally sustainable, allowing for their use in scenarios where energy efficiency is paramount.
+Firstly, between the Batch 32 and Batch 64 configurations, we see that, overall, Batch 32 configurations show better results. Because of this, we will do a further comparison just between them.
+
+The Batch 32 AdamW configuration appears to strike an optimal balance between accuracy and
+emissions, making it a strong candidate for deployment. Even though it does not have the best numbers when it comes to RAM power, the difference is so low that can be almost ignored. Given the low emissions and energy metrics, this configuration is environmentally sustainable, allowing for their use in scenarios where energy efficiency is paramount.
 
 #### Summary
 
-The table below, summarizes all the performance metrics considered when evaluating the model.
+The table below, summarizes all the performance metrics considered when evaluating the model. As said above, considering only the different configurations of Batch 32.
 
-| Metric | Batch 32 |Batch 64 | Batch 32 Adam | Batch 32 Rmsprop |
+| Metric | Rmsprop | AdamW | SGD | Adam |
 | ------ | ----- | ----- | ----- | ----- |
-|Train accuracy | 0.28498 | 0.26010| 0.26010 | 0.28861 |
-|Train validation accuracy | 0.39909 | 0.39517| 0.39517 | 0.41669 |
-|Train loss | 3.16361 | 3.33960| 3.33960 | 3.12644 |
-|Train validation loss | 3.16361 | 3.33960| 3.33960 | 3.12644 |
+|Duration (min) | 9.7 | 9.7| 10.2 | 13.7 |
+|Train validation accuracy | 0.8194 | 0.8230| 0.7982 | 0.8236 |
+|Train accuracy | 0.9713| 0.9943| 0.8485 | 0.9993 |
+|Train validation loss | 0.5966 | 0.5694| 0.8626 | 0.5682 |
+|Train loss | 0.1097 | 0.0732| 0.7642 | 0.0414 |
+
 
 ## Model Examination (opt)
 
 ## Environmental Impact
 
-The next table shows the results of the environmental metrics avaluated.
+The next table shows the results of the environmental metrics avaluated. Again, the focus is on Batch 32.
 
-| Metric | Batch 32 |Batch 64 | Batch 32 Adam | Batch 32 Rmsprop |
-| ------ | ----- | ----- | ----- | ----- |
-| Emissions | 0.00023 | 0.00011 | 0.00011 | 0.00025 |
-| Emissions rate | 6.98e-07 | 6.99e-07 | 6.99e-07 | 6.98e-07 |
-| CPU power | 14.0000 | 14.0000 | 14.0000 | 14.0000 |
-| GPU power | 0.00000 | 0.00000 | 0.00000 | 0.00000 |
-| RAM power | 0.46661 | 0.49706 | 0.49706 | 0.45724 |
-| CPU energy | 0.00127 | 0.00064 | 0.00064 | 0.00137 |
-| GPU energy | 0.00000 | 0.00002 | 0.00002 | 0.00004 |
-| RAM energy | 0.00131 | 0.00066 | 0.00066 | 0.00142 |
-| Energy consumed | 2.36840 | 2.35004 | 2.35004 | 2.30601 |
+| Metric            | Rmsprop  | AdamW    | SGD     | Adam    |
+|-------------------|----------|----------|---------|---------|
+| Emissions (kg)     | 0.000391 | 0.000390 | 0.000412| 0.000560|
+| Emissions Rate     | 7.07 × 10⁻⁷ | 7.07 × 10⁻⁷ | 7.07 × 10⁻⁷ | 7.07 × 10⁻⁷ |
+| CPU Power (W)      | 14       | 14       | 14      | 14      |
+| RAM Power (W)      | 0.6395   | 0.6519   | 0.6487  | 0.6556  |
+| Energy Consumed (kWh) | 0.00225 | 0.00224 | 0.00237 | 0.00322 |
+
 
 
 Carbon emissions can be estimated using the [Machine Learning Impact calculator](https://mlco2.github.io/impact/#compute) presented in [Lacoste et al. (2019)](https://arxiv.org/abs/1910.09700).
