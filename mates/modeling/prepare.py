@@ -45,6 +45,7 @@ from mates.features.utils import load_params
 
 app = typer.Typer()
 
+
 @app.command()
 def process_data():
     """
@@ -52,7 +53,7 @@ def process_data():
     performs a train-validation split if required, and saves the processed data.
 
     The function reads parameters from a configuration file, such as whether the data
-    is for training or testing, the size of the validation split, and whether to save 
+    is for training or testing, the size of the validation split, and whether to save
     the processed data.
 
     Parameters
@@ -82,16 +83,16 @@ def process_data():
 
         # Save processed data if specified in the params
         if params["save_processed"]:
-            with open(PROCESSED_DATA_DIR / 'output_shape.pkl', 'wb') as f:
+            with open(PROCESSED_DATA_DIR / "output_shape.pkl", "wb") as f:
                 pk.dump(output_shape, f)
 
-            with open(PROCESSED_DATA_DIR / 'x_train.pkl', 'wb') as f:
+            with open(PROCESSED_DATA_DIR / "x_train.pkl", "wb") as f:
                 pk.dump(x_train, f)
-            with open(PROCESSED_DATA_DIR / 'y_train.pkl', 'wb') as f:
+            with open(PROCESSED_DATA_DIR / "y_train.pkl", "wb") as f:
                 pk.dump(y_train, f)
-            with open(PROCESSED_DATA_DIR / 'x_valid.pkl', 'wb') as f:
+            with open(PROCESSED_DATA_DIR / "x_valid.pkl", "wb") as f:
                 pk.dump(x_val, f)
-            with open(PROCESSED_DATA_DIR / 'y_valid.pkl', 'wb') as f:
+            with open(PROCESSED_DATA_DIR / "y_valid.pkl", "wb") as f:
                 pk.dump(y_val, f)
 
     logger.success("Data processing complete.")

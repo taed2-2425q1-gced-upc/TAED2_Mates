@@ -1,9 +1,12 @@
 """ Module to test the load_params function from the utils module. """
 
 from unittest import mock
+
 import pytest
 import yaml
+
 from mates.features.utils import load_params
+
 
 @pytest.fixture
 def patch_file_system_load_params(mocker):
@@ -20,15 +23,18 @@ def patch_file_system_load_params(mocker):
         A mock object representing the open function to simulate file reading.
     """
     # Patch yaml.safe_load to return predefined parameters for different stages
-    mocker.patch('mates.features.utils.yaml.safe_load',
-                 return_value={
-                     'prepare': {'is_train': True},
-                     'train': {'save_model': True, 'epochs': 15},
-                     'predict': {'model_name': "mobilenet_exp_batch_32", 'batch_size': 32}
-                 })
-    mock_open = mocker.patch('builtins.open', new_callable=mock.mock_open)
-    mocker.patch('mates.features.utils.Path', return_value="parameters.yaml")
+    mocker.patch(
+        "mates.features.utils.yaml.safe_load",
+        return_value={
+            "prepare": {"is_train": True},
+            "train": {"save_model": True, "epochs": 15},
+            "predict": {"model_name": "mobilenet_exp_batch_32", "batch_size": 32},
+        },
+    )
+    mock_open = mocker.patch("builtins.open", new_callable=mock.mock_open)
+    mocker.patch("mates.features.utils.Path", return_value="parameters.yaml")
     return mock_open
+
 
 def test_load_params_train(patch_file_system_load_params):
     """
@@ -44,8 +50,9 @@ def test_load_params_train(patch_file_system_load_params):
     """
     params = load_params("train")
 
-    patch_file_system_load_params.assert_called_once_with("parameters.yaml", "r", encoding='utf-8')
-    assert params == {'save_model': True, 'epochs': 15}
+    patch_file_system_load_params.assert_called_once_with("parameters.yaml", "r", encoding="utf-8")
+    assert params == {"save_model": True, "epochs": 15}
+
 
 def test_load_params_prepare(patch_file_system_load_params):
     """
@@ -61,8 +68,9 @@ def test_load_params_prepare(patch_file_system_load_params):
     """
     params = load_params("prepare")
 
-    patch_file_system_load_params.assert_called_once_with("parameters.yaml", "r", encoding='utf-8')
-    assert params == {'is_train': True}
+    patch_file_system_load_params.assert_called_once_with("parameters.yaml", "r", encoding="utf-8")
+    assert params == {"is_train": True}
+
 
 def test_load_params_predict(patch_file_system_load_params):
     """
@@ -78,8 +86,9 @@ def test_load_params_predict(patch_file_system_load_params):
     """
     params = load_params("predict")
 
-    patch_file_system_load_params.assert_called_once_with("parameters.yaml", "r", encoding='utf-8')
-    assert params == {'model_name': "mobilenet_exp_batch_32", 'batch_size': 32}
+    patch_file_system_load_params.assert_called_once_with("parameters.yaml", "r", encoding="utf-8")
+    assert params == {"model_name": "mobilenet_exp_batch_32", "batch_size": 32}
+
 
 def test_load_params_yaml_error(mocker):
     """
@@ -95,16 +104,17 @@ def test_load_params_yaml_error(mocker):
         The mocker fixture for creating mocks in tests.
     """
     # Patch the open function to simulate file reading and raise a YAMLError
-    mocker.patch('mates.features.utils.Path', return_value="parameters.yaml")
-    mock_open = mocker.patch('builtins.open', new_callable=mock.mock_open)
-    mocker.patch('mates.features.utils.yaml.safe_load', 
-                 side_effect=yaml.YAMLError("Error loading YAML"))
+    mocker.patch("mates.features.utils.Path", return_value="parameters.yaml")
+    mock_open = mocker.patch("builtins.open", new_callable=mock.mock_open)
+    mocker.patch(
+        "mates.features.utils.yaml.safe_load", side_effect=yaml.YAMLError("Error loading YAML")
+    )
 
     # Call the function with an expected stage
     params = load_params("train")
 
     # Verify that the open function was called correctly
-    mock_open.assert_called_once_with("parameters.yaml", "r", encoding='utf-8')
+    mock_open.assert_called_once_with("parameters.yaml", "r", encoding="utf-8")
 
     # Assert that the function returns an empty dict (based on your implementation)
     assert params == {}

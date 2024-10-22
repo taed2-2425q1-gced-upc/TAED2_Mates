@@ -4,13 +4,13 @@ AAA
 
 import io
 import json
+
 import requests
-from PIL import Image
 import streamlit as st
 from loguru import logger
+from PIL import Image
 
-from config import DATA_DIR, FIGURES_APP_DIR
-
+from mates.config import DATA_DIR, FIGURES_APP_DIR
 
 # Define the API URL (modify this to your FastAPI server URL)
 API_URL = "http://localhost:5000/"
@@ -19,6 +19,7 @@ logger.info(f"Initalizing Streamlit app with API URL: {API_URL}")
 # Initialize session state for navigation
 if "page" not in st.session_state:
     st.session_state.page = "Welcome Page"  # Start on the Welcome Page by default
+
 
 # Function to handle page navigation
 def set_page(page_name: str):
@@ -36,6 +37,7 @@ def set_page(page_name: str):
     """
     st.session_state.page = page_name
 
+
 # Sidebar with clickable text links styled as buttons
 st.sidebar.title("Navigation")
 
@@ -50,9 +52,11 @@ if st.sidebar.button("Assistance"):
 
 if st.session_state.page == "Welcome Page":
     st.title("Welcome to the Dog Breed Classification App!")
-    st.write("""
+    st.write(
+        """
     Welcome! This app helps you classify dog breeds using machine learning models.     
-    """)
+    """
+    )
     st.write("Upload a photo, and let's unveil the unique characteristics of our furry friends!")
     st.write("")
 
@@ -69,9 +73,11 @@ if st.session_state.page == "Welcome Page":
 elif st.session_state.page == "Main Page":
     st.title("Dog Breed Classification App")
 
-    st.write("""
+    st.write(
+        """
         Welcome to the Dog Breed Classification App!
-    """)
+    """
+    )
     st.write("""Upload an image of a dog and find its breed using machine learning models.""")
     st.write("")
     st.write("")
@@ -112,15 +118,14 @@ elif st.session_state.page == "Main Page":
     if st.button("Predict") and uploaded_file is not None and selected_model:
         # Prepare the file for the request
         img_bytes = io.BytesIO()
-        image.save(img_bytes, format='JPEG')
+        image.save(img_bytes, format="JPEG")
         img_bytes.seek(0)  # Reset file pointer to the start
 
-         # Make the prediction request to the FastAPI
-        files = {'file': ('dog_image.jpg', img_bytes, 'image/jpeg')}
-        res = requests.post(f"{API_URL}/predict",
-                            params={'model_name': selected_model},
-                            files=files,
-                            timeout=10)
+        # Make the prediction request to the FastAPI
+        files = {"file": ("dog_image.jpg", img_bytes, "image/jpeg")}
+        res = requests.post(
+            f"{API_URL}/predict", params={"model_name": selected_model}, files=files, timeout=10
+        )
 
         if res.status_code == 200:
             prediction = res.json()["prediction"]
@@ -145,25 +150,27 @@ elif st.session_state.page == "Assistance":
     def get_dog_data():
         """
         Get the dog breed data from customized catalogue dictionary.
-        
+
         Returns:
         --------
         list[dict]:
             Dictionary of dog breeds and their corresponding group.
         """
-        with open(DATA_DIR / "dog_catalogue_data.json", 'r', encoding='utf-8') as f:
+        with open(DATA_DIR / "dog_catalogue_data.json", "r", encoding="utf-8") as f:
             return json.load(f)
 
     dog_data = get_dog_data()
     # Breed names for the search dropdown
-    breed_names = [dog['name'] for dog in dog_data]
+    breed_names = [dog["name"] for dog in dog_data]
 
     st.header("Dog Image Gallery")
 
     # Search bar for selecting a dog breed (empty on load with a placeholder)
-    search_term = st.selectbox("Search for a dog breed here!",
-                               [""] + breed_names,
-                               format_func=lambda x: "" if x == "" else x)
+    search_term = st.selectbox(
+        "Search for a dog breed here!",
+        [""] + breed_names,
+        format_func=lambda x: "" if x == "" else x,
+    )
 
     # Display breed information if the user searches for a breed
     if search_term:
@@ -171,10 +178,10 @@ elif st.session_state.page == "Assistance":
         selected_dog = next(dog for dog in dog_data if dog["name"] == search_term)
 
         with st.expander(f"{selected_dog['name']} Information", expanded=True):
-            st.image(selected_dog["image_path"],
-                     caption=selected_dog['name'],
-                     use_column_width=True)
-            st.subheader(selected_dog['name'])
+            st.image(
+                selected_dog["image_path"], caption=selected_dog["name"], use_column_width=True
+            )
+            st.subheader(selected_dog["name"])
             st.write(selected_dog["description"])
 
     st.write("")

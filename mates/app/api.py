@@ -99,7 +99,7 @@ async def lifespan(app: FastAPI):
     Context manager for the FastAPI application lifespan.
 
     During application startup, this function:
-    - Loads all pre-trained models from the specified MODELS_DIR into the global 
+    - Loads all pre-trained models from the specified MODELS_DIR into the global
       `models_dict`, making them accessible for predictions.
     - Loads the corresponding breed labels from the RAW_DATA_DIR.
 
@@ -118,11 +118,7 @@ async def lifespan(app: FastAPI):
     global encoding_labels
 
     # Load all models from MODELS_DIR
-    model_paths = [
-        filename.stem
-        for filename in MODELS_DIR.iterdir()
-        if filename.suffix == ".h5"
-    ]
+    model_paths = [filename.stem for filename in MODELS_DIR.iterdir() if filename.suffix == ".h5"]
 
     for model_name in model_paths:
         models_dict[model_name] = {"model": load_model(model_name)}
@@ -153,7 +149,7 @@ async def _index():
     Root endpoint for API health check.
 
     Returns a welcome message and confirms that the API is operational.
-    
+
     Returns:
     --------
     dict: A dictionary containing:
@@ -188,7 +184,7 @@ async def _predict_dog_breed(model_name: str, file: UploadFile = File(...)):
     """
     Predicts the dog breed from an uploaded image using a specified pre-trained model.
 
-    This endpoint accepts an image file, processes it, and runs it through the 
+    This endpoint accepts an image file, processes it, and runs it through the
     selected model to predict the breed of the dog in the image.
 
     Parameters:
@@ -200,10 +196,10 @@ async def _predict_dog_breed(model_name: str, file: UploadFile = File(...)):
 
     Returns:
     --------
-    JSONResponse: 
+    JSONResponse:
         - model: The name of the model used for prediction.
         - prediction: The predicted dog breed.
-    
+
     Raises:
     -------
     HTTPException:
@@ -213,30 +209,25 @@ async def _predict_dog_breed(model_name: str, file: UploadFile = File(...)):
     if model_name not in models_dict:
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST,
-            detail=f"Model {model_name} not found. Please choose from available models."
+            detail=f"Model {model_name} not found. Please choose from available models.",
         )
 
     try:
         image = Image.open(file.file)
     except Exception as e:
         raise HTTPException(
-            status_code=HTTPStatus.BAD_REQUEST,
-            detail=f"Invalid image format: {e}"
+            status_code=HTTPStatus.BAD_REQUEST, detail=f"Invalid image format: {e}"
         )
 
     # Predict breed using the selected model
     try:
         prediction = predict_single(models_dict[model_name]["model"], encoding_labels, image)
         return JSONResponse(
-            status_code=HTTPStatus.OK,
-            content={
-                "model": model_name,
-                "prediction": prediction
-            }
+            status_code=HTTPStatus.OK, content={"model": model_name, "prediction": prediction}
         )
     except Exception as e:
         logger.error(f"Error during prediction: {e}")
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail="An error occurred during prediction."
+            detail="An error occurred during prediction.",
         )

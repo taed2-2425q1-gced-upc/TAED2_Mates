@@ -1,11 +1,16 @@
 """ Module to test the load_model function from the features module. """
 
 from unittest import mock
-import tf_keras
-from mates.features.features import load_model, MODELS_DIR
 
-@mock.patch('mates.features.features.tf_keras.models.load_model',
-            return_value=mock.Mock(spec=tf_keras.Model))
+import tf_keras
+
+from mates.features.features import MODELS_DIR, load_model
+
+
+@mock.patch(
+    "mates.features.features.tf_keras.models.load_model",
+    return_value=mock.Mock(spec=tf_keras.Model),
+)
 def test_load_model(mock_load_model):
     """
     Test the load_model function.
@@ -25,11 +30,11 @@ def test_load_model(mock_load_model):
     model = load_model(model_name)
 
     # Assert that the returned model is the mocked model
-    assert model is mock_load_model.return_value, \
-        "The returned model should be the mocked model instance"
+    assert (
+        model is mock_load_model.return_value
+    ), "The returned model should be the mocked model instance"
 
     # Assert that the load_model function was called with the correct arguments
     mock_load_model.assert_called_once_with(
-        MODELS_DIR / f"{model_name}.h5",
-        custom_objects={'KerasLayer': mock.ANY}
+        MODELS_DIR / f"{model_name}.h5", custom_objects={"KerasLayer": mock.ANY}
     )

@@ -1,12 +1,12 @@
 """
 Module for training a machine learning model using processed data and tracking emissions.
 
-This module provides a command-line interface (CLI) to load processed data, train a model, 
-and save the model and its metrics. It also tracks CO2 emissions during the training process 
+This module provides a command-line interface (CLI) to load processed data, train a model,
+and save the model and its metrics. It also tracks CO2 emissions during the training process
 using the CodeCarbon library and logs relevant metrics to MLflow for experiment tracking.
 
 Commands available:
-- `train`: Loads processed data, trains the model, tracks emissions, logs metrics to MLflow, 
+- `train`: Loads processed data, trains the model, tracks emissions, logs metrics to MLflow,
   and saves the model if specified in the parameters.
 
 Workflow:
@@ -34,7 +34,6 @@ Additional module imports:
     data, model parameters, and creating models.
 """
 
-
 from pathlib import Path
 
 import mlflow
@@ -52,8 +51,7 @@ app = typer.Typer()
 
 
 @app.command()
-def train(
-):
+def train():
     """
     Function to train a model. Loads processed data, trains a model, and saves the model.
     """
@@ -71,35 +69,39 @@ def train(
         train_data, valid_data, output_shape = load_processed_data(params["batch_size"])
 
         logger.info("Training model...")
-        model = create_model(input_shape=INPUT_SHAPE,
-                             output_shape=output_shape,
-                             model_url=params["model_url"],
-                             optimizer=params["optimizer"],
-                             metrics=params["metrics"]
-                            )
+        model = create_model(
+            input_shape=INPUT_SHAPE,
+            output_shape=output_shape,
+            model_url=params["model_url"],
+            optimizer=params["optimizer"],
+            metrics=params["metrics"],
+        )
 
-        early_stopping = tf_keras.callbacks.EarlyStopping(monitor=params["monitor"],
-                                                          patience=params["patience"])
+        early_stopping = tf_keras.callbacks.EarlyStopping(
+            monitor=params["monitor"], patience=params["patience"]
+        )
 
         out_file = f"{params['model_name']}_{params['experiment_name']}_emissions.csv"
 
         # Track the CO2 emissions of training the model
-        tracker = EmissionsTracker(project_name="Dog_breed_classification_model",
-                                   measure_power_secs=1,
-                                   tracking_mode="process",
-                                   output_dir=METRICS_DIR,
-                                   output_file=out_file,
-                                   on_csv_write="update",
-                                   default_cpu_power=45,
-                                   )
+        tracker = EmissionsTracker(
+            project_name="Dog_breed_classification_model",
+            measure_power_secs=1,
+            tracking_mode="process",
+            output_dir=METRICS_DIR,
+            output_file=out_file,
+            on_csv_write="update",
+            default_cpu_power=45,
+        )
         try:
             tracker.start()
-            history = model.fit(x=train_data,
+            history = model.fit(
+                x=train_data,
                 epochs=params["epochs"],
                 validation_data=valid_data,
                 validation_freq=1,
-                callbacks=[early_stopping]
-                )
+                callbacks=[early_stopping],
+            )
         finally:
             tracker.stop()
 
@@ -110,7 +112,7 @@ def train(
 
         # Log additional metrics from the History object
         log = list(history.history.items())
-        
+
         for _, metrics in enumerate(log):
             metric_name = metrics[0]
             for epoch, metric_values in enumerate(metrics[1]):
@@ -121,7 +123,7 @@ def train(
         logger.success("Model training complete.")
         if params["save_model"]:
             model.save(MODELS_DIR / f"{params['model_name']}_{params['experiment_name']}.h5")
-            mlflow.tensorflow.log_model(model, params['model_name'])
+            mlflow.tensorflow.log_model(model, params["model_name"])
 
 
 if __name__ == "__main__":
