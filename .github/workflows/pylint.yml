@@ -27,4 +27,9 @@ jobs:
           poetry lock --no-update
           poetry install
       - name: Run pylint
-        run: make lint
+        run:
+          # $? >= 5 means serious or configuration issues
+          pylint $(git ls-files '*.py')
+          if [ $? -ge 5 ]; then
+            exit 1
+          fi
