@@ -1,12 +1,12 @@
 """
 Module for generating predictions on test data using a pre-trained model.
 
-This module provides a command-line interface (CLI) to load a pre-trained model, 
-process test data, and generate predictions. The predicted results are saved as a 
+This module provides a command-line interface (CLI) to load a pre-trained model,
+process test data, and generate predictions. The predicted results are saved as a
 CSV file for further analysis or evaluation.
 
 Commands available:
-- predict_test: Loads the pre-trained model and test data, generates predictions, 
+- predict_test: Loads the pre-trained model and test data, generates predictions,
   and saves the predictions to a specified directory.
 
 Workflow:
@@ -27,9 +27,9 @@ Dependencies:
 - PIL (Pillow): For image processing when predicting single images.
 
 Additional module imports:
-- IMG_SIZE, OUTPUT_DATA_DIR, RAW_DATA_DIR from mates.config: Constants for image size 
+- IMG_SIZE, OUTPUT_DATA_DIR, RAW_DATA_DIR from mates.config: Constants for image size
   and paths to data directories.
-- create_batches, load_model, load_params, read_data, read_labels from mates.features: 
+- create_batches, load_model, load_params, read_data, read_labels from mates.features:
   Utility functions for data processing, model loading, parameter fetching, and label encoding.
 """
 
@@ -43,18 +43,16 @@ import typer
 from PIL import Image
 
 from mates.config import IMG_SIZE, OUTPUT_DATA_DIR, RAW_DATA_DIR
-from mates.features.utils import load_params
 from mates.features.features import create_batches, load_model, read_data, read_labels
-
+from mates.features.utils import load_params
 
 app = typer.Typer()
 
 
 @app.command()
-def predict_test(
-):
+def predict_test():
     """
-    Function to predict on test data. Loads the model, processes the test data, and 
+    Function to predict on test data. Loads the model, processes the test data, and
     generates predictions that are saved as a CSV file.
 
     Returns
@@ -94,7 +92,7 @@ def predict_single(
     image: Image.Image,
 ) -> str:
     """
-    Predict function for a single image. Loads and preprocesses the image, 
+    Predict function for a single image. Loads and preprocesses the image,
     then generates a prediction for the corresponding dog breed.
 
     Parameters
@@ -112,15 +110,15 @@ def predict_single(
         Predicted dog breed.
     """
     # Preprocess image: resize, convert to array, normalize and add batch dimension
-    if image.mode != 'RGB':
-        image = image.convert('RGB')
+    if image.mode != "RGB":
+        image = image.convert("RGB")
 
     img = image.resize((IMG_SIZE, IMG_SIZE))
     img = tf_keras.preprocessing.image.img_to_array(img)
     img = img / 255.0
     img = tf.expand_dims(img, axis=0)
-    img = tf.image.convert_image_dtype(img, tf.float32) 
-    
+    img = tf.image.convert_image_dtype(img, tf.float32)
+
     prediction = model.predict(img)
     # Get the predicted label (dog breed)
     predicted_label = encoding_labels[np.argmax(prediction[0])]

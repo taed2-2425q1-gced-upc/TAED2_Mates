@@ -1,8 +1,10 @@
 """ Module to test the create_batches function from the features module. """
 
-import tensorflow as tf
 import pytest
+import tensorflow as tf
+
 from mates.features.features import create_batches
+
 
 # Mock functions for testing
 def mock_process_image(image):
@@ -20,6 +22,7 @@ def mock_process_image(image):
         The processed image path for testing purposes.
     """
     return image
+
 
 def mock_get_label_image(image, label):
     """
@@ -39,6 +42,7 @@ def mock_get_label_image(image, label):
     """
     return image, label
 
+
 # Use the pytest fixture for patching
 @pytest.fixture
 def patch_tf_functions_create_batches(mocker):
@@ -54,8 +58,9 @@ def patch_tf_functions_create_batches(mocker):
         The mocker fixture used to create mocks.
     """
     # Adjust the patch path to reflect the correct import path
-    mocker.patch('mates.features.features.process_image', side_effect=mock_process_image)
-    mocker.patch('mates.features.features.get_label_image', side_effect=mock_get_label_image)
+    mocker.patch("mates.features.features.process_image", side_effect=mock_process_image)
+    mocker.patch("mates.features.features.get_label_image", side_effect=mock_get_label_image)
+
 
 def test_create_batches_with_validation_data(patch_tf_functions_create_batches):
     """
@@ -71,7 +76,7 @@ def test_create_batches_with_validation_data(patch_tf_functions_create_batches):
     """
     # Given
     batch_size = 10
-    x = ['image1.jpg', 'image2.jpg', 'image3.jpg']
+    x = ["image1.jpg", "image2.jpg", "image3.jpg"]
     y = [0, 1, 1]  # Dummy labels for testing
     valid_data = True
 
@@ -83,8 +88,9 @@ def test_create_batches_with_validation_data(patch_tf_functions_create_batches):
     # Since we have 3 items and batch size is 10
     assert data_batch.cardinality().numpy() == 1
     for batch in data_batch:
-        assert batch[0].numpy().tolist() == [b'image1.jpg', b'image2.jpg', b'image3.jpg']
+        assert batch[0].numpy().tolist() == [b"image1.jpg", b"image2.jpg", b"image3.jpg"]
         assert batch[1].numpy().tolist() == [0, 1, 1]
+
 
 def test_create_batches_with_test_data(patch_tf_functions_create_batches):
     """
@@ -100,19 +106,21 @@ def test_create_batches_with_test_data(patch_tf_functions_create_batches):
     """
     # Given
     batch_size = 10
-    x = ['image1.jpg', 'image2.jpg', 'image3.jpg']
+    x = ["image1.jpg", "image2.jpg", "image3.jpg"]
     valid_data = False
     test_data = True
 
     # When
-    data_batch = create_batches(batch_size=batch_size, x=x,
-                                valid_data=valid_data, test_data=test_data)
+    data_batch = create_batches(
+        batch_size=batch_size, x=x, valid_data=valid_data, test_data=test_data
+    )
 
     # Then
     assert isinstance(data_batch, tf.data.Dataset)
     assert data_batch.cardinality().numpy() == 1  # All images in one batch since batch size is 10
     for batch in data_batch:
-        assert batch.numpy().tolist() == [b'image1.jpg', b'image2.jpg', b'image3.jpg']
+        assert batch.numpy().tolist() == [b"image1.jpg", b"image2.jpg", b"image3.jpg"]
+
 
 def test_create_batches_with_training_data(patch_tf_functions_create_batches):
     """
@@ -128,14 +136,15 @@ def test_create_batches_with_training_data(patch_tf_functions_create_batches):
     """
     # Given
     batch_size = 2
-    x = ['image1.jpg', 'image2.jpg', 'image3.jpg']
+    x = ["image1.jpg", "image2.jpg", "image3.jpg"]
     y = [0, 1, 1]  # Dummy labels for testing
     valid_data = False
     test_data = False
 
     # When
-    data_batch = create_batches(batch_size=batch_size, x=x, y=y,
-                                valid_data=valid_data, test_data=test_data)
+    data_batch = create_batches(
+        batch_size=batch_size, x=x, y=y, valid_data=valid_data, test_data=test_data
+    )
 
     # Then
     assert isinstance(data_batch, tf.data.Dataset)

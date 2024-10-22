@@ -1,4 +1,26 @@
+************* Module api
+mates/app/api.py:117:4: W0602: Using global for 'models_dict' but no assignment is done (global-variable-not-assigned)
+mates/app/api.py:118:4: W0603: Using the global statement (global-statement)
+mates/app/api.py:218:8: W0707: Consider explicitly re-raising using 'raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=f'Invalid image format: {e}') from e' (raise-missing-from)
+mates/app/api.py:230:8: W0707: Consider explicitly re-raising using 'raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail='An error occurred during prediction.') from e' (raise-missing-from)
+************* Module mates.features.gaissa.calculator
+mates/features/gaissa/calculator.py:30:0: E0611: No name 'python' in module 'tensorflow' (no-name-in-module)
+************* Module mates.features.gaissa.gaissaplugin
+mates/features/gaissa/gaissaplugin.py:35:4: W0221: Number of parameters was 3 in 'PluginInterface.generate_output' and is now 4 in overriding 'PlugIn.generate_output' method (arguments-differ)
 
---------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+------------------------------------------------------------------
+Your code has been rated at 9.88/10 (previous run: 9.88/10, +0.00)
 
+ERROR: /Users/andrea/Documents/GCED/TAED2_Mates/mates/features/gaissa/calculator.py Imports are incorrectly sorted and/or formatted.
+--- /Users/andrea/Documents/GCED/TAED2_Mates/mates/features/gaissa/calculator.py:before	2024-10-22 15:00:56.888191
++++ /Users/andrea/Documents/GCED/TAED2_Mates/mates/features/gaissa/calculator.py:after	2024-10-22 15:01:10.402276
+@@ -30,7 +30,6 @@
+ from tensorflow.python.framework.convert_to_constants import (
+     convert_variables_to_constants_v2_as_graph,
+ )
+-
+ from tf_keras.models import load_model
+ 
+ 
+All done! ✨ 🍰 ✨
+31 files would be left unchanged.

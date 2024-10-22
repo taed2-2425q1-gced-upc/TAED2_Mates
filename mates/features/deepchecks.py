@@ -30,17 +30,18 @@ Additional module imports:
 
 import numpy as np
 import typer
+from deepchecks.vision import BatchOutputFormat, VisionData
+from deepchecks.vision.suites import full_suite
 from loguru import logger
 from PIL import Image
-from deepchecks.vision.suites import full_suite
-from deepchecks.vision import VisionData, BatchOutputFormat
 from sklearn.model_selection import train_test_split
 
-from mates.config import RAW_DATA_DIR, REPORTS_DIR, IMG_SIZE
+from mates.config import IMG_SIZE, RAW_DATA_DIR, REPORTS_DIR
+from mates.features.features import load_model, read_data
 from mates.features.utils import load_params
-from mates.features.features import read_data, load_model
 
 app = typer.Typer()
+
 
 @app.command()
 def custom_generator(x, y, batch_size: int, target_size: tuple = (IMG_SIZE, IMG_SIZE)):
@@ -134,7 +135,7 @@ def checks():
     """
     Perform a train-validation split and run checks to validate the split.
 
-    This function loads the dataset, splits it into training and validation sets, 
+    This function loads the dataset, splits it into training and validation sets,
     then performs DeepChecks validation on the split and saves the results.
 
     Returns
@@ -145,16 +146,16 @@ def checks():
     params = load_params("prepare")
 
     x, y, _ = read_data(dir_path=RAW_DATA_DIR, train_data=True)
-    x_train, x_val, y_train, y_val = train_test_split(x, y,
-                                                      test_size=params["split_size"],
-                                                      random_state=params["seed"])
+    x_train, x_val, y_train, y_val = train_test_split(
+        x, y, test_size=params["split_size"], random_state=params["seed"]
+    )
 
     train_ds = create_vision_data(
-        custom_generator(x_train, y_train, params["batch_size"]),
-        'classification')
+        custom_generator(x_train, y_train, params["batch_size"]), "classification"
+    )
     val_ds = create_vision_data(
-        custom_generator(x_val, y_val, params["batch_size"]),
-        'classification')
+        custom_generator(x_val, y_val, params["batch_size"]), "classification"
+    )
     run_checks(train_ds, val_ds, REPORTS_DIR / "deepchecks")
 
     logger.success("Checks completed.")
