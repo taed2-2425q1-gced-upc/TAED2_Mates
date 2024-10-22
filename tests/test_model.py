@@ -1,9 +1,13 @@
 """ Module to test the model. """
+
 import pickle as pk
-import pytest
+
 import numpy as np
+import pytest
+
 from mates.config import PROCESSED_DATA_DIR
 from mates.features.features import load_model, load_processed_data
+
 
 @pytest.fixture
 def dbc_model():
@@ -11,6 +15,7 @@ def dbc_model():
     Load the dog breed classification model for testing.
     """
     return load_model("mobilenet_exp_batch_62")
+
 
 def test_dbc_model(dbc_model):
     """
@@ -20,7 +25,7 @@ def test_dbc_model(dbc_model):
     an acceptable accuracy on the validation dataset.
     """
     # Load validation labels
-    with open(PROCESSED_DATA_DIR / 'y_valid.pkl', 'rb') as f:
+    with open(PROCESSED_DATA_DIR / "y_valid.pkl", "rb") as f:
         y_valid = pk.load(f)
     # Load validation data
     _, valid_data, _ = load_processed_data(32)
@@ -29,10 +34,10 @@ def test_dbc_model(dbc_model):
     y_pred = dbc_model.predict(valid_data)
 
     # Assertions on predictions
-    assert all(len(pred) == 120 for pred in y_pred),\
-        "Each prediction should have 120 classes."
-    assert all(round(sum(pred)) == 1 for pred in y_pred),\
-        "Each prediction should be one-hot encoded."
+    assert all(len(pred) == 120 for pred in y_pred), "Each prediction should have 120 classes."
+    assert all(
+        round(sum(pred)) == 1 for pred in y_pred
+    ), "Each prediction should be one-hot encoded."
 
     # Convert predictions and true labels to class indices
     predicted_classes = np.argmax(y_pred, axis=1)

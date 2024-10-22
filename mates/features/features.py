@@ -46,9 +46,7 @@ app = typer.Typer()
 
 
 @app.command()
-def load_processed_data(
-    batch_size: int
-):
+def load_processed_data(batch_size: int):
     """
     Function to load processed data and create batches for training and validation.
 
@@ -66,15 +64,15 @@ def load_processed_data(
     output_shape : tuple
         Output shape of the dataset for model configuration.
     """
-    with open(PROCESSED_DATA_DIR / 'output_shape.pkl', 'rb') as f:
+    with open(PROCESSED_DATA_DIR / "output_shape.pkl", "rb") as f:
         output_shape = pk.load(f)
-    with open(PROCESSED_DATA_DIR / 'x_train.pkl', 'rb') as f:
+    with open(PROCESSED_DATA_DIR / "x_train.pkl", "rb") as f:
         x_train = pk.load(f)
-    with open(PROCESSED_DATA_DIR / 'y_train.pkl', 'rb') as f:
+    with open(PROCESSED_DATA_DIR / "y_train.pkl", "rb") as f:
         y_train = pk.load(f)
-    with open(PROCESSED_DATA_DIR / 'x_valid.pkl', 'rb') as f:
+    with open(PROCESSED_DATA_DIR / "x_valid.pkl", "rb") as f:
         x_valid = pk.load(f)
-    with open(PROCESSED_DATA_DIR / 'y_valid.pkl', 'rb') as f:
+    with open(PROCESSED_DATA_DIR / "y_valid.pkl", "rb") as f:
         y_valid = pk.load(f)
 
     train_data = create_batches(batch_size, x_train, y_train)
@@ -84,9 +82,7 @@ def load_processed_data(
 
 
 @app.command()
-def load_model(
-    model_name: str
-):
+def load_model(model_name: str):
     """
     Load a pre-trained model from the MODELS_DIR directory.
 
@@ -100,8 +96,9 @@ def load_model(
     model : tf.keras.Model
         The loaded model.
     """
-    model = tf_keras.models.load_model(MODELS_DIR / f"{model_name}.h5",
-                                       custom_objects={'KerasLayer': hub.KerasLayer})
+    model = tf_keras.models.load_model(
+        MODELS_DIR / f"{model_name}.h5", custom_objects={"KerasLayer": hub.KerasLayer}
+    )
     return model
 
 
@@ -172,8 +169,8 @@ def read_labels(
     encoding_labels : list
         List of unique label encodings (breeds).
     """
-    labels = pd.read_csv(dir_path / 'labels.csv')
-    encoding_labels = pd.get_dummies(labels['breed']).columns
+    labels = pd.read_csv(dir_path / "labels.csv")
+    encoding_labels = pd.get_dummies(labels["breed"]).columns
 
     return labels, encoding_labels
 
@@ -202,18 +199,18 @@ def read_data(
     encoding_labels : list
         List of encoding labels (if train_data is True).
     """
-    data_type = 'train' if train_data else 'test'
-    imgs = os.listdir(dir_path / f'{data_type}/')
+    data_type = "train" if train_data else "test"
+    imgs = os.listdir(dir_path / f"{data_type}/")
 
-    x = [dir_path / f'{data_type}/' / f for f in imgs]
+    x = [dir_path / f"{data_type}/" / f for f in imgs]
 
     if train_data:
         labels, encoding_labels = read_labels(dir_path)
-        y = pd.get_dummies(labels['breed']).to_numpy()
-        encoding_labels = labels['breed'].unique()
+        y = pd.get_dummies(labels["breed"]).to_numpy()
+        encoding_labels = labels["breed"].unique()
     else:
-        imgs = os.listdir(dir_path / f'{data_type}/')
-        x = [dir_path / f'{data_type}/' / f for f in imgs]
+        imgs = os.listdir(dir_path / f"{data_type}/")
+        x = [dir_path / f"{data_type}/" / f for f in imgs]
         y = None
         encoding_labels = None
 
@@ -250,16 +247,17 @@ def create_batches(
         Batched data.
     """
     if test_data:
-        data = tf.data.Dataset.from_tensor_slices(
-            tf.constant([str(x) for x in x]))
+        data = tf.data.Dataset.from_tensor_slices(tf.constant([str(x) for x in x]))
         data_batch = data.map(process_image).batch(batch_size)
     elif valid_data:
         data = tf.data.Dataset.from_tensor_slices(
-            (tf.constant([str(x) for x in x]), tf.constant(y)))
+            (tf.constant([str(x) for x in x]), tf.constant(y))
+        )
         data_batch = data.map(get_label_image).batch(batch_size)
     else:
         data = tf.data.Dataset.from_tensor_slices(
-            (tf.constant([str(x) for x in x]), tf.constant(y)))
+            (tf.constant([str(x) for x in x]), tf.constant(y))
+        )
         data = data.shuffle(buffer_size=len(x))
         data_batch = data.map(get_label_image).batch(batch_size)
 
@@ -297,21 +295,19 @@ def create_model(
     """
     model = tf_keras.Sequential()
     model.add(hub.KerasLayer(model_url, input_shape=(IMG_SIZE, IMG_SIZE, 3)))
-    model.add(tf_keras.layers.Dense(output_shape, activation='softmax'))
+    model.add(tf_keras.layers.Dense(output_shape, activation="softmax"))
 
-    if optimizer == 'adam':
+    if optimizer == "adam":
         optimizer = tf_keras.optimizers.Adam()
-    elif optimizer == 'sgd':
+    elif optimizer == "sgd":
         optimizer = tf_keras.optimizers.SGD()
-    elif optimizer == 'rmsprop':
+    elif optimizer == "rmsprop":
         optimizer = tf_keras.optimizers.RMSprop()
-    elif optimizer == 'adamw':
+    elif optimizer == "adamw":
         optimizer = tf_keras.optimizers.AdamW()
 
     model.compile(
-        loss=tf_keras.losses.CategoricalCrossentropy(),
-        optimizer=optimizer,
-        metrics=metrics
+        loss=tf_keras.losses.CategoricalCrossentropy(), optimizer=optimizer, metrics=metrics
     )
 
     model.build(input_shape)

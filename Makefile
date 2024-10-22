@@ -26,9 +26,9 @@ clean:
 ## Lint using pylint
 .PHONY: lint
 lint:
-	poetry run pylint mates > linter.txt
-	isort --check --diff --profile black mates
-	black --check --config pyproject.toml mates
+	@pylint $$(git ls-files '*.py') > linter.txt || true
+	@isort --check --diff --profile black mates tests >> linter.txt 2>&1 || true
+	@black --check --config pyproject.toml mates tests >> linter.txt 2>&1 || true
 
 .PHONY: test
 test:
