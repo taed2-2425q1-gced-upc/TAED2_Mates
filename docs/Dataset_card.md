@@ -16,7 +16,6 @@ Secondary:
 
 
 
-- **Leaderboard**:
 - **Point of contact**: aditya86@cs.stanford.edu, bangpeng@cs.stanford.edu
 
 ### Dataset Summary
@@ -166,7 +165,7 @@ All labels are stored in a separate csv, which has the attributes ```image_id```
 
 For instance, this are some lines of such file:
 
-|id|breed|
+|id|class|
 |------|-----|
 |000bec180eb18c7604dcecc8fe0dba07| boston_bull|
 |001513dfcb2ffafc82cccf4d8bbaba97|dingo|
