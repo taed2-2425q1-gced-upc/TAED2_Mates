@@ -35,7 +35,4 @@ jobs:
           
       - name: Run pylint
         run: |
-          for file in $(git ls-files '*.py')
-          do
-            poetry run pylint "$file" --fail-under=6.0;
-          done
+          poetry run pylint $(git ls-files '*.py')
