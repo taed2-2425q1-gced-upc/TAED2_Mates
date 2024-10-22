@@ -30,6 +30,9 @@ jobs:
           
       - name: Install the project dependencies
         run: poetry install
+
+      - name: List directory contents
+        run: ls -R
           
       - name: Run pytest
         run: poetry run pytest
