@@ -7,25 +7,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - name: Install Python
         uses: actions/setup-python@v4
-        # see details (matrix, python-version, python-version-file, etc.)
-        # https://github.com/actions/setup-python
-      - name: Install poetry
-        uses: abatilo/actions-poetry@v2
+        with:
+          python-version: 3.9
+          
+      - name: Install poetry cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.local
+          key: poetry-1.8.3-0
+        
       - name: Setup a local virtual environment (if no poetry.toml file)
         run: |
           poetry config virtualenvs.create true --local
           poetry config virtualenvs.in-project true --local
-      - uses: actions/cache@v3
-        name: Define a cache for the virtual environment based on the dependencies lock file
+          
+      - name: cache deps
+        id: cache-deps
+        uses: actions/cache@v2
         with:
-          path: ./.venv
-          key: venv-${{ hashFiles('poetry.lock') }}
+          path: .venv
+          key: pydeps-${{ hashFiles('**/poetry.lock') }}
+          
       - name: Install the project dependencies
         run: |
           poetry lock --no-update
           poetry install
+          
       - name: Run pylint
         run: |
           pylint $(git ls-files '*.py')
