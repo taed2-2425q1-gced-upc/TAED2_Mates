@@ -13,11 +13,8 @@ jobs:
         with:
           python-version: 3.9
           
-      - name: Install poetry cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.local
-          key: poetry-1.8.3-0
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v2
         
       - name: Setup a local virtual environment (if no poetry.toml file)
         run: |
