@@ -1,6 +1,34 @@
 """
-AAA
+Dog Breed Classification Application
+
+This module implements a Streamlit web application for classifying dog breeds
+using machine learning models. The application interacts with a FastAPI backend
+to fetch available models and make predictions based on uploaded dog images.
+
+Features:
+---------
+- Users can navigate between a welcome page, a main prediction page, and an assistance page.
+- The main page allows users to upload an image of a dog, select a machine learning model,
+  and receive breed predictions.
+- The assistance page provides information about various dog breeds from a custom 
+  catalogue, including images and descriptions.
+
+Dependencies:
+-------------
+- streamlit: For building the web interface.
+- requests: For making API calls to the FastAPI backend.
+- PIL (Pillow): For image handling.
+- loguru: For logging information.
+- json: For loading breed data from a JSON file.
+
+Usage:
+------
+To run the application, use the command:
+    streamlit run <this_script_name.py>
+
+Make sure the FastAPI backend is running at the specified API_URL before using the app.
 """
+
 
 import io
 import json
