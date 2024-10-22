@@ -26,9 +26,9 @@ clean:
 ## Lint using pylint
 .PHONY: lint
 lint:
-	@pylint $$(git ls-files '*.py') > linter.txt || true
-	@isort --check --diff --profile black mates tests >> linter.txt 2>&1 || true
-	@black --check --config pyproject.toml mates tests >> linter.txt 2>&1 || true
+	@pylint $$(git ls-files '*.py')
+	@isort --check --diff --profile black mates tests 
+	@black --check --config pyproject.toml mates tests
 
 .PHONY: test
 test:
