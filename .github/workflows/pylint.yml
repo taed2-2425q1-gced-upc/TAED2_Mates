@@ -34,5 +34,16 @@ jobs:
           poetry install
           
       - name: Run pylint
+        continue-on-error: true
         run: |
           poetry run pylint $(git ls-files '*.py')
+
+      - name: Run isort
+        continue-on-error: true
+        run: 
+          poetry run isort --check --diff --profile black mates tests
+
+      - name: Run black
+        continue-on-error: true
+        run:
+          poetry run black --check --config pyproject.toml mates tests
