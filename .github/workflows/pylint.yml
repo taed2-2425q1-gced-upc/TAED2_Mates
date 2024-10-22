@@ -28,7 +28,6 @@ jobs:
           poetry install
       - name: Run pylint
         run: |
-          # $? >= 5 means serious or configuration issues
           pylint $(git ls-files '*.py')
           if [ $? -ge 5 ]; then
             exit 1
