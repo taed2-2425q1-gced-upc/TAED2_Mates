@@ -1,4 +1,4 @@
-name: Pylint
+name: Linter
 
 on: [push]
 
@@ -27,7 +27,7 @@ jobs:
           poetry lock --no-update
           poetry install
       - name: Run pylint
-        run:
+        run: |
           # $? >= 5 means serious or configuration issues
           pylint $(git ls-files '*.py')
           if [ $? -ge 5 ]; then
