@@ -24,7 +24,7 @@ jobs:
           key: venv-${{ hashFiles('poetry.lock') }}
       - name: Install the project dependencies
         run: |
-        poetry lock --no-update
-        poetry install
-      - name: Run the automated tests (for example)
+          poetry lock --no-update
+          poetry install
+      - name: Run pylint
         run: make lint
