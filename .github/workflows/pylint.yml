@@ -35,7 +35,7 @@ jobs:
           
       - name: Run pylint
         run: |
-          pylint $(git ls-files '*.py')
+          poetry run pylint $(git ls-files '*.py')
           if [ $? -ge 5 ]; then
             exit 1
           fi
