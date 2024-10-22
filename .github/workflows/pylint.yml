@@ -29,9 +29,7 @@ jobs:
           key: pydeps-${{ hashFiles('**/poetry.lock') }}
           
       - name: Install the project dependencies
-        run: |
-          poetry lock --no-update
-          poetry install
+        run: poetry install
           
       - name: Run pylint
         continue-on-error: true
