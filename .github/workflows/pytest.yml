@@ -36,7 +36,7 @@ jobs:
       
       - name: Pull DVC data
         continue-on-error: true
-        run: poetry run dvc pull  # Pull data from DVC
+        run: poetry run dvc pull --force
 
       - name: Run DVC prepare stage
         run: poetry run dvc repro prepare
