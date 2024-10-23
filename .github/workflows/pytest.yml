@@ -38,7 +38,12 @@ jobs:
         continue-on-error: true
         run: poetry run dvc pull --force
 
+      - name: list files
+        continue-on-error: true
+        run: ls -R
+
       - name: Run DVC prepare stage
+        continue-on-error: true
         run: poetry run dvc repro prepare
       
       - name: Run pytest
