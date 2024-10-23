@@ -30,9 +30,9 @@ jobs:
           
       - name: Install the project dependencies
         run: poetry install
-
-      - name: List directory contents
-        run: ls -R
-          
+        
+      - name: Run prepare for tests
+        run: python -m mates.modeling.prepare
+        
       - name: Run pytest
         run: poetry run pytest
