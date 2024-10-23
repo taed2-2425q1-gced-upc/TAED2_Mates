@@ -36,7 +36,7 @@ jobs:
       
       - name: Pull DVC data
         continue-on-error: true
-        run: poetry run dvc pull --force
+        run: poetry run dvc pull -r origin
 
       - name: list files
         continue-on-error: true
