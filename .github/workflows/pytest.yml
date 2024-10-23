@@ -35,6 +35,7 @@ jobs:
         run: poetry add dvc
       
       - name: Pull DVC data
+        continue-on-error: true
         run: poetry run dvc pull  # Pull data from DVC
 
       - name: Run DVC prepare stage
