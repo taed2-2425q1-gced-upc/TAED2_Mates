@@ -202,12 +202,11 @@ def read_data(
     data_type = "train" if train_data else "test"
     imgs = os.listdir(dir_path / f"{data_type}/")
 
-    x = [dir_path / f"{data_type}/" / f for f in imgs]
-
     if train_data:
         labels, encoding_labels = read_labels(dir_path)
         y = pd.get_dummies(labels["breed"]).to_numpy()
-        encoding_labels = labels["breed"].unique()
+        x = [dir_path / f'{data_type}/' / f'{id}.jpg' for id in labels['id']]
+        encoding_labels = labels['breed'].unique()
     else:
         imgs = os.listdir(dir_path / f"{data_type}/")
         x = [dir_path / f"{data_type}/" / f for f in imgs]
