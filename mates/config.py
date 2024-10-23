@@ -54,8 +54,9 @@ REPORTS_DIR = PROJ_ROOT / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
 FIGURES_APP_DIR = FIGURES_DIR / "streamlit"
 
-PORT = 5000
+TEST_DIR = PROJ_ROOT / "tests"
 
+PORT = 5000
 
 # Model parameters
 IMG_SIZE = 224
