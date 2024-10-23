@@ -33,8 +33,7 @@ jobs:
           
       - name: Run pylint
         continue-on-error: true
-        run: |
-          poetry run pylint $(git ls-files '*.py')
+        run: poetry run pylint $(git ls-files '*.py')
 
       - name: Run isort
         continue-on-error: true
