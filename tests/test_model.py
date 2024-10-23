@@ -4,6 +4,7 @@ import pickle as pk
 
 import numpy as np
 import pytest
+import os
 
 from mates.config import PROCESSED_DATA_DIR
 from mates.features.features import load_model, load_processed_data
