@@ -33,25 +33,6 @@ jobs:
 
       - name: Install DVC
         run: poetry add dvc
-
-      - name: Connect to DVC
-        run: | 
-          poetry run dvc remote add origin https://dagshub.com/0J0P0/TAED2_Mates.dvc
-          poetry run dvc remote modify origin --local auth basic 
-          poetry run dvc remote modify origin --local user AndreaTomas00 
-          poetry run dvc remote modify origin --local password 70c01d5c00deb627439ed8c9cc864078879e47f5
-      
-      - name: Pull DVC data
-        continue-on-error: true
-        run: poetry run dvc pull -r origin
-
-      - name: list files
-        continue-on-error: true
-        run: ls -R
-
-      - name: Run DVC prepare stage
-        continue-on-error: true
-        run: poetry run dvc repro prepare
       
       - name: Run pytest
         run: poetry run pytest
