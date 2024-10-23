@@ -21,7 +21,7 @@ jobs:
           poetry config virtualenvs.create true --local
           poetry config virtualenvs.in-project true --local
           
-      - name: cache deps
+      - name: Cache deps
         id: cache-deps
         uses: actions/cache@v2
         with:
@@ -30,9 +30,15 @@ jobs:
           
       - name: Install the project dependencies
         run: poetry install
-        
-      - name: Run prepare for tests
-        run: python -m mates.modeling.prepare
-        
+
+      - name: Install DVC
+        run: poetry add dvc
+      
+      - name: Pull DVC data
+        run: poetry run dvc pull  # Pull data from DVC
+
+      - name: Run DVC prepare stage
+        run: poetry run dvc repro prepare
+      
       - name: Run pytest
         run: poetry run pytest
