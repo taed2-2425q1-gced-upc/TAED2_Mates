@@ -36,10 +36,10 @@ jobs:
 
       - name: Connect to DVC
         run: | 
-          dvc remote add origin https://dagshub.com/0J0P0/TAED2_Mates.dvc
-          dvc remote modify origin --local auth basic 
-          dvc remote modify origin --local user AndreaTomas00 
-          dvc remote modify origin --local password 70c01d5c00deb627439ed8c9cc864078879e47f5
+          poetry run dvc remote add origin https://dagshub.com/0J0P0/TAED2_Mates.dvc
+          poetry run dvc remote modify origin --local auth basic 
+          poetry run dvc remote modify origin --local user AndreaTomas00 
+          poetry run dvc remote modify origin --local password 70c01d5c00deb627439ed8c9cc864078879e47f5
       
       - name: Pull DVC data
         continue-on-error: true
