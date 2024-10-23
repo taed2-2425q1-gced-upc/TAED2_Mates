@@ -38,7 +38,7 @@ import streamlit as st
 from loguru import logger
 from PIL import Image
 
-from mates.config import DATA_DIR, FIGURES_APP_DIR
+from config import DATA_DIR, FIGURES_APP_DIR
 
 # Define the API URL (modify this to your FastAPI server URL)
 API_URL = "http://localhost:5000/"
@@ -152,7 +152,7 @@ elif st.session_state.page == "Main Page":
         # Make the prediction request to the FastAPI
         files = {"file": ("dog_image.jpg", img_bytes, "image/jpeg")}
         res = requests.post(
-            f"{API_URL}/predict", params={"model_name": selected_model}, files=files, timeout=10
+            f"{API_URL}predict", params={"model_name": selected_model}, files=files, timeout=10
         )
 
         if res.status_code == 200:
@@ -207,7 +207,9 @@ elif st.session_state.page == "Assistance":
 
         with st.expander(f"{selected_dog['name']} Information", expanded=True):
             st.image(
-                selected_dog["image_path"], caption=selected_dog["name"], use_column_width=True
+                str(FIGURES_APP_DIR / selected_dog["image_path"]),
+                caption=selected_dog["name"],
+                use_column_width=True
             )
             st.subheader(selected_dog["name"])
             st.write(selected_dog["description"])
