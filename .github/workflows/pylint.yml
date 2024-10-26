@@ -1,0 +1,46 @@
+name: Linter
+
+on: [push]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+          
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v2
+        
+      - name: Setup a local virtual environment (if no poetry.toml file)
+        run: |
+          poetry config virtualenvs.create true --local
+          poetry config virtualenvs.in-project true --local
+          
+      - name: cache deps
+        id: cache-deps
+        uses: actions/cache@v2
+        with:
+          path: .venv
+          key: pydeps-${{ hashFiles('**/poetry.lock') }}
+          
+      - name: Install the project dependencies
+        run: poetry install
+          
+      - name: Run pylint
+        continue-on-error: true
+        run: poetry run pylint $(git ls-files '*.py')
+
+      - name: Run isort
+        continue-on-error: true
+        run: 
+          poetry run isort --check --diff --profile black mates tests
+
+      - name: Run black
+        continue-on-error: true
+        run:
+          poetry run black --check --config pyproject.toml mates tests

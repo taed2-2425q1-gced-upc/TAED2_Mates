@@ -1,135 +1,102 @@
-import os
-import typer
-import pandas as pd
-import tensorflow as tf
-from pathlib import Path
+"""
+Data Preparation Module
+
+This module provides functionality to prepare data for machine learning tasks such as 
+training and validation. It processes raw image data, performs train-validation splits, 
+and saves the processed datasets for further use. 
+
+Key Features:
+- Configurable data preparation: The parameters, such as train/test mode, validation split size, 
+  and random seed, are loaded from a YAML configuration file.
+- Train-validation split: For training datasets, the module splits the data into training and 
+  validation sets, ensuring proper data separation for model training.
+- Data serialization: Processed datasets, including training, validation, and output shape, 
+  are saved as pickle files for easy reuse without having to reprocess raw data each time.
+
+Workflow:
+1. Load preparation parameters from a configuration file.
+2. Read the raw image data and corresponding labels from the dataset.
+3. If preparing training data:
+   - Split the dataset into training and validation sets based on the configuration.
+   - Save the split datasets and encoding labels.
+4. Log the progress and results of the data preparation.
+
+The module uses the following dependencies:
+- `pickle`: For saving and loading processed datasets.
+- `typer`: For providing a command-line interface (CLI) to execute the data preparation process.
+- `loguru`: For logging information, warnings, and errors during data processing.
+- `sklearn.model_selection.train_test_split`: For splitting data into training and validation sets.
+
+External module imports:
+- `PROCESSED_DATA_DIR` from mates.config: The directory where processed data is saved.
+- `load_params`, `read_data` from mates.features: Functions for loading configuration parameters
+    and reading raw data.
+"""
+
 import pickle as pk
+
+import typer
+from loguru import logger
 from sklearn.model_selection import train_test_split
 
-from mates.config import IMG_SIZE, RAW_DATA_DIR, BATCH_SIZE, PROCESSED_DATA_DIR
+from mates.config import PROCESSED_DATA_DIR
+from mates.features.features import read_data
+from mates.features.utils import load_params
 
 app = typer.Typer()
 
 
 @app.command()
-def read_data(
-    dir_path: Path = RAW_DATA_DIR,
-    train_data: bool = True,
-):
+def process_data():
     """
-    Load training or test data.
-    Returns image paths, labels (if train_data), and encoding labels (if train_data).
+    Process and prepare data for training or validation. This function reads raw data,
+    performs a train-validation split if required, and saves the processed data.
+
+    The function reads parameters from a configuration file, such as whether the data
+    is for training or testing, the size of the validation split, and whether to save
+    the processed data.
 
     Parameters
     ----------
-    dir_path : Path
-        Path to the data directory.
-    train_data : bool
-        Whether to load training or test data.
+    None
 
     Returns
     -------
-    X : list
-        List of image paths.
-    y : list
-        List of labels. None if train_data is False.
-    encoding_labels : list
-        List of encoding labels. None if train_data is False.
+    None
     """
-    
-    data_type = 'train' if train_data else 'test'
-    imgs = os.listdir(dir_path / f'{data_type}/')
-    
-    X = [dir_path / f'{data_type}/' / f for f in imgs]
-    
-    if train_data:
-        labels = pd.read_csv(dir_path / 'labels.csv')
-        y = pd.get_dummies(labels['breed']).to_numpy()
-        encoding_labels = labels['breed'].unique()
-    else:
-        y = None
-        encoding_labels = None
-    
-    return X, y, encoding_labels
+    # Load preparation parameters from the config
+    params = load_params("prepare")
 
+    logger.info("Processing data...")
 
-@app.command()
-def process_image(
-    img_path: Path,
-    img_size: int = IMG_SIZE,
-):
-    """
-    """
+    # Read raw data (for training or testing based on params)
+    x, y, encoding_labels = read_data(train_data=params["is_train"])
 
-    img = tf.io.read_file(img_path)
-    img = tf.image.decode_jpeg(img, channels=3)
-    img = tf.image.convert_image_dtype(img, tf.float32)
-    img = tf.image.resize(img, size=[img_size, img_size])
-    
-    return img
-
-
-@app.command()
-def get_label_image(img_path, label):
-    """
-    """
-    
-    return process_image(img_path), label
-
-
-@app.command()
-def create_batches(
-    X: list,
-    y: list = None,
-    batch_size: int = BATCH_SIZE,
-    valid_data: bool = False,
-    test_data: bool = False,
-):
-    """
-    """
-    
-    if test_data:
-        data = tf.data.Dataset.from_tensor_slices(tf.constant([str(x) for x in X]))
-        data_batch = data.map(process_image).batch(batch_size)
-    elif valid_data:
-        data = tf.data.Dataset.from_tensor_slices((tf.constant([str(x) for x in X]), tf.constant(y)))
-        data_batch = data.map(get_label_image).batch(batch_size)
-    else:
-        data = tf.data.Dataset.from_tensor_slices((tf.constant([str(x) for x in X]), tf.constant(y)))
-        data = data.shuffle(buffer_size=len(X))
-        data_batch = data.map(get_label_image).batch(batch_size)
-    
-    return data_batch
-
-
-@app.command()
-def process_data(
-    is_train: bool = True,
-    split_size: float = 0.3,
-    seed: int = 42,
-    save_processed: bool = True,
-): 
-    """
-    """
-
-    X, y, encoding_labels = read_data(is_train)
-    
-    if is_train:
+    # If training data is being processed
+    if params["is_train"]:
         output_shape = len(encoding_labels)
-        X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=split_size, random_state=seed)
 
-        train_data = create_batches(X_train, y_train)
-        valid_data = create_batches(X_val, y_val, valid_data=True)
+        # Perform train-validation split
+        x_train, x_val, y_train, y_val = train_test_split(
+            x, y, test_size=params["split_size"], random_state=params["seed"]
+        )
 
-        if save_processed:
-            with open(PROCESSED_DATA_DIR / 'train_data.pkl', 'wb') as f:
-                pk.dump(train_data, f)
-            with open(PROCESSED_DATA_DIR / 'valid_data.pkl', 'wb') as f:
-                pk.dump(valid_data, f)
-            with open(PROCESSED_DATA_DIR / 'output_shape.pkl', 'wb') as f:
+        # Save processed data if specified in the params
+        if params["save_processed"]:
+            with open(PROCESSED_DATA_DIR / "output_shape.pkl", "wb") as f:
                 pk.dump(output_shape, f)
 
-        return train_data, valid_data, output_shape
+            with open(PROCESSED_DATA_DIR / "x_train.pkl", "wb") as f:
+                pk.dump(x_train, f)
+            with open(PROCESSED_DATA_DIR / "y_train.pkl", "wb") as f:
+                pk.dump(y_train, f)
+            with open(PROCESSED_DATA_DIR / "x_valid.pkl", "wb") as f:
+                pk.dump(x_val, f)
+            with open(PROCESSED_DATA_DIR / "y_valid.pkl", "wb") as f:
+                pk.dump(y_val, f)
 
-    test_data = create_batches(X, y)
-    return test_data, None, None
+    logger.success("Data processing complete.")
+
+
+if __name__ == "__main__":
+    process_data()

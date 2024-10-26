@@ -1,3 +1,5 @@
-/train_data.pkl
-/valid_data.pkl
 /output_shape.pkl
+/X_train.pkl
+/y_train.pkl
+/X_valid.pkl
+/y_valid.pkl

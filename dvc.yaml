@@ -1,17 +1,41 @@
 stages:
   prepare:
-    cmd: python -m mates.modeling.prepare.py
+    cmd: python -m mates.modeling.prepare
     deps:
     - data/raw/labels.csv
     - data/raw/test
     - data/raw/train
-    - modeling/prepare.py
+    - mates/modeling/prepare.py
     params:
     - prepare.is_train
     - prepare.save_processed
     - prepare.seed
     - prepare.split_size
     outs:
+    - data/processed/X_train.pkl
+    - data/processed/X_valid.pkl
     - data/processed/output_shape.pkl
-    - data/processed/train_data.pkl
-    - data/processed/valid_data.pkl
+    - data/processed/y_train.pkl
+    - data/processed/y_valid.pkl
+  train:
+    cmd: python -m mates.modeling.train
+    deps:
+    - data/processed/X_train.pkl
+    - data/processed/X_valid.pkl
+    - data/processed/output_shape.pkl
+    - data/processed/y_train.pkl
+    - data/processed/y_valid.pkl
+    - mates/modeling/train.py
+    params:
+    - train.batch_size
+    - train.epochs
+    - train.experiment_name
+    - train.metrics
+    - train.model_name
+    - train.model_url
+    - train.monitor
+    - train.optimizer
+    - train.patience
+    - train.save_model
+    outs:
+    - models/

@@ -60,6 +60,7 @@ Furthermore, models have limitations such as difficulty generalizing to new data
 
 To address these issues, it is crucial to use high-quality training data, employ bias reduction techniques, and conduct thorough evaluations of model fairness. Additionally, fostering transparency and collaboration among different disciplines is essential.
 
+
 ## How to Get Started with the Model
 
 Use the code below to get started with the model.
@@ -96,6 +97,7 @@ The two batches are ones using a 32 batch and a 64 batch and the optimizers cons
 The chosen combination of batch and optimizer is **Batch 32 using AdamW**, as it is the one with best accuracy.
 
 Moreover, the model has a total of 3965848 parameters, with only 199800 of them being trainable.
+
 
 ## Evaluation
 
@@ -147,8 +149,6 @@ The next table shows the results of the environmental metrics avaluated. Again, 
 | RAM Power (W)      | 0.6395   | 0.6519   | 0.6487  | 0.6556  |
 | Energy Consumed (kWh) | 0.00225 | 0.00224 | 0.00237 | 0.00322 |
 
-
-
 Carbon emissions can be estimated using the [Machine Learning Impact calculator](https://mlco2.github.io/impact/#compute) presented in [Lacoste et al. (2019)](https://arxiv.org/abs/1910.09700).
 
 - **Hardware Type**:
@@ -164,6 +164,7 @@ CPU Model: 11th Gen Intel(R) Core(TM) i5-1155G7 @ 2.50GHz
 
 
 ## Citation
+
 
 Kaggle link of the model: https://www.kaggle.com/models/google/mobilenet-v2
 
@@ -181,3 +182,4 @@ Andrea Tomás - andrea.tomas@estudiantat.upc.edu
 Maria Tubella - maria.tubella@estudiantat.upc.edu
 
 Juan Pablo Zaldívar - juan.pablo.zaldivar@estudiantat.upc.edu
+
