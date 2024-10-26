@@ -176,7 +176,7 @@ For instance, this are some lines of such file:
 
 On the other hand, this is an example of an image that could be the one shown in the first entrance of the csv. It is an image of a *Boston Bull*:
 
-![Chihuahua](example_image2.jpg)
+![Boston bull](..reports/figures/example_image2.jpg)
 
 Each image has a filename that is its unique ```id```. 
 
