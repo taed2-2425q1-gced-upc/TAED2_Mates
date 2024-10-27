@@ -24,7 +24,24 @@ The Stanford Dogs dataset contains images of 120 breeds of dogs from around the 
 
 ### Supported Tasks and Leaderboards
 
-This dataset can be used in various models which perform an image classification task. It is important to mention that it was found in Kaggle's [Playground Prediction Competition](https://www.kaggle.com/competitions/dog-breed-identification/overview), which was held from September 29th 2017 to February 28th 2018. 7,525 entrants, 1,405 participants, 1,280 teams and 8,708 submission are some of the most relevant details of this competition as well as the models used: ```mobilenet_v2``` from Google and ```resent_50``` from TensorFlow. 
+The Stanford Dogs Dataset is primarily designed for fine-grained image classification tasks, specifically aimed at dog breed recognition. Below are the key supported tasks associated with this dataset:
+
+- **Dog Breed Classification**: The primary task is to classify images into one of the 120 dog breeds. This involves identifying the specific breed of a dog based on its visual features.
+  
+- **Fine-Grained Image Categorization**: Beyond general classification, the dataset supports the challenge of fine-grained categorization, where models must distinguish between visually similar breeds.
+
+- **Transfer Learning Benchmarking**: The dataset serves as a benchmark for evaluating the effectiveness of transfer learning techniques, particularly for models pre-trained on large datasets like ImageNet.
+
+#### Leaderboards
+
+The Stanford Dogs Dataset is often used in competitions and benchmarks to encourage advancements in model performance. Participants can submit their model predictions and compete for the best accuracy scores on the following leaderboards:
+
+- **Kaggle Competitions**: Various competitions hosted on Kaggle utilize the Stanford Dogs Dataset, where data scientists and machine learning practitioners can showcase their models and approaches.
+  - It is important to mention that the dataset for this prject was found in Kaggle's [Playground Prediction Competition](https://www.kaggle.com/competitions/dog-breed-identification/overview), which was held from September 29th 2017 to February 28th 2018. 7,525 entrants, 1,405 participants, 1,280 teams and 8,708 submission are some of the most relevant details of this competition as well as the models used: ```mobilenet_v2``` from Google and ```resent_50``` from TensorFlow. 
+- **Academic Challenges**: Research challenges in fine-grained visual categorization frequently feature this dataset, providing a platform for academic contributions and innovations in image classification techniques.
+
+For up-to-date information on current leaderboards and challenges, participants can refer to the dataset's homepage and related repositories.
+
 
 ### Languages
 American English
@@ -161,9 +178,9 @@ yorkshire_terrier
 
 ```
 
-All labels are stored in a separate csv, which has the attributes ```image_id``` and ```class```. As can be understood, each image is associated to an unique *image_id*.
+All labels are stored in a separate csv (except for the test ones), which has the attributes ```image_id``` and ```class```. Each row represents an image name (id) and its corresponding breed.
 
-For instance, this are some lines of such file:
+For instance, these are some lines of such file:
 
 |id|class|
 |------|-----|
@@ -174,12 +191,11 @@ For instance, this are some lines of such file:
 |0021f9ceb3235effd7fcde7f7538ed62|golden_retriever|
 
 
-On the other hand, this is an example of an image that could be the one shown in the first entrance of the csv. It is an image of a *Boston Bull*:
+On the other hand, this is an image example. It is an image of a *Boston Bull* dog:
 
-![Boston bull](..reports/figures/example_image2.jpg)
+![Boston bull](../reports/figures/dataset_card_example2.jpg)
 
-
-Each image has a filename that is its unique ```id```. 
+Each image filename is its unique `id`. 
 
 ### Data Fields
 
@@ -187,10 +203,10 @@ Images and annotations for each of the classes.
 
 ### Data Splits
 
-- ```train``` - the training set, where we are provided the breed for these dogs.
-- ```test``` - the test set, we must predict the probability of each breed for each image.
-- ```annotations``` - the breeds for the images in the train set.
-- ```images``` - images of the dogs used in both sets.
+- ```train``` - Training set. Contains images of dogs with their respective breed labels.
+- ```test``` - Test set. The breed for these dogs is not provided.
+- ```annotations``` - The annotations for the training set.
+- ```images``` - Images of the dogs used in both sets.
 
 ## Dataset Creation
 
