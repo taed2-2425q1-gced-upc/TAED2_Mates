@@ -25,29 +25,29 @@ def image_data():
     image_paths = [
         TEST_DIR / f"test_images/{img}"
         for img in [
-            "0021f9ceb3235effd7fcde7f7538ed62.jpg",
-            "008887054b18ba3c7601792b6a453cc3.jpg",
-            "00e9ed3fab1d2032603d1a90e557976f.jpg",
-            "010d65bd29d246aea53d9849da142ccf.jpg",
-            "0120343862761d052d6a7ade81625c94.jpg",
-            "0161847d5bfae154af084993fa26a1a7.jpg",
-            "0311a6a51a414ba91f3ad8055170baa1.jpg",
-            "0365fe4e3e13a885c6b02ebbbf2d9173.jpg",
-            "03ae71ff9e4c5ac97afdfa956ea5e191.jpg",
-            "03f6435dc8a5e760d19e67831c6034fb.jpg",
+            "img1.jpg",
+            "img2.jpg",
+            "img3.jpg",
+            "img4.jpg",
+            "img5.jpg",
+            "img6.jpg",
+            "img7.jpg",
+            "img8.jpg",
+            "img9.jpg",
+            "img10.jpg",
         ]
     ]
     true_classes = [
-        "golden_retriever",
-        "boxer",
-        "weimaraner",
-        "boston_bull",
+        "pug",
+        "rottweiler",
+        "german_shepherd",
+        "newfoundland",
+        "blenheim_spaniel",
+        "saint_bernard",
+        "mexican_hairless",
+        "border_collie",
         "dingo",
-        "giant_schnauzer",
-        "lhasa",
-        "cairn",
-        "borzoi",
-        "chow",
+        "beagle",
     ]
     _, dog_breeds = read_labels(RAW_DATA_DIR)
     return image_paths, true_classes, dog_breeds
