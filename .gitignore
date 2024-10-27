@@ -171,3 +171,5 @@ cython_debug/
 #.idea/
 
 linter.txt
+
+models/*.h5
