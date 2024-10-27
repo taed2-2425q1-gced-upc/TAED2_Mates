@@ -55,6 +55,7 @@ streamlit = "^1.39.0"
 torchvision = "^0.19.1"
 deepchecks = {extras = ["vision"], version = "^0.18.1"}
 starlette = ">=0.40.0"
+werkzeug = ">=3.0.6"
 
 
 [tool.poetry.group.dev.dependencies]
