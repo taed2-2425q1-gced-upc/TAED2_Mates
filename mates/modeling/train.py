@@ -39,6 +39,7 @@ from pathlib import Path
 import mlflow
 import pandas as pd
 import tf_keras
+import itertools
 import typer
 from codecarbon import EmissionsTracker
 from loguru import logger
@@ -51,16 +52,19 @@ app = typer.Typer()
 
 
 @app.command()
-def train():
+def single_train(params: dict):
     """
     Function to train a model. Loads processed data, trains a model, and saves the model.
-    """
-    params = load_params("train")
 
+    Parameters:
+    ----------
+    params: dict
+        Dictionary containing the training parameters.    
+    """
     mlflow.tensorflow.autolog()
     mlflow.set_experiment(params["experiment_name"])
 
-    with mlflow.start_run(run_name=f"optimizer_{params['optimizer']}"):
+    with mlflow.start_run(run_name=f"{params['optimizer']}_{params['batch_size']}"):
         mlflow.log_param("optimizer", params["optimizer"])
         mlflow.log_param("model_url", params["model_url"])
         mlflow.log_param("batch_size", params["batch_size"])
@@ -81,7 +85,7 @@ def train():
             monitor=params["monitor"], patience=params["patience"]
         )
 
-        out_file = f"{params['model_name']}_{params['experiment_name']}_emissions.csv"
+        out_file = f"{params['optimizer']}_{params['batch_size']}_emissions.csv"
 
         # Track the CO2 emissions of training the model
         tracker = EmissionsTracker(
@@ -123,8 +127,37 @@ def train():
         logger.success("Model training complete.")
         if params["save_model"]:
             model.save(MODELS_DIR / f"{params['model_name']}_{params['experiment_name']}.h5")
-            mlflow.tensorflow.log_model(model, params["model_name"])
+            mlflow.tensorflow.log_model(model, params["model_name"] + params["experiment_name"])
+
+
+@app.command()
+def train(
+):
+    """
+    Function to train a model with multiple combinations of hyperparameters.
+    """
+    params = load_params("train")
+
+    hyperparams = params["hyperparams"]
+    epochs_options = hyperparams["epochs"]
+    batch_size_options = hyperparams["batch_size"]
+    optimizer_options = hyperparams["optimizer"]
+
+    # Generate all combinations of hyperparameters
+    combs = list(itertools.product(epochs_options, batch_size_options, optimizer_options))
+
+    # Iterate over each combination of hyperparameters
+    for (epochs, batch_size, optimizer) in combs:
+        params["epochs"] = epochs
+        params["batch_size"] = batch_size
+        params["optimizer"] = optimizer
+
+        logger.info(
+            f"Starting training with epochs={epochs}, batch={batch_size}, optimizer={optimizer}"
+        )
+
+        single_train(params)
 
 
 if __name__ == "__main__":
-    app()
+    train()
