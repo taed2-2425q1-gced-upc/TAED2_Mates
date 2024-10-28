@@ -43,18 +43,60 @@ The input ```images``` are expected to have color values in the range [0,1], fol
 
 #### Outputs
 
-The output is a batch of feature vectors. For each input image, the feature vector has size ```num_features``` = 1664.
+The output is a dictionary containing:
+
+- **detection_boxes**: A `tf.float32` tensor of shape `[N, 4]`, providing bounding box coordinates in the format `[ymin, xmin, ymax, xmax]`.
+- **detection_class_entities**: A `tf.string` tensor of shape `[N]`, listing detection class names as Freebase MIDs.
+- **detection_class_names**: A `tf.string` tensor of shape `[N]`, offering human-readable detection class names.
+- **detection_class_labels**: A `tf.int64` tensor of shape `[N]`, containing class indices.
+- **detection_scores**: A `tf.float32` tensor of shape `[N]`, reflecting detection scores.
+
+For our specific task of dog breed classification, the model has been adapted to output a 1x120 tensor instead of bounding boxes. This tensor represents a softmax distribution over the 120 dog breeds in our dataset, providing probability scores for each class and indicating the likelihood that the image belongs to each breed. This output is achieved by adding a fully connected Deep Neural Network (DNN) layer on top of the base MobileNetV2 model, mapping the feature embeddings into a 120-dimensional output. The softmax activation function ensures that these values sum to 1, enabling a probabilistic interpretation of the model’s predictions.
 
 
-### Out-of-Scope Use
+#### Out-of-Scope Use
 
-A different use of this model could be using it for tasks like object detection or image segmentation.
+The model is not intended for the following applications:
+
+- **Medical Diagnosis**: The model should not be used for any medical purposes, including diagnosing conditions related to dog breeds or health issues.
+- **Legal or Security Decisions**: Outputs should not be used to inform legal judgments or security-related decisions, including breed discrimination or identification.
+- **Surveillance**: The model is not designed for surveillance or monitoring purposes, especially in sensitive environments or without consent.
+- **Animal Welfare Decisions**: The model should not be used to determine the welfare or treatment of animals based on breed classifications.
+- **Unverified Environments**: The model should not be deployed in unverified or uncontrolled environments where accuracy cannot be guaranteed.
+
+Users are encouraged to apply the model within its intended context and adhere to ethical guidelines to prevent misuse.
 
 ## Bias, Risks and Limitations
 
-Image classification models are powerful tools but come with challenges. These models can develop biases if the data used to train them is not representative of the general population, or if the algorithms themselves are inherently biased. 
+Image classification models are powerful tools, but they come with inherent challenges that can affect their performance and ethical use. This section outlines key aspects of bias, risks, and limitations associated with these models.
 
-Furthermore, models have limitations such as difficulty generalizing to new data, lack of interpretability, and vulnerability to adversarial attacks. This means that models may not perform well on data that is different from what they were trained on, it can be difficult to understand why a model made a particular decision, and models can be tricked into misclassifying images.
+### Bias in Training Data
+
+Bias in image classification models often stems from the training data used to develop them. If the dataset is not representative of the diverse range of inputs the model will encounter in real-world applications, the model may learn skewed or inaccurate patterns. Key factors include:
+
+- **Underrepresentation**: In our case, most of the dog breeds or characteristics are not underrepresented in the training data. Although there is class imbalance that could be treated with data augmentation techniques.
+- **Societal Bias**: Models may inadvertently reflect societal biases present in the training data, potentially perpetuating stereotypes or inaccuracies in breed classification.
+
+To mitigate bias, it’s crucial to curate diverse and high-quality datasets that accurately represent the populations and scenarios the model will encounter.
+
+### Risks of Misclassification
+
+While image classification models can achieve high accuracy, they carry risks related to misclassification. This can have real-world implications, particularly in sensitive applications. Key considerations include:
+
+- **Generalization**: Models may struggle to generalize to new or unseen data, especially if it differs significantly from the training set. This can lead to decreased accuracy and reliability in practical use. 
+- **Interpretability**: Users may find it challenging to understand why the model arrived at a particular classification, complicating trust and accountability.
+
+Addressing these risks requires ongoing evaluation, robust testing on diverse datasets, and improved interpretability methods.
+
+### Limitations in Application
+
+Beyond bias and misclassification, image classification models have inherent limitations that can affect their usability:
+
+- **Context Dependence**: The model's effectiveness can vary significantly based on context. Environmental factors, such as lighting and background, can influence performance, leading to inconsistent results.
+- **Static Learning**: Once trained, models may not adapt to new information or evolving datasets without retraining, limiting their flexibility in dynamic environments.
+- **Ethical Implications**: The use of classification models in certain contexts, such as breed identification for discrimination or profiling, raises ethical concerns. Users must be aware of potential misuse and consider the implications of deploying such models.
+
+To effectively use image classification models, it is essential to understand these limitations and consider them in the context of deployment to ensure responsible and ethical application.
 
 ### Recommendations
 
@@ -63,15 +105,59 @@ To address these issues, it is crucial to use high-quality training data, employ
 
 ## How to Get Started with the Model
 
-Use the code below to get started with the model.
+Getting started with the model is straightforward. Follow the steps below to create and compile your image classification model using TensorFlow and a pre-trained backbone from TensorFlow Hub.
 
-```
-# Apply image detector on a single image.
-detector = hub.Module("https://kaggle.com/models/google/mobilenet-v2/frameworks/TensorFlow1/variations/openimages-v4-ssd-mobilenet-v2/versions/1")
-detector_output = detector(image_tensor, as_dict=True)
-class_names = detector_output["detection_class_names"]
+### Step 1: Define Model Parameters
 
+First, you will need to specify the parameters for your model, including the input shape, output shape, model URL, optimizer, and evaluation metrics. For example:
+
+```python
+input_shape = [None, 224, 224, 3]  # Adjust according to your input requirements
+output_shape = 120  # Number of dog breeds
+model_url = "URL_OF_THE_PRE_TRAINED_MODEL"  # Replace with actual model URL
+optimizer = "adam"  # Choose your optimizer
+metrics = ["accuracy"]  # Define metrics for evaluation
 ```
+
+### Step 2: Create and Compile the Model
+
+Use the `create_model()` function in `mates/features/features.py` to create and compile your model:
+
+```python
+model = create_model(input_shape, output_shape, model_url, optimizer, metrics)
+```
+
+This function performs the following tasks:
+- Loads a pre-trained model from TensorFlow Hub.
+- Adds a dense layer with softmax activation for multi-class classification.
+- Compiles the model with the specified loss function, optimizer, and metrics.
+
+### Step 3: Build the Model
+
+The model is automatically built when you call the `create_model` function, but if you need to build it manually, you can use:
+
+```python
+model.build(input_shape)
+```
+
+### Step 4: Train the Model
+
+After the model is created and compiled, you can proceed to train it with your dataset using the `fit` method:
+
+```python
+# Example of training the model
+model.fit(train_data, epochs=10, validation_data=val_data)
+```
+
+### Step 5: Evaluate the Model
+
+Once training is complete, evaluate the model on test data to assess its performance:
+
+```python
+model.evaluate(test_data)
+```
+
+By following these steps, you can effectively get started with the model and tailor it to your specific dog breed classification tasks.
 
 ## Training Details
 
