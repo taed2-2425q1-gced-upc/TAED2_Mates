@@ -79,7 +79,7 @@ Bias in image classification models often stems from the training data used to d
 
 To mitigate bias, it’s crucial to curate diverse and high-quality datasets that accurately represent the populations and scenarios the model will encounter.
 
-### 2. Risks of Misclassification
+### Risks of Misclassification
 
 While image classification models can achieve high accuracy, they carry risks related to misclassification. This can have real-world implications, particularly in sensitive applications. Key considerations include:
 
@@ -88,7 +88,7 @@ While image classification models can achieve high accuracy, they carry risks re
 
 Addressing these risks requires ongoing evaluation, robust testing on diverse datasets, and improved interpretability methods.
 
-### 3. Limitations in Application
+### Limitations in Application
 
 Beyond bias and misclassification, image classification models have inherent limitations that can affect their usability:
 
