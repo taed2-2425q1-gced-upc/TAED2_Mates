@@ -6,8 +6,8 @@ from unittest import mock
 import pytest
 from PIL import Image
 
-from mates.config import IMG_SIZE, RAW_DATA_DIR, TEST_DIR
-from mates.features.features import load_model, read_labels
+from mates.config import IMG_SIZE, TEST_DIR
+from mates.features.features import load_model
 from mates.modeling.predict import predict_single
 
 
@@ -49,7 +49,19 @@ def image_data():
         "dingo",
         "beagle",
     ]
-    _, dog_breeds = read_labels(RAW_DATA_DIR)
+
+    dog_breeds = ["dog" for _ in range(120)]
+    dog_breeds[88] = "pug"
+    dog_breeds[91] = "rottweiler"
+    dog_breeds[46] = "german_shepherd"
+    dog_breeds[78] = "newfoundland"
+    dog_breeds[13] = "blenheim_spaniel"
+    dog_breeds[92] = "saint_bernard"
+    dog_breeds[74] = "mexican_hairless"
+    dog_breeds[16] = "border_collie"
+    dog_breeds[37] = "dingo"
+    dog_breeds[9] = "beagle"
+
     return image_paths, true_classes, dog_breeds
 
 
@@ -115,7 +127,7 @@ def test_predict_single_image_conversion(mock_image, dbc_model, image_data):
 
     # Create a mock grayscale image
     mock_image_instance = mock_image.new("L", (IMG_SIZE, IMG_SIZE))  # Mock grayscale image
-    rgb_image = Image.open("tests/pod.jpg")
+    rgb_image = Image.open("tests/test_images/pod.jpg")
     mock_image_instance.convert.return_value = rgb_image
 
     # Call predict_single with the mocked image

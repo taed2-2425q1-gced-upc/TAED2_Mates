@@ -1,1 +1,472 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="30" time="106.813" timestamp="2024-10-22T15:01:54.387915+02:00" hostname="Carloss-MacBook-Pro.local"><testcase classname="tests.test_api" name="test_root_endpoint" time="2.156" /><testcase classname="tests.test_api" name="test_get_models" time="0.001" /><testcase classname="tests.test_api" name="test_model_prediction" time="0.302" /><testcase classname="tests.test_api" name="test_model_prediction_not_found" time="0.002" /><testcase classname="tests.test_api" name="test_model_prediction_bad_image" time="0.129" /><testcase classname="tests.test_api" name="test_predict_dog_breed_internal_server_error" time="0.006" /><testcase classname="tests.test_create_batches" name="test_create_batches_with_validation_data" time="0.017" /><testcase classname="tests.test_create_batches" name="test_create_batches_with_test_data" time="0.009" /><testcase classname="tests.test_create_batches" name="test_create_batches_with_training_data" time="0.013" /><testcase classname="tests.test_create_model" name="test_create_model_rmsprop" time="0.004" /><testcase classname="tests.test_create_model" name="test_create_model_adam" time="0.003" /><testcase classname="tests.test_create_model" name="test_create_model_adamw" time="0.003" /><testcase classname="tests.test_create_model" name="test_create_model_sgd" time="0.003" /><testcase classname="tests.test_get_label" name="test_get_label_image" time="0.001" /><testcase classname="tests.test_load_model" name="test_load_model" time="0.001" /><testcase classname="tests.test_load_params" name="test_load_params_train" time="0.004" /><testcase classname="tests.test_load_params" name="test_load_params_prepare" time="0.004" /><testcase classname="tests.test_load_params" name="test_load_params_predict" time="0.003" /><testcase classname="tests.test_load_params" name="test_load_params_yaml_error" time="0.003" /><testcase classname="tests.test_load_processed_data" name="test_load_processed_data" time="0.005" /><testcase classname="tests.test_model" name="test_dbc_model" time="17.982" /><testcase classname="tests.test_predict" name="test_predict" time="57.746" /><testcase classname="tests.test_predict_single" name="test_predict_single" time="21.817" /><testcase classname="tests.test_predict_single" name="test_predict_single_image_conversion" time="1.135" /><testcase classname="tests.test_prepare" name="test_process_data_no_train" time="0.001" /><testcase classname="tests.test_prepare" name="test_process_data_train_save" time="0.006" /><testcase classname="tests.test_process_image" name="test_process_image" time="0.004" /><testcase classname="tests.test_read_data" name="test_read_data_with_training_data" time="0.002" /><testcase classname="tests.test_read_data" name="test_read_data_with_test_data" time="0.001" /><testcase classname="tests.test_read_labels" name="test_read_labels" time="0.003" /></testsuite></testsuites>
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="4" failures="5" skipped="0" tests="31" time="28.521" timestamp="2024-10-29T10:15:09.720728+01:00" hostname="Carloss-MacBook-Pro.local"><testcase classname="tests.test_api" name="test_root_endpoint" time="0.012" /><testcase classname="tests.test_api" name="test_get_models" time="0.038"><failure message="AssertionError: assert [] == ['mobilenet_e...exp_batch_32']&#10;  &#10;  Right contains 2 more items, first extra item: #x1B[0m#x1B[33m'#x1B[39;49;00m#x1B[33mmobilenet_exp_batch_62#x1B[39;49;00m#x1B[33m'#x1B[39;49;00m#x1B[90m#x1B[39;49;00m&#10;  Use -v to get more diff">api_client = &lt;starlette.testclient.TestClient object at 0x2d3c84e50&gt;
+
+    def test_get_models(api_client):
+        """Test the endpoint that retrieves available models."""
+        response = api_client.get("/models")
+        json = response.json()
+&gt;       assert json == ["mobilenet_exp_batch_62", "mobilenet_exp_batch_32"]
+E       AssertionError: assert [] == ['mobilenet_e...exp_batch_32']
+E         
+E         Right contains 2 more items, first extra item: #x1B[0m#x1B[33m'#x1B[39;49;00m#x1B[33mmobilenet_exp_batch_62#x1B[39;49;00m#x1B[33m'#x1B[39;49;00m#x1B[90m#x1B[39;49;00m
+E         Use -v to get more diff
+
+tests/test_api.py:48: AssertionError</failure></testcase><testcase classname="tests.test_api" name="test_model_prediction" time="0.002"><failure message="assert &lt;HTTPStatus.BAD_REQUEST: 400&gt; == 200&#10; +  where &lt;HTTPStatus.BAD_REQUEST: 400&gt; = &lt;Response [400 Bad Request]&gt;.status_code">api_client = &lt;starlette.testclient.TestClient object at 0x2d3c84e50&gt;, sample_image_file = &lt;_io.BytesIO object at 0x2d52e6200&gt;
+
+    def test_model_prediction(api_client, sample_image_file):
+        """Test the model prediction endpoint with a valid image."""
+        response = api_client.post(
+            "/predict?model_name=mobilenet_exp_batch_62",
+            files={"file": ("test.jpg", sample_image_file, "image/jpeg")},
+        )
+        json = response.json()
+        print(json)
+&gt;       assert response.status_code == 200
+E       assert &lt;HTTPStatus.BAD_REQUEST: 400&gt; == 200
+E        +  where &lt;HTTPStatus.BAD_REQUEST: 400&gt; = &lt;Response [400 Bad Request]&gt;.status_code
+
+tests/test_api.py:59: AssertionError</failure></testcase><testcase classname="tests.test_api" name="test_model_prediction_not_found" time="0.001" /><testcase classname="tests.test_api" name="test_model_prediction_bad_image" time="0.001"><failure message="AssertionError: assert 'Invalid image format' in 'Model mobilenet_exp_batch_62 not found. Please choose from available models.'">api_client = &lt;starlette.testclient.TestClient object at 0x2d3c84e50&gt;
+
+    def test_model_prediction_bad_image(api_client):
+        """Test the model prediction endpoint with an invalid image format."""
+        response = api_client.post(
+            "/predict?model_name=mobilenet_exp_batch_62",
+            files={"file": ("test.txt", "invalid content", "text")},
+        )
+        assert response.status_code == 400
+&gt;       assert "Invalid image format" in response.json()["detail"]
+E       AssertionError: assert 'Invalid image format' in 'Model mobilenet_exp_batch_62 not found. Please choose from available models.'
+
+tests/test_api.py:81: AssertionError</failure></testcase><testcase classname="tests.test_api" name="test_predict_dog_breed_internal_server_error" time="0.003"><failure message="assert &lt;HTTPStatus.BAD_REQUEST: 400&gt; == &lt;HTTPStatus.INTERNAL_SERVER_ERROR: 500&gt;&#10; +  where &lt;HTTPStatus.BAD_REQUEST: 400&gt; = &lt;Response [400 Bad Request]&gt;.status_code&#10; +  and   &lt;HTTPStatus.INTERNAL_SERVER_ERROR: 500&gt; = HTTPStatus.INTERNAL_SERVER_ERROR">api_client = &lt;starlette.testclient.TestClient object at 0x2d3c84e50&gt;, sample_image_file = &lt;_io.BytesIO object at 0x2d52e7330&gt;
+
+    def test_predict_dog_breed_internal_server_error(api_client, sample_image_file):
+        """Test the model prediction endpoint for handling internal server errors."""
+        with patch("mates.app.api.predict_single", side_effect=Exception("error")):
+            response = api_client.post(
+                "/predict?model_name=mobilenet_exp_batch_62",
+                files={"file": ("test.jpg", sample_image_file, "image/jpeg")},
+            )
+    
+&gt;           assert response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
+E           assert &lt;HTTPStatus.BAD_REQUEST: 400&gt; == &lt;HTTPStatus.INTERNAL_SERVER_ERROR: 500&gt;
+E            +  where &lt;HTTPStatus.BAD_REQUEST: 400&gt; = &lt;Response [400 Bad Request]&gt;.status_code
+E            +  and   &lt;HTTPStatus.INTERNAL_SERVER_ERROR: 500&gt; = HTTPStatus.INTERNAL_SERVER_ERROR
+
+tests/test_api.py:92: AssertionError</failure></testcase><testcase classname="tests.test_create_batches" name="test_create_batches_with_validation_data" time="0.018" /><testcase classname="tests.test_create_batches" name="test_create_batches_with_test_data" time="0.007" /><testcase classname="tests.test_create_batches" name="test_create_batches_with_training_data" time="0.009" /><testcase classname="tests.test_create_model" name="test_create_model_rmsprop" time="0.003" /><testcase classname="tests.test_create_model" name="test_create_model_adam" time="0.003" /><testcase classname="tests.test_create_model" name="test_create_model_adamw" time="0.002" /><testcase classname="tests.test_create_model" name="test_create_model_sgd" time="0.002" /><testcase classname="tests.test_get_label" name="test_get_label_image" time="0.001" /><testcase classname="tests.test_load_model" name="test_load_model" time="0.000" /><testcase classname="tests.test_load_params" name="test_load_params_train" time="0.003" /><testcase classname="tests.test_load_params" name="test_load_params_prepare" time="0.003" /><testcase classname="tests.test_load_params" name="test_load_params_predict" time="0.003" /><testcase classname="tests.test_load_params" name="test_load_params_yaml_error" time="0.003" /><testcase classname="tests.test_load_processed_data" name="test_load_processed_data" time="0.004" /><testcase classname="tests.test_model" name="test_dbc_model_validation" time="0.001"><error message="failed on setup with &quot;OSError: No file or directory found at /Users/andrea/Documents/GCED/2024-2025/TAED2_Mates/models/mobilenet_exp_batch_62.h5&quot;">@pytest.fixture
+    def dbc_model():
+        """
+        Load the dog breed classification model for testing.
+        """
+&gt;       return load_model("mobilenet_exp_batch_62")
+
+tests/test_model.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+mates/features/features.py:99: in load_model
+    model = tf_keras.models.load_model(
+../../../../Library/Caches/pypoetry/virtualenvs/mates-J_tolljG-py3.11/lib/python3.11/site-packages/tf_keras/src/saving/saving_api.py:262: in load_model
+    return legacy_sm_saving_lib.load_model(
+../../../../Library/Caches/pypoetry/virtualenvs/mates-J_tolljG-py3.11/lib/python3.11/site-packages/tf_keras/src/utils/traceback_utils.py:70: in error_handler
+    raise e.with_traceback(filtered_tb) from None
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+filepath = PosixPath('/Users/andrea/Documents/GCED/2024-2025/TAED2_Mates/models/mobilenet_exp_batch_62.h5')
+custom_objects = {'Custom&gt;Adadelta': &lt;class 'tf_keras.src.optimizers.adadelta.Adadelta'&gt;, 'Custom&gt;Adafactor': &lt;class 'tf_keras.src.opti...d': &lt;class 'tf_keras.src.optimizers.adagrad.Adagrad'&gt;, 'Custom&gt;Adam': &lt;class 'tf_keras.src.optimizers.adam.Adam'&gt;, ...}
+compile = True, options = None
+
+    @traceback_utils.filter_traceback
+    def load_model(filepath, custom_objects=None, compile=True, options=None):
+        """Loads a model saved via `model.save()`.
+    
+        Usage:
+    
+        &gt;&gt;&gt; model = tf.keras.Sequential([
+        ...     tf.keras.layers.Dense(5, input_shape=(3,)),
+        ...     tf.keras.layers.Softmax()])
+        &gt;&gt;&gt; model.save('/tmp/model')
+        &gt;&gt;&gt; loaded_model = tf.keras.models.load_model('/tmp/model')
+        &gt;&gt;&gt; x = tf.random.uniform((10, 3))
+        &gt;&gt;&gt; assert np.allclose(model.predict(x), loaded_model.predict(x))
+    
+        Note that the model weights may have different scoped names after being
+        loaded. Scoped names include the model/layer names, such as
+        `"dense_1/kernel:0"`. It is recommended that you use the layer properties to
+        access specific variables, e.g. `model.get_layer("dense_1").kernel`.
+    
+        Args:
+            filepath: One of the following:
+                - String or `pathlib.Path` object, path to the saved model
+                - `h5py.File` object from which to load the model
+            custom_objects: Optional dictionary mapping names
+                (strings) to custom classes or functions to be
+                considered during deserialization.
+            compile: Boolean, whether to compile the model
+                after loading.
+            options: Optional `tf.saved_model.LoadOptions` object that specifies
+              options for loading from SavedModel.
+    
+        Returns:
+            A TF-Keras model instance. If the original model was compiled, and saved
+            with the optimizer, then the returned model will be compiled. Otherwise,
+            the model will be left uncompiled. In the case that an uncompiled model
+            is returned, a warning is displayed if the `compile` argument is set to
+            `True`.
+    
+        Raises:
+            ImportError: if loading from an hdf5 file and h5py is not available.
+            IOError: In case of an invalid savefile.
+        """
+        with serialization.SharedObjectLoadingScope():
+            custom_objects = custom_objects or {}
+            tlco = object_registration._THREAD_LOCAL_CUSTOM_OBJECTS.__dict__
+            gco = object_registration._GLOBAL_CUSTOM_OBJECTS
+            custom_objects = {**custom_objects, **tlco, **gco}
+            with object_registration.CustomObjectScope(custom_objects):
+                with keras_option_scope(
+                    save_traces=False, in_tf_saved_model_scope=True
+                ):
+                    with tf.__internal__.load_context(options):
+                        filepath_str = io_utils.path_to_string(filepath)
+                        if isinstance(filepath_str, str):
+                            if not tf.io.gfile.exists(filepath_str):
+&gt;                               raise IOError(
+                                    f"No file or directory found at {filepath_str}"
+                                )
+E                               OSError: No file or directory found at /Users/andrea/Documents/GCED/2024-2025/TAED2_Mates/models/mobilenet_exp_batch_62.h5
+
+../../../../Library/Caches/pypoetry/virtualenvs/mates-J_tolljG-py3.11/lib/python3.11/site-packages/tf_keras/src/saving/legacy/save.py:233: OSError</error></testcase><testcase classname="tests.test_model" name="test_dbc_model" time="0.000"><error message="failed on setup with &quot;OSError: No file or directory found at /Users/andrea/Documents/GCED/2024-2025/TAED2_Mates/models/mobilenet_exp_batch_62.h5&quot;">@pytest.fixture
+    def dbc_model():
+        """
+        Load the dog breed classification model for testing.
+        """
+&gt;       return load_model("mobilenet_exp_batch_62")
+
+tests/test_model.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+mates/features/features.py:99: in load_model
+    model = tf_keras.models.load_model(
+../../../../Library/Caches/pypoetry/virtualenvs/mates-J_tolljG-py3.11/lib/python3.11/site-packages/tf_keras/src/saving/saving_api.py:262: in load_model
+    return legacy_sm_saving_lib.load_model(
+../../../../Library/Caches/pypoetry/virtualenvs/mates-J_tolljG-py3.11/lib/python3.11/site-packages/tf_keras/src/utils/traceback_utils.py:70: in error_handler
+    raise e.with_traceback(filtered_tb) from None
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+filepath = PosixPath('/Users/andrea/Documents/GCED/2024-2025/TAED2_Mates/models/mobilenet_exp_batch_62.h5')
+custom_objects = {'Custom&gt;Adadelta': &lt;class 'tf_keras.src.optimizers.adadelta.Adadelta'&gt;, 'Custom&gt;Adafactor': &lt;class 'tf_keras.src.opti...d': &lt;class 'tf_keras.src.optimizers.adagrad.Adagrad'&gt;, 'Custom&gt;Adam': &lt;class 'tf_keras.src.optimizers.adam.Adam'&gt;, ...}
+compile = True, options = None
+
+    @traceback_utils.filter_traceback
+    def load_model(filepath, custom_objects=None, compile=True, options=None):
+        """Loads a model saved via `model.save()`.
+    
+        Usage:
+    
+        &gt;&gt;&gt; model = tf.keras.Sequential([
+        ...     tf.keras.layers.Dense(5, input_shape=(3,)),
+        ...     tf.keras.layers.Softmax()])
+        &gt;&gt;&gt; model.save('/tmp/model')
+        &gt;&gt;&gt; loaded_model = tf.keras.models.load_model('/tmp/model')
+        &gt;&gt;&gt; x = tf.random.uniform((10, 3))
+        &gt;&gt;&gt; assert np.allclose(model.predict(x), loaded_model.predict(x))
+    
+        Note that the model weights may have different scoped names after being
+        loaded. Scoped names include the model/layer names, such as
+        `"dense_1/kernel:0"`. It is recommended that you use the layer properties to
+        access specific variables, e.g. `model.get_layer("dense_1").kernel`.
+    
+        Args:
+            filepath: One of the following:
+                - String or `pathlib.Path` object, path to the saved model
+                - `h5py.File` object from which to load the model
+            custom_objects: Optional dictionary mapping names
+                (strings) to custom classes or functions to be
+                considered during deserialization.
+            compile: Boolean, whether to compile the model
+                after loading.
+            options: Optional `tf.saved_model.LoadOptions` object that specifies
+              options for loading from SavedModel.
+    
+        Returns:
+            A TF-Keras model instance. If the original model was compiled, and saved
+            with the optimizer, then the returned model will be compiled. Otherwise,
+            the model will be left uncompiled. In the case that an uncompiled model
+            is returned, a warning is displayed if the `compile` argument is set to
+            `True`.
+    
+        Raises:
+            ImportError: if loading from an hdf5 file and h5py is not available.
+            IOError: In case of an invalid savefile.
+        """
+        with serialization.SharedObjectLoadingScope():
+            custom_objects = custom_objects or {}
+            tlco = object_registration._THREAD_LOCAL_CUSTOM_OBJECTS.__dict__
+            gco = object_registration._GLOBAL_CUSTOM_OBJECTS
+            custom_objects = {**custom_objects, **tlco, **gco}
+            with object_registration.CustomObjectScope(custom_objects):
+                with keras_option_scope(
+                    save_traces=False, in_tf_saved_model_scope=True
+                ):
+                    with tf.__internal__.load_context(options):
+                        filepath_str = io_utils.path_to_string(filepath)
+                        if isinstance(filepath_str, str):
+                            if not tf.io.gfile.exists(filepath_str):
+&gt;                               raise IOError(
+                                    f"No file or directory found at {filepath_str}"
+                                )
+E                               OSError: No file or directory found at /Users/andrea/Documents/GCED/2024-2025/TAED2_Mates/models/mobilenet_exp_batch_62.h5
+
+../../../../Library/Caches/pypoetry/virtualenvs/mates-J_tolljG-py3.11/lib/python3.11/site-packages/tf_keras/src/saving/legacy/save.py:233: OSError</error></testcase><testcase classname="tests.test_predict" name="test_predict" time="0.002"><failure message="OSError: No file or directory found at /Users/andrea/Documents/GCED/2024-2025/TAED2_Mates/models/mobilenet_exp_batch_32.h5">@pytest.mark.skipif(
+        IN_GITHUB_ACTIONS,
+        reason="Test doesn't work in Github Actions. \
+                        Enough with test_model",
+    )
+    def test_predict():
+        """
+        Test for the `predict_test` function.
+    
+        This test verifies that the `predict_test` function correctly predicts the dog breed
+        for all images located in the `raw/tests` directory. It checks that the output CSV
+        file is generated with the expected number of rows and valid breed names.
+    
+        Assertions:
+        - The number of predictions matches the number of images processed.
+        - The output CSV contains exactly two columns.
+        - All predicted breeds are from the predefined list of dog breeds.
+        """
+    
+        # Call the predict_test function to generate predictions
+&gt;       predict_test()
+
+tests/test_predict.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+mates/modeling/predict.py:66: in predict_test
+    model = load_model(params["model_name"])
+mates/features/features.py:99: in load_model
+    model = tf_keras.models.load_model(
+../../../../Library/Caches/pypoetry/virtualenvs/mates-J_tolljG-py3.11/lib/python3.11/site-packages/tf_keras/src/saving/saving_api.py:262: in load_model
+    return legacy_sm_saving_lib.load_model(
+../../../../Library/Caches/pypoetry/virtualenvs/mates-J_tolljG-py3.11/lib/python3.11/site-packages/tf_keras/src/utils/traceback_utils.py:70: in error_handler
+    raise e.with_traceback(filtered_tb) from None
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+filepath = PosixPath('/Users/andrea/Documents/GCED/2024-2025/TAED2_Mates/models/mobilenet_exp_batch_32.h5')
+custom_objects = {'Custom&gt;Adadelta': &lt;class 'tf_keras.src.optimizers.adadelta.Adadelta'&gt;, 'Custom&gt;Adafactor': &lt;class 'tf_keras.src.opti...d': &lt;class 'tf_keras.src.optimizers.adagrad.Adagrad'&gt;, 'Custom&gt;Adam': &lt;class 'tf_keras.src.optimizers.adam.Adam'&gt;, ...}
+compile = True, options = None
+
+    @traceback_utils.filter_traceback
+    def load_model(filepath, custom_objects=None, compile=True, options=None):
+        """Loads a model saved via `model.save()`.
+    
+        Usage:
+    
+        &gt;&gt;&gt; model = tf.keras.Sequential([
+        ...     tf.keras.layers.Dense(5, input_shape=(3,)),
+        ...     tf.keras.layers.Softmax()])
+        &gt;&gt;&gt; model.save('/tmp/model')
+        &gt;&gt;&gt; loaded_model = tf.keras.models.load_model('/tmp/model')
+        &gt;&gt;&gt; x = tf.random.uniform((10, 3))
+        &gt;&gt;&gt; assert np.allclose(model.predict(x), loaded_model.predict(x))
+    
+        Note that the model weights may have different scoped names after being
+        loaded. Scoped names include the model/layer names, such as
+        `"dense_1/kernel:0"`. It is recommended that you use the layer properties to
+        access specific variables, e.g. `model.get_layer("dense_1").kernel`.
+    
+        Args:
+            filepath: One of the following:
+                - String or `pathlib.Path` object, path to the saved model
+                - `h5py.File` object from which to load the model
+            custom_objects: Optional dictionary mapping names
+                (strings) to custom classes or functions to be
+                considered during deserialization.
+            compile: Boolean, whether to compile the model
+                after loading.
+            options: Optional `tf.saved_model.LoadOptions` object that specifies
+              options for loading from SavedModel.
+    
+        Returns:
+            A TF-Keras model instance. If the original model was compiled, and saved
+            with the optimizer, then the returned model will be compiled. Otherwise,
+            the model will be left uncompiled. In the case that an uncompiled model
+            is returned, a warning is displayed if the `compile` argument is set to
+            `True`.
+    
+        Raises:
+            ImportError: if loading from an hdf5 file and h5py is not available.
+            IOError: In case of an invalid savefile.
+        """
+        with serialization.SharedObjectLoadingScope():
+            custom_objects = custom_objects or {}
+            tlco = object_registration._THREAD_LOCAL_CUSTOM_OBJECTS.__dict__
+            gco = object_registration._GLOBAL_CUSTOM_OBJECTS
+            custom_objects = {**custom_objects, **tlco, **gco}
+            with object_registration.CustomObjectScope(custom_objects):
+                with keras_option_scope(
+                    save_traces=False, in_tf_saved_model_scope=True
+                ):
+                    with tf.__internal__.load_context(options):
+                        filepath_str = io_utils.path_to_string(filepath)
+                        if isinstance(filepath_str, str):
+                            if not tf.io.gfile.exists(filepath_str):
+&gt;                               raise IOError(
+                                    f"No file or directory found at {filepath_str}"
+                                )
+E                               OSError: No file or directory found at /Users/andrea/Documents/GCED/2024-2025/TAED2_Mates/models/mobilenet_exp_batch_32.h5
+
+../../../../Library/Caches/pypoetry/virtualenvs/mates-J_tolljG-py3.11/lib/python3.11/site-packages/tf_keras/src/saving/legacy/save.py:233: OSError</failure></testcase><testcase classname="tests.test_predict_single" name="test_predict_single" time="0.000"><error message="failed on setup with &quot;OSError: No file or directory found at /Users/andrea/Documents/GCED/2024-2025/TAED2_Mates/models/mobilenet_exp_batch_62.h5&quot;">@pytest.fixture
+    def dbc_model():
+        """Load model to test."""
+&gt;       return load_model("mobilenet_exp_batch_62")
+
+tests/test_predict_single.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+mates/features/features.py:99: in load_model
+    model = tf_keras.models.load_model(
+../../../../Library/Caches/pypoetry/virtualenvs/mates-J_tolljG-py3.11/lib/python3.11/site-packages/tf_keras/src/saving/saving_api.py:262: in load_model
+    return legacy_sm_saving_lib.load_model(
+../../../../Library/Caches/pypoetry/virtualenvs/mates-J_tolljG-py3.11/lib/python3.11/site-packages/tf_keras/src/utils/traceback_utils.py:70: in error_handler
+    raise e.with_traceback(filtered_tb) from None
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+filepath = PosixPath('/Users/andrea/Documents/GCED/2024-2025/TAED2_Mates/models/mobilenet_exp_batch_62.h5')
+custom_objects = {'Custom&gt;Adadelta': &lt;class 'tf_keras.src.optimizers.adadelta.Adadelta'&gt;, 'Custom&gt;Adafactor': &lt;class 'tf_keras.src.opti...d': &lt;class 'tf_keras.src.optimizers.adagrad.Adagrad'&gt;, 'Custom&gt;Adam': &lt;class 'tf_keras.src.optimizers.adam.Adam'&gt;, ...}
+compile = True, options = None
+
+    @traceback_utils.filter_traceback
+    def load_model(filepath, custom_objects=None, compile=True, options=None):
+        """Loads a model saved via `model.save()`.
+    
+        Usage:
+    
+        &gt;&gt;&gt; model = tf.keras.Sequential([
+        ...     tf.keras.layers.Dense(5, input_shape=(3,)),
+        ...     tf.keras.layers.Softmax()])
+        &gt;&gt;&gt; model.save('/tmp/model')
+        &gt;&gt;&gt; loaded_model = tf.keras.models.load_model('/tmp/model')
+        &gt;&gt;&gt; x = tf.random.uniform((10, 3))
+        &gt;&gt;&gt; assert np.allclose(model.predict(x), loaded_model.predict(x))
+    
+        Note that the model weights may have different scoped names after being
+        loaded. Scoped names include the model/layer names, such as
+        `"dense_1/kernel:0"`. It is recommended that you use the layer properties to
+        access specific variables, e.g. `model.get_layer("dense_1").kernel`.
+    
+        Args:
+            filepath: One of the following:
+                - String or `pathlib.Path` object, path to the saved model
+                - `h5py.File` object from which to load the model
+            custom_objects: Optional dictionary mapping names
+                (strings) to custom classes or functions to be
+                considered during deserialization.
+            compile: Boolean, whether to compile the model
+                after loading.
+            options: Optional `tf.saved_model.LoadOptions` object that specifies
+              options for loading from SavedModel.
+    
+        Returns:
+            A TF-Keras model instance. If the original model was compiled, and saved
+            with the optimizer, then the returned model will be compiled. Otherwise,
+            the model will be left uncompiled. In the case that an uncompiled model
+            is returned, a warning is displayed if the `compile` argument is set to
+            `True`.
+    
+        Raises:
+            ImportError: if loading from an hdf5 file and h5py is not available.
+            IOError: In case of an invalid savefile.
+        """
+        with serialization.SharedObjectLoadingScope():
+            custom_objects = custom_objects or {}
+            tlco = object_registration._THREAD_LOCAL_CUSTOM_OBJECTS.__dict__
+            gco = object_registration._GLOBAL_CUSTOM_OBJECTS
+            custom_objects = {**custom_objects, **tlco, **gco}
+            with object_registration.CustomObjectScope(custom_objects):
+                with keras_option_scope(
+                    save_traces=False, in_tf_saved_model_scope=True
+                ):
+                    with tf.__internal__.load_context(options):
+                        filepath_str = io_utils.path_to_string(filepath)
+                        if isinstance(filepath_str, str):
+                            if not tf.io.gfile.exists(filepath_str):
+&gt;                               raise IOError(
+                                    f"No file or directory found at {filepath_str}"
+                                )
+E                               OSError: No file or directory found at /Users/andrea/Documents/GCED/2024-2025/TAED2_Mates/models/mobilenet_exp_batch_62.h5
+
+../../../../Library/Caches/pypoetry/virtualenvs/mates-J_tolljG-py3.11/lib/python3.11/site-packages/tf_keras/src/saving/legacy/save.py:233: OSError</error></testcase><testcase classname="tests.test_predict_single" name="test_predict_single_image_conversion" time="0.000"><error message="failed on setup with &quot;OSError: No file or directory found at /Users/andrea/Documents/GCED/2024-2025/TAED2_Mates/models/mobilenet_exp_batch_62.h5&quot;">@pytest.fixture
+    def dbc_model():
+        """Load model to test."""
+&gt;       return load_model("mobilenet_exp_batch_62")
+
+tests/test_predict_single.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+mates/features/features.py:99: in load_model
+    model = tf_keras.models.load_model(
+../../../../Library/Caches/pypoetry/virtualenvs/mates-J_tolljG-py3.11/lib/python3.11/site-packages/tf_keras/src/saving/saving_api.py:262: in load_model
+    return legacy_sm_saving_lib.load_model(
+../../../../Library/Caches/pypoetry/virtualenvs/mates-J_tolljG-py3.11/lib/python3.11/site-packages/tf_keras/src/utils/traceback_utils.py:70: in error_handler
+    raise e.with_traceback(filtered_tb) from None
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+filepath = PosixPath('/Users/andrea/Documents/GCED/2024-2025/TAED2_Mates/models/mobilenet_exp_batch_62.h5')
+custom_objects = {'Custom&gt;Adadelta': &lt;class 'tf_keras.src.optimizers.adadelta.Adadelta'&gt;, 'Custom&gt;Adafactor': &lt;class 'tf_keras.src.opti...d': &lt;class 'tf_keras.src.optimizers.adagrad.Adagrad'&gt;, 'Custom&gt;Adam': &lt;class 'tf_keras.src.optimizers.adam.Adam'&gt;, ...}
+compile = True, options = None
+
+    @traceback_utils.filter_traceback
+    def load_model(filepath, custom_objects=None, compile=True, options=None):
+        """Loads a model saved via `model.save()`.
+    
+        Usage:
+    
+        &gt;&gt;&gt; model = tf.keras.Sequential([
+        ...     tf.keras.layers.Dense(5, input_shape=(3,)),
+        ...     tf.keras.layers.Softmax()])
+        &gt;&gt;&gt; model.save('/tmp/model')
+        &gt;&gt;&gt; loaded_model = tf.keras.models.load_model('/tmp/model')
+        &gt;&gt;&gt; x = tf.random.uniform((10, 3))
+        &gt;&gt;&gt; assert np.allclose(model.predict(x), loaded_model.predict(x))
+    
+        Note that the model weights may have different scoped names after being
+        loaded. Scoped names include the model/layer names, such as
+        `"dense_1/kernel:0"`. It is recommended that you use the layer properties to
+        access specific variables, e.g. `model.get_layer("dense_1").kernel`.
+    
+        Args:
+            filepath: One of the following:
+                - String or `pathlib.Path` object, path to the saved model
+                - `h5py.File` object from which to load the model
+            custom_objects: Optional dictionary mapping names
+                (strings) to custom classes or functions to be
+                considered during deserialization.
+            compile: Boolean, whether to compile the model
+                after loading.
+            options: Optional `tf.saved_model.LoadOptions` object that specifies
+              options for loading from SavedModel.
+    
+        Returns:
+            A TF-Keras model instance. If the original model was compiled, and saved
+            with the optimizer, then the returned model will be compiled. Otherwise,
+            the model will be left uncompiled. In the case that an uncompiled model
+            is returned, a warning is displayed if the `compile` argument is set to
+            `True`.
+    
+        Raises:
+            ImportError: if loading from an hdf5 file and h5py is not available.
+            IOError: In case of an invalid savefile.
+        """
+        with serialization.SharedObjectLoadingScope():
+            custom_objects = custom_objects or {}
+            tlco = object_registration._THREAD_LOCAL_CUSTOM_OBJECTS.__dict__
+            gco = object_registration._GLOBAL_CUSTOM_OBJECTS
+            custom_objects = {**custom_objects, **tlco, **gco}
+            with object_registration.CustomObjectScope(custom_objects):
+                with keras_option_scope(
+                    save_traces=False, in_tf_saved_model_scope=True
+                ):
+                    with tf.__internal__.load_context(options):
+                        filepath_str = io_utils.path_to_string(filepath)
+                        if isinstance(filepath_str, str):
+                            if not tf.io.gfile.exists(filepath_str):
+&gt;                               raise IOError(
+                                    f"No file or directory found at {filepath_str}"
+                                )
+E                               OSError: No file or directory found at /Users/andrea/Documents/GCED/2024-2025/TAED2_Mates/models/mobilenet_exp_batch_62.h5
+
+../../../../Library/Caches/pypoetry/virtualenvs/mates-J_tolljG-py3.11/lib/python3.11/site-packages/tf_keras/src/saving/legacy/save.py:233: OSError</error></testcase><testcase classname="tests.test_prepare" name="test_process_data_no_train" time="0.001" /><testcase classname="tests.test_prepare" name="test_process_data_train_save" time="0.004" /><testcase classname="tests.test_process_image" name="test_process_image" time="0.004" /><testcase classname="tests.test_read_data" name="test_read_data_with_training_data" time="0.006" /><testcase classname="tests.test_read_data" name="test_read_data_with_test_data" time="0.001" /><testcase classname="tests.test_read_labels" name="test_read_labels" time="0.006" /></testsuite></testsuites>
