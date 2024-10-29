@@ -39,7 +39,7 @@ import mlflow
 import pandas as pd
 import requests
 import streamlit as st
-from config import DATA_DIR, METRICS_DIR, FIGURES_APP_DIR
+from config import DATA_DIR, FIGURES_APP_DIR, METRICS_DIR
 from loguru import logger
 from PIL import Image
 
