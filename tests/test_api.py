@@ -12,17 +12,21 @@ from fastapi.testclient import TestClient
 from mates.app.api import app
 
 
-@pytest.fixture(name="api_client", scope="module", autouse=True)
+@pytest.fixture(scope="module")
 def api_client():
     """Fixture that provides a TestClient for testing the FastAPI application."""
-    with TestClient(app) as client:
-        yield client
+    # Patching read_labels globally, so the mock is available during app startup
+    dog_breeds = ["dog" for _ in range(120)]
+    dog_breeds[16] = "border_collie"
+    with patch("mates.app.api.read_labels", return_value=(None, dog_breeds)):
+        with TestClient(app) as client:
+            yield client
 
 
 @pytest.fixture
 def sample_image_file():
     """Fixture to provide a valid image for testing."""
-    with open("tests/bit.jpg", "rb") as f:  # Adjust path as necessary
+    with open("tests/test_images/bit.jpg", "rb") as f:  # Adjust path as necessary
         image_data = BytesIO(f.read())
     return image_data
 
@@ -51,6 +55,7 @@ def test_model_prediction(api_client, sample_image_file):
         files={"file": ("test.jpg", sample_image_file, "image/jpeg")},
     )
     json = response.json()
+    print(json)
     assert response.status_code == 200
     assert json == {"model": "mobilenet_exp_batch_62", "prediction": "border_collie"}
 
