@@ -76,12 +76,12 @@ def set_page(page_name: str):
 # Sidebar with clickable text links styled as buttons
 st.sidebar.title("Navigation")
 
-if st.sidebar.button("Main Page"):
-    set_page("Main Page")
-if st.sidebar.button("Assistance"):
-    set_page("Assistance")
-if st.sidebar.button("Tracking"):
-    set_page("Tracking")
+if st.sidebar.button("Prediction Page"):
+    set_page("Prediction Page")
+if st.sidebar.button("Assistance Page"):
+    set_page("Assistance Page")
+if st.sidebar.button("Tracking Page"):
+    set_page("Tracking Page")
 
 ############################################
 ### Welcome Page
@@ -89,33 +89,51 @@ if st.sidebar.button("Tracking"):
 
 if st.session_state.page == "Welcome Page":
     st.title("Welcome to the Dog Breed Classification App!")
+    st.subheader(
+        """
+        Welcome! This app is designed to help you classify dog breeds with the power of machine learning. 
+        """
+    )
+
     st.write(
         """
-    Welcome! This app helps you classify dog breeds using machine learning models.     
-    """
+        Using a fine-tuned MobileNetV2 model, our app can analyze an uploaded dog image and predict its breed. This project also serves as a hands-on demonstration of best practices in software engineering for machine learning. The Dog Breed Classification App showcases our commitment to building reliable, scalable ML solutions through strong software engineering principles. By using modular code, version control, and automated tracking of training metrics, we ensure a robust and maintainable pipeline.
+        """
     )
-    st.write("Upload a photo, and let's unveil the unique characteristics of our furry friends!")
-    st.write("")
 
+    st.info("Head over to the Prediction Page to upload an image and reveal the unique characteristics of our furry friends!")
+
+    # Navigate to the Prediction Prediction Page
     if st.button("Go to Prediction Page"):
-        set_page("Main Page")  # Navigate to the Main Prediction Page
+        set_page("Prediction Page")
 
     st.write("##")
-    st.image(str(FIGURES_APP_DIR / "footer.jpg"))
+    st.image(str(FIGURES_APP_DIR / "footer.jpg"), use_column_width="always")
 
 ############################################
-### Main Page
+### Prediction Page
 ############################################
 
-elif st.session_state.page == "Main Page":
+elif st.session_state.page == "Prediction Page":
     st.title("Dog Breed Classification App")
+
+    st.subheader(
+        """
+        Welcome to the Prediction Page!
+        """
+    )
+
+    st.divider()
 
     st.write(
         """
-        Welcome to the Dog Breed Classification App!
-    """
+        **Instructions**:
+        1. Select a model from the dropdown list below.
+        2. Upload a clear image of a dog (supported formats: JPG, JPEG, PNG).
+        3. Click "Predict" to receive the breed classification.
+        """
     )
-    st.write("""Upload an image of a dog and find its breed using machine learning models.""")
+
     st.write("")
     st.write("")
 
@@ -143,13 +161,16 @@ elif st.session_state.page == "Main Page":
     if available_models:
         selected_model = st.selectbox("Select a Model", available_models)
 
+    st.write("")
+    st.write("")
+
     # File uploader for image input
     uploaded_file = st.file_uploader("Upload an image of a dog", type=["jpg", "jpeg", "png"])
 
     # Display uploaded image
     if uploaded_file is not None:
         image = Image.open(uploaded_file)
-        st.image(image, caption="Uploaded Image", use_column_width=True)
+        st.image(image, caption="Uploaded Image")
 
     # Predict button
     if st.button("Predict") and uploaded_file is not None and selected_model:
@@ -167,20 +188,19 @@ elif st.session_state.page == "Main Page":
         if res.status_code == 200:
             prediction = res.json()["prediction"]
             st.success(f"Predicted Breed: {prediction}")
+            st.write("Enjoy discovering the breed details and unique traits!")
         else:
             st.error(f"Prediction failed: {res.json()['detail']}")
-    else:
-        st.info("Please upload an image and select a model.")
 
     st.write("##")
-    st.image(str(FIGURES_APP_DIR / "footer.jpg"))
+    st.image(str(FIGURES_APP_DIR / "footer.jpg"), use_column_width="always")
 
 ############################################
-### Assistance Page
+### Assistance Page Page
 ############################################
 
-elif st.session_state.page == "Assistance":
-    st.title("Assistance")
+elif st.session_state.page == "Assistance Page":
+    st.title("Assistance Page")
     st.write("Find out more about our little furry friends!")
 
     # List of dog breeds, images, and descriptions for the search
@@ -242,15 +262,16 @@ elif st.session_state.page == "Assistance":
                 st.write(dog["description"])
 
     st.write("##")
-    st.image(str(FIGURES_APP_DIR / "footer.jpg"))
+    st.image(str(FIGURES_APP_DIR / "footer.jpg"), use_column_width="always")
+
 
 ############################################
-### Tracking Page
+### Tracking Page Page
 ############################################
 
-elif st.session_state.page == "Tracking":
+elif st.session_state.page == "Tracking Page":
 
-    st.title("Tracking and monitoring dashboard")
+    st.title("Tracking Page and monitoring dashboard")
     st.write("Make AI development easy!")
 
     # Load the CSV files into DataFrames
@@ -281,13 +302,11 @@ elif st.session_state.page == "Tracking":
 
     # MLFLOW DATA
     mlflow.set_tracking_uri('https://dagshub.com/0J0P0/TAED2_Mates.mlflow/')
-    exp_name_32 = 'exp_batch_32'
-    exp_name_62 = 'exp_batch_62'
 
-    exp_32 = mlflow.get_experiment_by_name(exp_name_32)
+    exp_32 = mlflow.get_experiment_by_name('exp_batch_32')
     exp_32_id = exp_32.experiment_id
 
-    exp_62 = mlflow.get_experiment_by_name(exp_name_62)
+    exp_62 = mlflow.get_experiment_by_name('exp_batch_62')
     exp_62_id = exp_62.experiment_id
 
     runs_32 = mlflow.search_runs(experiment_ids=[exp_32_id])
@@ -316,7 +335,7 @@ elif st.session_state.page == "Tracking":
         pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="500"></iframe>'
         st.markdown(pdf_display, unsafe_allow_html=True)
 
-    # Main layout with two columns: one for the PDF, the other for KPIs and plots
+    # Prediction layout with two columns: one for the PDF, the other for KPIs and plots
     col1, col2 = st.columns([1, 2])
 
     # Column 1: PDF Viewer
@@ -333,8 +352,7 @@ elif st.session_state.page == "Tracking":
         avg_energy_consumed = combined_emissions['energy_consumed'].mean()
 
         # Create KPIs
-        # Create KPIs with custom widths
-        kpi1, kpi2, kpi3 = st.columns([1, 1, 1])  # All have equal width
+        kpi1, kpi2, kpi3 = st.columns([1, 1, 1]) 
         kpi1.metric(label="Avg Duration (s)", value=f"{avg_duration:.4f} s")
         kpi2.metric(label="Total Emissions (kgCO2)", value=f"{total_emissions:.4f} kgCO2")
         kpi3.metric(label="Avg Consumption (kWh)", value=f"{avg_energy_consumed:.4f} kWh")
@@ -342,9 +360,9 @@ elif st.session_state.page == "Tracking":
         st.header("Emission Comparison")
 
         bar_chart = alt.Chart(combined_emissions).transform_calculate(
-            short_id="substring(datum.run_id, 0, 5)"  # Crear una nueva columna con los primeros 5 caracteres de run_id
+            short_id="substring(datum.run_id, 0, 5)"
         ).mark_bar().encode(
-            x=alt.X('short_id:N', title='Model', axis=alt.Axis(labelAngle=-45)),  # Usar short_id en lugar de run_id
+            x=alt.X('short_id:N', title='Model', axis=alt.Axis(labelAngle=-45)),
             y=alt.Y('sum(emissions):Q', title='Total Emissions'),
             color='batch_size:N',
             column='batch_size:N'
@@ -355,7 +373,6 @@ elif st.session_state.page == "Tracking":
         )
 
         st.altair_chart(bar_chart)
-
 
     col3, col4 = st.columns([2, 1])
 
@@ -370,7 +387,7 @@ elif st.session_state.page == "Tracking":
         # Data for optimizers and batch sizes
         optim_counts = combined_metrics['params.optimizer'].value_counts().reset_index()
         optim_counts.columns = ['optimizer', 'count']
-        
+
         batch_size_counts = combined_metrics['params.batch_size'].value_counts().reset_index()
         batch_size_counts.columns = ['batch_size', 'count']
 
@@ -401,3 +418,6 @@ elif st.session_state.page == "Tracking":
             height=225   # Smaller height
         )
         st.altair_chart(batch_chart)
+
+    st.image(str(FIGURES_APP_DIR / "footer.jpg"), use_column_width="always")
+    
