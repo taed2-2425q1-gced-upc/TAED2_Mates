@@ -59,7 +59,7 @@ def single_train(params: dict):
     Parameters:
     ----------
     params: dict
-        Dictionary containing the training parameters.    
+        Dictionary containing the training parameters.
     """
     mlflow.tensorflow.autolog()
     mlflow.set_experiment(params["experiment_name"])
@@ -131,8 +131,7 @@ def single_train(params: dict):
 
 
 @app.command()
-def train(
-):
+def train():
     """
     Function to train a model with multiple combinations of hyperparameters.
     """
@@ -147,7 +146,7 @@ def train(
     combs = list(itertools.product(epochs_options, batch_size_options, optimizer_options))
 
     # Iterate over each combination of hyperparameters
-    for (epochs, batch_size, optimizer) in combs:
+    for epochs, batch_size, optimizer in combs:
         params["epochs"] = epochs
         params["batch_size"] = batch_size
         params["optimizer"] = optimizer
