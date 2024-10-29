@@ -16,7 +16,6 @@ Secondary:
 
 
 
-- **Leaderboard**:
 - **Point of contact**: aditya86@cs.stanford.edu, bangpeng@cs.stanford.edu
 
 ### Dataset Summary
@@ -25,7 +24,24 @@ The Stanford Dogs dataset contains images of 120 breeds of dogs from around the 
 
 ### Supported Tasks and Leaderboards
 
-This dataset can be used in various models which perform an image classification task. It is important to mention that it was found in Kaggle's [Playground Prediction Competition](https://www.kaggle.com/competitions/dog-breed-identification/overview), which was held from September 29th 2017 to February 28th 2018. 7,525 entrants, 1,405 participants, 1,280 teams and 8,708 submission are some of the most relevant details of this competition as well as the models used: ```mobilenet_v2``` from Google and ```resent_50``` from TensorFlow. 
+The Stanford Dogs Dataset is primarily designed for fine-grained image classification tasks, specifically aimed at dog breed recognition. Below are the key supported tasks associated with this dataset:
+
+- **Dog Breed Classification**: The primary task is to classify images into one of the 120 dog breeds. This involves identifying the specific breed of a dog based on its visual features.
+  
+- **Fine-Grained Image Categorization**: Beyond general classification, the dataset supports the challenge of fine-grained categorization, where models must distinguish between visually similar breeds.
+
+- **Transfer Learning Benchmarking**: The dataset serves as a benchmark for evaluating the effectiveness of transfer learning techniques, particularly for models pre-trained on large datasets like ImageNet.
+
+#### Leaderboards
+
+The Stanford Dogs Dataset is often used in competitions and benchmarks to encourage advancements in model performance. Participants can submit their model predictions and compete for the best accuracy scores on the following leaderboards:
+
+- **Kaggle Competitions**: Various competitions hosted on Kaggle utilize the Stanford Dogs Dataset, where data scientists and machine learning practitioners can showcase their models and approaches.
+  - It is important to mention that the dataset for this prject was found in Kaggle's [Playground Prediction Competition](https://www.kaggle.com/competitions/dog-breed-identification/overview), which was held from September 29th 2017 to February 28th 2018. 7,525 entrants, 1,405 participants, 1,280 teams and 8,708 submission are some of the most relevant details of this competition as well as the models used: ```mobilenet_v2``` from Google and ```resent_50``` from TensorFlow. 
+- **Academic Challenges**: Research challenges in fine-grained visual categorization frequently feature this dataset, providing a platform for academic contributions and innovations in image classification techniques.
+
+For up-to-date information on current leaderboards and challenges, participants can refer to the dataset's homepage and related repositories.
+
 
 ### Languages
 American English
@@ -34,7 +50,7 @@ American English
 
 ### Data Instances
 
-There are a total of 20,580 images; ~150 images per class. Moreover, there is an annotation for each instance (image).
+There are a total of 20,580 images; ~150 images per class. Moreover, there is an label for each instance (image).
 
 The list of breeds is as follows:
 
@@ -162,41 +178,24 @@ yorkshire_terrier
 
 ```
 
-This is an example of an annotation of an image of class chihuahua:
+All labels are stored in a separate csv (except for the test ones), which has the attributes ```image_id``` and ```class```. Each row represents an image name (id) and its corresponding breed.
 
-```
-<annotation>
-	<folder>02085620</folder>
-	<filename>n02085620_7</filename>
-	<source>
-		<database>ImageNet database</database>
-	</source>
-	<size>
-		<width>250</width>
-		<height>188</height>
-		<depth>3</depth>
-	</size>
-	<segment>0</segment>
-	<object>
-		<name>Chihuahua</name>
-		<pose>Unspecified</pose>
-		<truncated>0</truncated>
-		<difficult>0</difficult>
-		<bndbox>
-			<xmin>71</xmin>
-			<ymin>1</ymin>
-			<xmax>192</xmax>
-			<ymax>180</ymax>
-		</bndbox>
-	</object>
-</annotation>
-```
+For instance, these are some lines of such file:
 
-On the other hand, this is an example of an image of this same class:
+|id|class|
+|------|-----|
+|000bec180eb18c7604dcecc8fe0dba07| boston_bull|
+|001513dfcb2ffafc82cccf4d8bbaba97|dingo|
+|001cdf01b096e06d78e9e5112d419397|pakinese|
+|00214f311d5d2247d5dfe24b2303d|bluetick|
+|0021f9ceb3235effd7fcde7f7538ed62|golden_retriever|
 
-![Chihuahua](../reports/figures/example_image.jpg)
 
-Each image has a filename that is its unique ```id```. 
+On the other hand, this is an image example. It is an image of a *Boston Bull* dog:
+
+![Boston bull](../reports/figures/dataset_card_example2.jpg)
+
+Each image filename is its unique `id`. 
 
 ### Data Fields
 
@@ -204,10 +203,10 @@ Images and annotations for each of the classes.
 
 ### Data Splits
 
-- ```train``` - the training set, where we are provided the breed for these dogs.
-- ```test``` - the test set, we must predict the probability of each breed for each image.
-- ```annotations``` - the breeds for the images in the train set.
-- ```images``` - images of the dogs used in both sets.
+- ```train``` - Training set. Contains images of dogs with their respective breed labels.
+- ```test``` - Test set. The breed for these dogs is not provided.
+- ```annotations``` - The annotations for the training set.
+- ```images``` - Images of the dogs used in both sets.
 
 ## Dataset Creation
 
@@ -227,11 +226,6 @@ This dataset has been built using images and annotation from ImageNet for the ta
 
 [ImageNet](https://www.image-net.org/index.php) is an image database organized according to the [WordNet](https://wordnet.princeton.edu/) hierarchy (currently only the nouns), in which each node of the hierarchy is depicted by hundreds and thousands of images. The project, developed by Princeton, has been instrumental in advancing computer vision and deep learning research. More than 14 million images have been hand-annotated by the project to indicate what objects are pictured and in at least one million of the images, bounding boxes are also provided. The data is available for free to researchers for non-commercial use.
 
-### Annotations
-
-#### Annotation process
-
-#### Who are the annotators?
 
 ### Personal and Sensitive Information
 
@@ -282,4 +276,3 @@ khosla@csail.mit.edu)
 
 Dataset card template: https://github.com/huggingface/datasets/blob/main/templates/README_guide.md
 
-### Contributors

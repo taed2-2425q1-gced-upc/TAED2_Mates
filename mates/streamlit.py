@@ -37,12 +37,19 @@ import requests
 import streamlit as st
 from loguru import logger
 from PIL import Image
+import pandas as pd
+import base64
+import mlflow
+import altair as alt
 
-from mates.config import DATA_DIR, FIGURES_APP_DIR
+from config import DATA_DIR, METRICS_DIR, FIGURES_APP_DIR
 
 # Define the API URL (modify this to your FastAPI server URL)
-API_URL = "http://localhost:5000/"
+API_URL = "http://localhost:5000/"  # Local FastAPI server
+# API_URL = "http://172.16.4.39:8080/"  # VM FastAPI server
 logger.info(f"Initalizing Streamlit app with API URL: {API_URL}")
+
+st.set_page_config(page_title=None, layout="wide")
 
 # Initialize session state for navigation
 if "page" not in st.session_state:
@@ -73,6 +80,8 @@ if st.sidebar.button("Main Page"):
     set_page("Main Page")
 if st.sidebar.button("Assistance"):
     set_page("Assistance")
+if st.sidebar.button("Tracking"):
+    set_page("Tracking")
 
 ############################################
 ### Welcome Page
@@ -152,7 +161,7 @@ elif st.session_state.page == "Main Page":
         # Make the prediction request to the FastAPI
         files = {"file": ("dog_image.jpg", img_bytes, "image/jpeg")}
         res = requests.post(
-            f"{API_URL}/predict", params={"model_name": selected_model}, files=files, timeout=10
+            f"{API_URL}predict", params={"model_name": selected_model}, files=files, timeout=10
         )
 
         if res.status_code == 200:
@@ -207,7 +216,9 @@ elif st.session_state.page == "Assistance":
 
         with st.expander(f"{selected_dog['name']} Information", expanded=True):
             st.image(
-                selected_dog["image_path"], caption=selected_dog["name"], use_column_width=True
+                str(FIGURES_APP_DIR / selected_dog["image_path"]),
+                caption=selected_dog["name"],
+                use_column_width=True
             )
             st.subheader(selected_dog["name"])
             st.write(selected_dog["description"])
@@ -232,3 +243,161 @@ elif st.session_state.page == "Assistance":
 
     st.write("##")
     st.image(str(FIGURES_APP_DIR / "footer.jpg"))
+
+############################################
+### Tracking Page
+############################################
+
+elif st.session_state.page == "Tracking":
+
+    st.title("Tracking and monitoring dashboard")
+    st.write("Make AI development easy!")
+
+    # Load the CSV files into DataFrames
+    emissions_32 = pd.read_csv(METRICS_DIR / "mobilenet_exp_batch_32_emissions.csv")
+    emissions_62 = pd.read_csv(METRICS_DIR / "mobilenet_exp_batch_62_emissions.csv")
+    emissions_32 = emissions_32[['timestamp',
+                                 'run_id',
+                                 'duration',
+                                 'emissions',
+                                 'cpu_power',
+                                 'gpu_power',
+                                 'ram_power',
+                                 'energy_consumed',
+                                 'country_name']]
+    emissions_62 = emissions_32[['timestamp',
+                                 'run_id',
+                                 'duration',
+                                 'emissions',
+                                 'cpu_power',
+                                 'gpu_power',
+                                 'ram_power',
+                                 'energy_consumed',
+                                 'country_name']]
+    # Create a combined dataframe for comparison
+    emissions_32["batch_size"] = "32"
+    emissions_62["batch_size"] = "62"
+    combined_emissions = pd.concat([emissions_32, emissions_62])
+
+    # MLFLOW DATA
+    mlflow.set_tracking_uri('https://dagshub.com/0J0P0/TAED2_Mates.mlflow/')
+    exp_name_32 = 'exp_batch_32'
+    exp_name_62 = 'exp_batch_62'
+
+    exp_32 = mlflow.get_experiment_by_name(exp_name_32)
+    exp_32_id = exp_32.experiment_id
+
+    exp_62 = mlflow.get_experiment_by_name(exp_name_62)
+    exp_62_id = exp_62.experiment_id
+
+    runs_32 = mlflow.search_runs(experiment_ids=[exp_32_id])
+    runs_62 = mlflow.search_runs(experiment_ids=[exp_62_id])
+
+    df_runs_32 = pd.DataFrame(runs_32)
+    df_runs_62 = pd.DataFrame(runs_62)
+
+    combined_metrics = pd.concat([df_runs_32, df_runs_62])
+    combined_metrics = combined_metrics[['run_id',
+                                            'status',
+                                            'metrics.val_accuracy',
+                                            'metrics.accuracy',
+                                            'metrics.loss',
+                                            'metrics.val_loss',
+                                            'params.epochs',
+                                            'params.optimizer',
+                                            'params.batch_size']]
+
+
+    # Function to display PDF as base64
+    def display_pdf(pdf_file):
+        """Display a PDF file using a base64 string."""
+        with open(pdf_file, "rb") as f:
+            base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+        pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="500"></iframe>'
+        st.markdown(pdf_display, unsafe_allow_html=True)
+
+    # Main layout with two columns: one for the PDF, the other for KPIs and plots
+    col1, col2 = st.columns([1, 2])
+
+    # Column 1: PDF Viewer
+    with col1:
+        st.header("Gaissa Label")
+        display_pdf(METRICS_DIR / "gaissa/gaissa_label.pdf")  # Call the function to display the PDF
+
+    with col2:
+        st.header("Key Performance Indicators")
+
+        # Compute KPIs based on your dataset
+        avg_duration = combined_emissions['duration'].mean()
+        total_emissions = combined_emissions['emissions'].sum()
+        avg_energy_consumed = combined_emissions['energy_consumed'].mean()
+
+        # Create KPIs
+        # Create KPIs with custom widths
+        kpi1, kpi2, kpi3 = st.columns([1, 1, 1])  # All have equal width
+        kpi1.metric(label="Avg Duration (s)", value=f"{avg_duration:.4f} s")
+        kpi2.metric(label="Total Emissions (kgCO2)", value=f"{total_emissions:.4f} kgCO2")
+        kpi3.metric(label="Avg Consumption (kWh)", value=f"{avg_energy_consumed:.4f} kWh")
+
+        st.header("Emission Comparison")
+
+        bar_chart = alt.Chart(combined_emissions).transform_calculate(
+            short_id="substring(datum.run_id, 0, 5)"  # Crear una nueva columna con los primeros 5 caracteres de run_id
+        ).mark_bar().encode(
+            x=alt.X('short_id:N', title='Model', axis=alt.Axis(labelAngle=-45)),  # Usar short_id en lugar de run_id
+            y=alt.Y('sum(emissions):Q', title='Total Emissions'),
+            color='batch_size:N',
+            column='batch_size:N'
+        ).properties(
+            title='Emissions Comparison Across Models and Batch Sizes',
+            width=245,
+            height=150
+        )
+
+        st.altair_chart(bar_chart)
+
+
+    col3, col4 = st.columns([2, 1])
+
+    with col3:
+        st.header("Model Metrics")
+        st.dataframe(combined_metrics, height=200)
+
+        st.header("Model Emissions")
+        st.dataframe(combined_emissions, height=200)
+
+    with col4:
+        # Data for optimizers and batch sizes
+        optim_counts = combined_metrics['params.optimizer'].value_counts().reset_index()
+        optim_counts.columns = ['optimizer', 'count']
+        
+        batch_size_counts = combined_metrics['params.batch_size'].value_counts().reset_index()
+        batch_size_counts.columns = ['batch_size', 'count']
+
+        st.header("Optimizer Stats")
+
+        # Pie chart for optimizers using Altair with smaller dimensions
+        optimizer_chart = alt.Chart(optim_counts).mark_arc().encode(
+            theta=alt.Theta(field='count', type='quantitative'),
+            color=alt.Color(field='optimizer', type='nominal'),
+            tooltip=['optimizer', 'count']
+        ).properties(
+            title="Optimizers Used",
+            width=300,   # Smaller width
+            height=225   # Smaller height
+        )
+        st.altair_chart(optimizer_chart)
+
+        st.header("Batch Sizes Stats")
+
+        # Pie chart for batch sizes using Altair with smaller dimensions
+        batch_chart = alt.Chart(batch_size_counts).mark_arc().encode(
+            theta=alt.Theta(field='count', type='quantitative'),
+            color=alt.Color(field='batch_size', type='nominal'),
+            tooltip=['batch_size', 'count']
+        ).properties(
+            title="Batch Sizes",
+            width=300,   # Smaller width
+            height=225   # Smaller height
+        )
+        st.altair_chart(batch_chart)

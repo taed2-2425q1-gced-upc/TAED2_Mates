@@ -31,7 +31,7 @@ def test_dbc_model_validation(dbc_model):
     Test for dog breed classification model.
 
     This test verifies that the model makes valid predictions with
-    the valid dataset images and achieves an acceptable accuracy
+    the valid dataset images and achieves an acceptable accuracy 
     on the validation dataset.
     """
     # Load validation labels
@@ -63,7 +63,6 @@ def test_dbc_model_validation(dbc_model):
 
     # Assert that the accuracy is above a certain threshold
     assert accuracy > 0.8, f"Expected accuracy > 0.8, but got {accuracy:.4f}"
-
 
 @pytest.mark.usefixtures("image_data")
 def test_dbc_model(dbc_model, image_data):

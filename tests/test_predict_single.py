@@ -6,8 +6,8 @@ from unittest import mock
 import pytest
 from PIL import Image
 
-from mates.config import IMG_SIZE, TEST_DIR
-from mates.features.features import load_model
+from mates.config import IMG_SIZE, RAW_DATA_DIR, TEST_DIR
+from mates.features.features import load_model, read_labels
 from mates.modeling.predict import predict_single
 
 
@@ -25,43 +25,31 @@ def image_data():
     image_paths = [
         TEST_DIR / f"test_images/{img}"
         for img in [
-            "img1.jpg",
-            "img2.jpg",
-            "img3.jpg",
-            "img4.jpg",
-            "img5.jpg",
-            "img6.jpg",
-            "img7.jpg",
-            "img8.jpg",
-            "img9.jpg",
-            "img10.jpg",
+            "0021f9ceb3235effd7fcde7f7538ed62.jpg",
+            "008887054b18ba3c7601792b6a453cc3.jpg",
+            "00e9ed3fab1d2032603d1a90e557976f.jpg",
+            "010d65bd29d246aea53d9849da142ccf.jpg",
+            "0120343862761d052d6a7ade81625c94.jpg",
+            "0161847d5bfae154af084993fa26a1a7.jpg",
+            "0311a6a51a414ba91f3ad8055170baa1.jpg",
+            "0365fe4e3e13a885c6b02ebbbf2d9173.jpg",
+            "03ae71ff9e4c5ac97afdfa956ea5e191.jpg",
+            "03f6435dc8a5e760d19e67831c6034fb.jpg",
         ]
     ]
     true_classes = [
-        "pug",
-        "rottweiler",
-        "german_shepherd",
-        "newfoundland",
-        "blenheim_spaniel",
-        "saint_bernard",
-        "mexican_hairless",
-        "border_collie",
+        "golden_retriever",
+        "boxer",
+        "weimaraner",
+        "boston_bull",
         "dingo",
-        "beagle",
+        "giant_schnauzer",
+        "lhasa",
+        "cairn",
+        "borzoi",
+        "chow",
     ]
-
-    dog_breeds = ["dog" for _ in range(120)]
-    dog_breeds[88] = "pug"
-    dog_breeds[91] = "rottweiler"
-    dog_breeds[46] = "german_shepherd"
-    dog_breeds[78] = "newfoundland"
-    dog_breeds[13] = "blenheim_spaniel"
-    dog_breeds[92] = "saint_bernard"
-    dog_breeds[74] = "mexican_hairless"
-    dog_breeds[16] = "border_collie"
-    dog_breeds[37] = "dingo"
-    dog_breeds[9] = "beagle"
-
+    _, dog_breeds = read_labels(RAW_DATA_DIR)
     return image_paths, true_classes, dog_breeds
 
 
@@ -127,7 +115,7 @@ def test_predict_single_image_conversion(mock_image, dbc_model, image_data):
 
     # Create a mock grayscale image
     mock_image_instance = mock_image.new("L", (IMG_SIZE, IMG_SIZE))  # Mock grayscale image
-    rgb_image = Image.open("tests/test_images/pod.jpg")
+    rgb_image = Image.open("tests/pod.jpg")
     mock_image_instance.convert.return_value = rgb_image
 
     # Call predict_single with the mocked image
