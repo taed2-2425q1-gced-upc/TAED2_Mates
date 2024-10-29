@@ -34,12 +34,12 @@ Additional module imports:
     data, model parameters, and creating models.
 """
 
+import itertools
 from pathlib import Path
 
 import mlflow
 import pandas as pd
 import tf_keras
-import itertools
 import typer
 from codecarbon import EmissionsTracker
 from loguru import logger

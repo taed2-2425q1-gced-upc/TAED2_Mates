@@ -30,7 +30,6 @@ import tensorflow_hub as hub
 from tensorflow.python.framework.convert_to_constants import (
     convert_variables_to_constants_v2_as_graph,
 )
-
 from tf_keras.models import load_model
 
 

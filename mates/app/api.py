@@ -217,7 +217,7 @@ async def _predict_dog_breed(model_name: str, file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(
             status_code=HTTPStatus.BAD_REQUEST, detail=f"Invalid image format: {e}"
-        )
+        ) from e
 
     # Predict breed using the selected model
     try:
@@ -230,4 +230,4 @@ async def _predict_dog_breed(model_name: str, file: UploadFile = File(...)):
         raise HTTPException(
             status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail="An error occurred during prediction.",
-        )
+        ) from e

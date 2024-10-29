@@ -30,19 +30,19 @@ Make sure the FastAPI backend is running at the specified API_URL before using t
 """
 
 
+import base64
 import io
 import json
 
+import altair as alt
+import mlflow
+import pandas as pd
 import requests
 import streamlit as st
+from config import DATA_DIR, METRICS_DIR, FIGURES_APP_DIR
 from loguru import logger
 from PIL import Image
-import pandas as pd
-import base64
-import mlflow
-import altair as alt
 
-from config import DATA_DIR, METRICS_DIR, FIGURES_APP_DIR
 
 # Define the API URL (modify this to your FastAPI server URL)
 API_URL = "http://localhost:5000/"  # Local FastAPI server
@@ -352,7 +352,7 @@ elif st.session_state.page == "Tracking Page":
         avg_energy_consumed = combined_emissions['energy_consumed'].mean()
 
         # Create KPIs
-        kpi1, kpi2, kpi3 = st.columns([1, 1, 1]) 
+        kpi1, kpi2, kpi3 = st.columns([1, 1, 1])
         kpi1.metric(label="Avg Duration (s)", value=f"{avg_duration:.4f} s")
         kpi2.metric(label="Total Emissions (kgCO2)", value=f"{total_emissions:.4f} kgCO2")
         kpi3.metric(label="Avg Consumption (kWh)", value=f"{avg_energy_consumed:.4f} kWh")
