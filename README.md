@@ -162,16 +162,6 @@ A **Streamlit** web app (`mates/streamlit.py`) allows users to interactively tes
 
 ---
 
-## Project Description
-
-Strong software engineering practices are essential for ensuring the reliability and scalability of modern data science and machine learning projects. This project aims at providing hands-on experience in software engineering and good software practices, specifically regarding ML projects.
-
-To put this into practice, our team has chosen to fine-tune an existing model in the task of dog breed classification. For this, the MobileNetV2 model was used as a based model.
-
-This project will not only strengthen our technical proficiency in model fine-tuning and machine learning workflows but will also provide valuable experience in applying high-quality standard software engineering practices. By integrating principles such as version control, continuous integration, and code modularity, we aim to deliver a scalable and maintainable solution.
-
----
-
 ## Contact
 For any questions or issues regarding this dataset, please contact:
 
