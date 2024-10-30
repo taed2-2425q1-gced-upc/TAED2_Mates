@@ -29,7 +29,6 @@ To run the application, use the command:
 Make sure the FastAPI backend is running at the specified API_URL before using the app.
 """
 
-
 import base64
 import io
 import json
@@ -39,10 +38,10 @@ import mlflow
 import pandas as pd
 import requests
 import streamlit as st
-from config import DATA_DIR, FIGURES_APP_DIR, METRICS_DIR
 from loguru import logger
 from PIL import Image
 
+from mates.config import DATA_DIR, FIGURES_APP_DIR, METRICS_DIR
 
 # Define the API URL (modify this to your FastAPI server URL)
 API_URL = "http://localhost:5000/"  # Local FastAPI server
@@ -91,17 +90,27 @@ if st.session_state.page == "Welcome Page":
     st.title("Welcome to the Dog Breed Classification App!")
     st.subheader(
         """
-        Welcome! This app is designed to help you classify dog breeds with the power of machine learning. 
+        Welcome! This app is designed to help you classify dog breeds \
+        with the power of machine learning. 
         """
     )
 
     st.write(
         """
-        Using a fine-tuned MobileNetV2 model, our app can analyze an uploaded dog image and predict its breed. This project also serves as a hands-on demonstration of best practices in software engineering for machine learning. The Dog Breed Classification App showcases our commitment to building reliable, scalable ML solutions through strong software engineering principles. By using modular code, version control, and automated tracking of training metrics, we ensure a robust and maintainable pipeline.
+        Using a fine-tuned MobileNetV2 model, our app can analyze an uploaded \
+        dog image and predict its breed. This project also serves as a hands-on \
+        demonstration of best practices in software engineering for machine learning. \
+        The Dog Breed Classification App showcases our commitment to building reliable, \
+        scalable ML solutions through strong software engineering principles. \
+        By using modular code, version control, and automated tracking of training metrics,\
+        we ensure a robust and maintainable pipeline.
         """
     )
 
-    st.info("Head over to the Prediction Page to upload an image and reveal the unique characteristics of our furry friends!")
+    st.info(
+        "Head over to the Prediction Page to upload an image and reveal the unique \
+        characteristics of our furry friends!"
+    )
 
     # Navigate to the Prediction Prediction Page
     if st.button("Go to Prediction Page"):
@@ -238,7 +247,7 @@ elif st.session_state.page == "Assistance Page":
             st.image(
                 str(FIGURES_APP_DIR / selected_dog["image_path"]),
                 caption=selected_dog["name"],
-                use_column_width=True
+                use_column_width=True,
             )
             st.subheader(selected_dog["name"])
             st.write(selected_dog["description"])
@@ -277,36 +286,44 @@ elif st.session_state.page == "Tracking Page":
     # Load the CSV files into DataFrames
     emissions_32 = pd.read_csv(METRICS_DIR / "mobilenet_exp_batch_32_emissions.csv")
     emissions_62 = pd.read_csv(METRICS_DIR / "mobilenet_exp_batch_62_emissions.csv")
-    emissions_32 = emissions_32[['timestamp',
-                                 'run_id',
-                                 'duration',
-                                 'emissions',
-                                 'cpu_power',
-                                 'gpu_power',
-                                 'ram_power',
-                                 'energy_consumed',
-                                 'country_name']]
-    emissions_62 = emissions_32[['timestamp',
-                                 'run_id',
-                                 'duration',
-                                 'emissions',
-                                 'cpu_power',
-                                 'gpu_power',
-                                 'ram_power',
-                                 'energy_consumed',
-                                 'country_name']]
+    emissions_32 = emissions_32[
+        [
+            "timestamp",
+            "run_id",
+            "duration",
+            "emissions",
+            "cpu_power",
+            "gpu_power",
+            "ram_power",
+            "energy_consumed",
+            "country_name",
+        ]
+    ]
+    emissions_62 = emissions_32[
+        [
+            "timestamp",
+            "run_id",
+            "duration",
+            "emissions",
+            "cpu_power",
+            "gpu_power",
+            "ram_power",
+            "energy_consumed",
+            "country_name",
+        ]
+    ]
     # Create a combined dataframe for comparison
     emissions_32["batch_size"] = "32"
     emissions_62["batch_size"] = "62"
     combined_emissions = pd.concat([emissions_32, emissions_62])
 
     # MLFLOW DATA
-    mlflow.set_tracking_uri('https://dagshub.com/0J0P0/TAED2_Mates.mlflow/')
+    mlflow.set_tracking_uri("https://dagshub.com/0J0P0/TAED2_Mates.mlflow/")
 
-    exp_32 = mlflow.get_experiment_by_name('exp_batch_32')
+    exp_32 = mlflow.get_experiment_by_name("exp_batch_32")
     exp_32_id = exp_32.experiment_id
 
-    exp_62 = mlflow.get_experiment_by_name('exp_batch_62')
+    exp_62 = mlflow.get_experiment_by_name("exp_batch_62")
     exp_62_id = exp_62.experiment_id
 
     runs_32 = mlflow.search_runs(experiment_ids=[exp_32_id])
@@ -316,23 +333,27 @@ elif st.session_state.page == "Tracking Page":
     df_runs_62 = pd.DataFrame(runs_62)
 
     combined_metrics = pd.concat([df_runs_32, df_runs_62])
-    combined_metrics = combined_metrics[['run_id',
-                                            'status',
-                                            'metrics.val_accuracy',
-                                            'metrics.accuracy',
-                                            'metrics.loss',
-                                            'metrics.val_loss',
-                                            'params.epochs',
-                                            'params.optimizer',
-                                            'params.batch_size']]
-
+    combined_metrics = combined_metrics[
+        [
+            "run_id",
+            "status",
+            "metrics.val_accuracy",
+            "metrics.accuracy",
+            "metrics.loss",
+            "metrics.val_loss",
+            "params.epochs",
+            "params.optimizer",
+            "params.batch_size",
+        ]
+    ]
 
     # Function to display PDF as base64
     def display_pdf(pdf_file):
         """Display a PDF file using a base64 string."""
         with open(pdf_file, "rb") as f:
-            base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-        pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="500"></iframe>'
+            base64_pdf = base64.b64encode(f.read()).decode("utf-8")
+        pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" \
+            width="100%" height="500"></iframe>'
         st.markdown(pdf_display, unsafe_allow_html=True)
 
     # Prediction layout with two columns: one for the PDF, the other for KPIs and plots
@@ -341,15 +362,17 @@ elif st.session_state.page == "Tracking Page":
     # Column 1: PDF Viewer
     with col1:
         st.header("Gaissa Label")
-        display_pdf(METRICS_DIR / "gaissa/gaissa_label.pdf")  # Call the function to display the PDF
+        display_pdf(
+            METRICS_DIR / "gaissa/gaissa_label.pdf"
+        )  # Call the function to display the PDF
 
     with col2:
         st.header("Key Performance Indicators")
 
         # Compute KPIs based on your dataset
-        avg_duration = combined_emissions['duration'].mean()
-        total_emissions = combined_emissions['emissions'].sum()
-        avg_energy_consumed = combined_emissions['energy_consumed'].mean()
+        avg_duration = combined_emissions["duration"].mean()
+        total_emissions = combined_emissions["emissions"].sum()
+        avg_energy_consumed = combined_emissions["energy_consumed"].mean()
 
         # Create KPIs
         kpi1, kpi2, kpi3 = st.columns([1, 1, 1])
@@ -359,17 +382,19 @@ elif st.session_state.page == "Tracking Page":
 
         st.header("Emission Comparison")
 
-        bar_chart = alt.Chart(combined_emissions).transform_calculate(
-            short_id="substring(datum.run_id, 0, 5)"
-        ).mark_bar().encode(
-            x=alt.X('short_id:N', title='Model', axis=alt.Axis(labelAngle=-45)),
-            y=alt.Y('sum(emissions):Q', title='Total Emissions'),
-            color='batch_size:N',
-            column='batch_size:N'
-        ).properties(
-            title='Emissions Comparison Across Models and Batch Sizes',
-            width=245,
-            height=150
+        bar_chart = (
+            alt.Chart(combined_emissions)
+            .transform_calculate(short_id="substring(datum.run_id, 0, 5)")
+            .mark_bar()
+            .encode(
+                x=alt.X("short_id:N", title="Model", axis=alt.Axis(labelAngle=-45)),
+                y=alt.Y("sum(emissions):Q", title="Total Emissions"),
+                color="batch_size:N",
+                column="batch_size:N",
+            )
+            .properties(
+                title="Emissions Comparison Across Models and Batch Sizes", width=245, height=150
+            )
         )
 
         st.altair_chart(bar_chart)
@@ -385,39 +410,44 @@ elif st.session_state.page == "Tracking Page":
 
     with col4:
         # Data for optimizers and batch sizes
-        optim_counts = combined_metrics['params.optimizer'].value_counts().reset_index()
-        optim_counts.columns = ['optimizer', 'count']
+        optim_counts = combined_metrics["params.optimizer"].value_counts().reset_index()
+        optim_counts.columns = ["optimizer", "count"]
 
-        batch_size_counts = combined_metrics['params.batch_size'].value_counts().reset_index()
-        batch_size_counts.columns = ['batch_size', 'count']
+        batch_size_counts = combined_metrics["params.batch_size"].value_counts().reset_index()
+        batch_size_counts.columns = ["batch_size", "count"]
 
         st.header("Optimizer Stats")
 
         # Pie chart for optimizers using Altair with smaller dimensions
-        optimizer_chart = alt.Chart(optim_counts).mark_arc().encode(
-            theta=alt.Theta(field='count', type='quantitative'),
-            color=alt.Color(field='optimizer', type='nominal'),
-            tooltip=['optimizer', 'count']
-        ).properties(
-            title="Optimizers Used",
-            width=300,   # Smaller width
-            height=225   # Smaller height
+        optimizer_chart = (
+            alt.Chart(optim_counts)
+            .mark_arc()
+            .encode(
+                theta=alt.Theta(field="count", type="quantitative"),
+                color=alt.Color(field="optimizer", type="nominal"),
+                tooltip=["optimizer", "count"],
+            )
+            .properties(
+                title="Optimizers Used", width=300, height=225  # Smaller width  # Smaller height
+            )
         )
         st.altair_chart(optimizer_chart)
 
         st.header("Batch Sizes Stats")
 
         # Pie chart for batch sizes using Altair with smaller dimensions
-        batch_chart = alt.Chart(batch_size_counts).mark_arc().encode(
-            theta=alt.Theta(field='count', type='quantitative'),
-            color=alt.Color(field='batch_size', type='nominal'),
-            tooltip=['batch_size', 'count']
-        ).properties(
-            title="Batch Sizes",
-            width=300,   # Smaller width
-            height=225   # Smaller height
+        batch_chart = (
+            alt.Chart(batch_size_counts)
+            .mark_arc()
+            .encode(
+                theta=alt.Theta(field="count", type="quantitative"),
+                color=alt.Color(field="batch_size", type="nominal"),
+                tooltip=["batch_size", "count"],
+            )
+            .properties(
+                title="Batch Sizes", width=300, height=225  # Smaller width  # Smaller height
+            )
         )
         st.altair_chart(batch_chart)
 
     st.image(str(FIGURES_APP_DIR / "footer.jpg"), use_column_width="always")
-    
