@@ -8,9 +8,7 @@ import pytest
 
 from mates.config import PROCESSED_DATA_DIR
 from mates.features.features import create_batches, load_model, load_processed_data
-from tests.test_predict_single import image_data
 
-IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
 
 
 @pytest.fixture
@@ -21,11 +19,6 @@ def dbc_model():
     return load_model("mobilenet_exp_batch_62")
 
 
-@pytest.mark.skipif(
-    IN_GITHUB_ACTIONS,
-    reason="Test doesn't work in Github Actions. \
-                    Enough with test_dbc_model",
-)
 def test_dbc_model_validation(dbc_model):
     """
     Test for dog breed classification model.
@@ -52,12 +45,9 @@ def test_dbc_model_validation(dbc_model):
     # Convert predictions and true labels to class indices
     predicted_classes = np.argmax(y_pred, axis=1)
     true_classes = np.argmax(y_valid, axis=1)
-    print(predicted_classes[0:100])
-    print(true_classes[0:100])
 
     # Calculate accuracy
     correct_predictions = np.sum(predicted_classes == true_classes)
-    print(correct_predictions)
     total_predictions = len(predicted_classes)
     accuracy = correct_predictions / total_predictions
 
