@@ -32,6 +32,8 @@ Make sure the FastAPI backend is running at the specified API_URL before using t
 import base64
 import io
 import json
+import sys
+from pathlib import Path
 
 import altair as alt
 import mlflow
@@ -42,6 +44,10 @@ from loguru import logger
 from PIL import Image
 
 from mates.config import DATA_DIR, FIGURES_APP_DIR, METRICS_DIR
+
+# Setting path
+root_dir = Path(__file__).resolve().parent.parent
+sys.path.append(str(root_dir))
 
 # Define the API URL (modify this to your FastAPI server URL)
 API_URL = "http://localhost:5000/"  # Local FastAPI server
