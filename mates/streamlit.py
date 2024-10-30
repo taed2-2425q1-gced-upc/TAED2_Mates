@@ -43,15 +43,15 @@ import streamlit as st
 from loguru import logger
 from PIL import Image
 
-from mates.config import DATA_DIR, FIGURES_APP_DIR, METRICS_DIR
-
 # Setting path
 root_dir = Path(__file__).resolve().parent.parent
 sys.path.append(str(root_dir))
 
+from mates.config import DATA_DIR, FIGURES_APP_DIR, METRICS_DIR
+    
 # Define the API URL (modify this to your FastAPI server URL)
-API_URL = "http://localhost:5000/"  # Local FastAPI server
-# API_URL = "http://172.16.4.39:8080/"  # VM FastAPI server
+# API_URL = "http://localhost:5000/"  # Local FastAPI server
+API_URL = "http://nattech.fib.upc.edu:40390/"  # VM FastAPI server
 logger.info(f"Initalizing Streamlit app with API URL: {API_URL}")
 
 st.set_page_config(page_title=None, layout="wide")

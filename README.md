@@ -137,42 +137,79 @@ A **Streamlit** web app (`mates/streamlit.py`) allows users to interactively tes
 
 ## Getting Started
 
-1. **Clone the Repository**:
-   ```bash
-   git clone <repository-url>
-   cd <repository-folder>
-   ```
+Follow these steps to set up the project on your local machine and get it running.
 
-2. **Set Up Environment**:
-   - Use **Poetry** to install dependencies:
-     ```bash
-     poetry install
-     ```
+### 1. Clone the Repository
+Begin by cloning the repository to your local machine. This will create a copy of the project files on your system.
+```bash
+git clone <repository-url>
+cd <repository-folder>
+```
+**Note**: Replace `<repository-url>` with the actual URL of the repository and `<repository-folder>` with the name of the folder created after cloning.
 
-3. **Data Processing**:
-   - Fetch the dataset and prepare it using **DVC**:
-     ```bash
-     dvc pull
-     ```
+### 2. Set Up Environment
+To manage dependencies efficiently, we use **Poetry**. Follow these steps:
 
-4. **Model Training**:
-   - Run the training script to fine-tune the MobileNetV2 model:
-     ```bash
-     dvc repro
-     ```
+- **Install Dependencies**:
+  Ensure you have Python 3.11 installed. Use Poetry to install all required dependencies specified in the `pyproject.toml` file:
+  ```bash
+  python3.11 -m poetry install
+  ```
 
-5. **Model Inference**:
-   - Using the web interface and the API, test the model on new images:
-     ```bash
-     streamlit run mates/streamlit.py
-     ```
+- **Activate the Virtual Environment**:
+  Activate the Poetry-managed virtual environment to ensure all commands run within the context of this environment:
+  ```bash
+  python3.11 -m poetry shell
+  ```
 
-    - For that the API can be used in local mode:git p
-     ```bash
-     uvicorn mates.app.api:app --host 0.0.0.0 --port 5000 --reload
-     ```
+### 3. Data Processing
+The project relies on a specific dataset. Use **DVC** (Data Version Control) to pull the necessary data files:
+```bash
+dvc pull
+```
+**Explanation**: This command fetches the dataset stored in DVC's remote storage, ensuring you have the correct version of the data for your model training.
+
+### 4. Model Training
+Once your environment is set up and the data is ready, you can start training your model. To fine-tune the MobileNetV2 model, execute the following command. You may also modify hyperparameters in the `params.yaml` file to customize the training process:
+```bash
+dvc repro
+```
+**Tip**: Review the `params.yaml` file before running this command to adjust settings such as batch size, or number of epochs as needed.
+
+### 5. Model Inference
+After training, you can evaluate the model using new images. The project provides a web interface and API for this purpose:
+
+- **Run the Streamlit Web Interface**:
+  Launch the Streamlit application, which provides an interactive UI to test your model:
+  ```bash
+  streamlit run mates/streamlit.py
+  ```
+
+- **Run the API in Local Mode**:
+  If you prefer to interact with the model via an API, run the FastAPI server locally:
+  ```bash
+  uvicorn mates.app.api:app --host 0.0.0.0 --port 5000 --reload
+  ```
+
+- **Run the API in a Virtual Machine**:
+  If you're operating in a virtual machine environment, use this command:
+  ```bash
+  uvicorn mates.app.api:app --host 0.0.0.0 --port 8080 --reload
+  ```
+
+### Configuring API URLs
+Depending on whether you are running the API locally or in a virtual machine, you'll need to update the API URL in the `streamlit.py` file:
+
+```python
+# Set the appropriate API URL
+API_URL = "http://localhost:5000/"  # For local FastAPI server
+API_URL = "http://nattech.fib.upc.edu:40390/"  # For VM FastAPI server
+```
+
+**Important**: Ensure that the API URL matches the mode you are using to avoid connectivity issues.
 
 ---
+
 
 ## Contact
 For any questions or issues regarding this dataset, please contact:
