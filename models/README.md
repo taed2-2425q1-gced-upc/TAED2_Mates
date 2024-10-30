@@ -24,6 +24,14 @@ models/
 
 ## File Descriptions
 
+Since the model is being tracked in DVC, when cloning for the first time, the model files won't be available. To download the model files, run the following command in the terminal:
+
+```bash
+dvc pull models/mobilenet_exp_batch_32.h5
+
+dvc pull models/mobilenet_exp_batch_62.h5
+```
+
 ### 1. `mobilenet_exp_batch_32.h5`
 This file contains the MobileNet model trained with a batch size of 32. The model was fine-tuned on the dog breed classification dataset and is stored in the HDF5 format (`.h5`). It can be used for inference or further fine-tuning by loading it into a Keras or TensorFlow environment.
 

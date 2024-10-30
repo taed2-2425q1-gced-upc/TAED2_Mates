@@ -6,13 +6,13 @@ prepare:
   batch_size: 62
 train:
   save_model: True
-  experiment_name: "hyperparameters"
+  experiment_name: "exp_batch"
   model_name: "mobilenet"
   model_url: "https://www.kaggle.com/models/google/mobilenet-v2/TensorFlow2/130-224-feature-vector/2"
   hyperparams:
     epochs: [6]
     batch_size: [32, 62]
-    optimizer: [adamw, adam, sgd, rmsprop]
+    optimizer: [adamw]
   patience: [5]
   metrics: ["accuracy"]
   monitor: "accuracy"

@@ -158,7 +158,19 @@ A **Streamlit** web app (`mates/streamlit.py`) allows users to interactively tes
 4. **Model Training**:
    - Run the training script to fine-tune the MobileNetV2 model:
      ```bash
-     python mates/modeling/train.py
+     dvc repro
+     ```
+
+5. **Model Inference**:
+   - Using the web interface and the API, test the model on new images:
+     ```bash
+     streamlit run mates/streamlit.py
+     ```
+
+    - For that the API can be used in local mode:git p
+     ```bash
+     uvicorn mates.app.api:app --host 0.0.0.0 --port 5000 --reload
+     ```
 
 ---
 

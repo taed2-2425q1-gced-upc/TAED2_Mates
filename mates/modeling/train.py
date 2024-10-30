@@ -6,8 +6,12 @@ and save the model and its metrics. It also tracks CO2 emissions during the trai
 using the CodeCarbon library and logs relevant metrics to MLflow for experiment tracking.
 
 Commands available:
-- `train`: Loads processed data, trains the model, tracks emissions, logs metrics to MLflow,
-  and saves the model if specified in the parameters.
+- `train`: Trains a model with multiple combinations of hyperparameters. This function calls
+    the `single_train` function for each combination of hyperparameters.
+
+- `single_train`: Trains a model with a single set of hyperparameters. This function is called
+    by the `train` function for each combination of hyperparameters.
+
 
 Workflow:
 1. Load training parameters from a YAML configuration file.
@@ -85,7 +89,7 @@ def single_train(params: dict):
             monitor=params["monitor"], patience=params["patience"]
         )
 
-        out_file = f"{params['optimizer']}_{params['batch_size']}_emissions.csv"
+        out_file = f"{params['model_name']}_{params['experiment_name']}_{params['batch_size']}_emissions.csv"
 
         # Track the CO2 emissions of training the model
         tracker = EmissionsTracker(
@@ -126,8 +130,8 @@ def single_train(params: dict):
 
         logger.success("Model training complete.")
         if params["save_model"]:
-            model.save(MODELS_DIR / f"{params['model_name']}_{params['experiment_name']}.h5")
-            mlflow.tensorflow.log_model(model, params["model_name"] + params["experiment_name"])
+            model.save(MODELS_DIR / f"{params['model_name']}_{params['experiment_name']}_{params['batch_size']}.h5")
+            mlflow.tensorflow.log_model(model, f"{params['model_name']}_{params['experiment_name']}_{params['batch_size']}")
 
 
 @app.command()
