@@ -87,9 +87,9 @@ def test_process_data_train_save(
 
     # Assertions for file open calls
     mock_open.assert_any_call(PROCESSED_DATA_DIR / "output_shape.pkl", "wb")
-    mock_open.assert_any_call(PROCESSED_DATA_DIR / "x_train.pkl", "wb")
+    mock_open.assert_any_call(PROCESSED_DATA_DIR / "X_train.pkl", "wb")
     mock_open.assert_any_call(PROCESSED_DATA_DIR / "y_train.pkl", "wb")
-    mock_open.assert_any_call(PROCESSED_DATA_DIR / "x_valid.pkl", "wb")
+    mock_open.assert_any_call(PROCESSED_DATA_DIR / "X_valid.pkl", "wb")
     mock_open.assert_any_call(PROCESSED_DATA_DIR / "y_valid.pkl", "wb")
 
     assert mock_dump.call_count == 5, "Expected 5 calls to pickle.dump."
