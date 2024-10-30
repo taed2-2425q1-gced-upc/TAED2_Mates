@@ -38,7 +38,10 @@ jobs:
         run: poetry run dvc pull models 
 
       - name: Download processed_data tracked by DVC
-        run: poetry run dvc pull data/processed/X_valid.pkl data/processed/y_valid.pkl
-      
+        run: |
+          poetry run dvc pull data/processed/X_valid.pkl data/processed/y_valid.pkl
+          poetry run dvc pull data/processed/X_train.pkl data/processed/y_train.pkl
+          poetry run dvc pull data/raw/labels.csv
+
       - name: Run pytest
         run: poetry run pytest
