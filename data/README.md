@@ -39,6 +39,15 @@ The following sections describe the purpose of each document included in this di
 
 ## Data Overview
 
+When cloning the repository for the first time, the raw data files will not be available. To download the raw data files, run the following commands in the terminal:
+
+```bash
+dvc pull data/raw/train.dvc
+dvc pull data/raw/test.dvc
+dvc pull data/raw/labels.csv.dvc
+```
+
+
 ### 1. `dog_catalogue_data.json`
 This file contains metadata for each dog breed. It includes breed names, image paths, descriptions, and other relevant information for the user interface.
 

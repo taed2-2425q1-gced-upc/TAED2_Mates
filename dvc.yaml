@@ -27,15 +27,14 @@ stages:
     - data/processed/y_valid.pkl
     - mates/modeling/train.py
     params:
-    - train.batch_size
-    - train.epochs
     - train.experiment_name
-    - train.metrics
     - train.model_name
     - train.model_url
+    - train.hyperparams
     - train.monitor
-    - train.optimizer
+    - train.metrics
     - train.patience
     - train.save_model
     outs:
-    - models/
+    - models/mobilenet_exp_batch_32.h5
+    - models/mobilenet_exp_batch_62.h5
