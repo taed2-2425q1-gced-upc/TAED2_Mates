@@ -11,6 +11,7 @@ from mates.modeling.predict import predict_test
 
 IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
 
+
 @pytest.mark.skipif(
     IN_GITHUB_ACTIONS,
     reason="Test doesn't work in Github Actions. \
