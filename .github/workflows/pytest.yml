@@ -31,5 +31,8 @@ jobs:
       - name: Install the project dependencies
         run: poetry install
       
+      - name: Download files tracked by DVC
+        run: poetry dvc pull
+      
       - name: Run pytest
         run: poetry run pytest
