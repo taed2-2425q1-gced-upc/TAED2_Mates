@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Install Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.9
           
@@ -23,13 +23,25 @@ jobs:
           
       - name: Cache deps
         id: cache-deps
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .venv
           key: pydeps-${{ hashFiles('**/poetry.lock') }}
           
       - name: Install the project dependencies
         run: poetry install
+
+      - name: Install DVC
+        run: pip install dvc
       
+      - name: Download models tracked by DVC
+        run: poetry run dvc pull models 
+
+      - name: Download processed_data tracked by DVC
+        run: |
+          poetry run dvc pull data/processed/X_valid.pkl data/processed/y_valid.pkl
+          poetry run dvc pull data/processed/X_train.pkl data/processed/y_train.pkl
+          poetry run dvc pull data/raw/labels.csv
+
       - name: Run pytest
         run: poetry run pytest

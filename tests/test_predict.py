@@ -9,14 +9,7 @@ from mates.config import OUTPUT_DATA_DIR, RAW_DATA_DIR
 from mates.features.features import read_labels
 from mates.modeling.predict import predict_test
 
-IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
 
-
-@pytest.mark.skipif(
-    IN_GITHUB_ACTIONS,
-    reason="Test doesn't work in Github Actions. \
-                    Enough with test_model",
-)
 def test_predict():
     """
     Test for the `predict_test` function.
@@ -40,9 +33,7 @@ def test_predict():
     # Read the generated predictions into a DataFrame
     generated_df = pd.read_csv(output_csv_path)
 
-    # List of images in the test directory
-    image_files = os.listdir(os.path.join(RAW_DATA_DIR, "test"))
-    num_images = len(image_files)
+    num_images = 10357
 
     # Assertions to validate predictions
     assert (
