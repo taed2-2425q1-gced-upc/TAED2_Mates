@@ -41,6 +41,8 @@ m.build([None, 224, 224, 3])  # Batch input shape.
 
 The input ```images``` are expected to have color values in the range [0,1], following the [common image](https://www.tensorflow.org/hub/common_signatures/images#input) input conventions. For this model, the size of the input images is fixed to ```height``` x ```width``` = 224 x 224 pixels.
 
+![Input Layers](../reports/figures/model_card_input_layers.png)
+
 #### Outputs
 
 The output is a dictionary containing:
@@ -52,6 +54,8 @@ The output is a dictionary containing:
 - **detection_scores**: A `tf.float32` tensor of shape `[N]`, reflecting detection scores.
 
 For our specific task of dog breed classification, the model has been adapted to output a 1x120 tensor instead of bounding boxes. This tensor represents a softmax distribution over the 120 dog breeds in our dataset, providing probability scores for each class and indicating the likelihood that the image belongs to each breed. This output is achieved by adding a fully connected Deep Neural Network (DNN) layer on top of the base MobileNetV2 model, mapping the feature embeddings into a 120-dimensional output. The softmax activation function ensures that these values sum to 1, enabling a probabilistic interpretation of the model’s predictions.
+
+![output layer](../reports/figures/model_card_output_layers.png)
 
 
 #### Out-of-Scope Use
