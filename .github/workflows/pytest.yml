@@ -30,6 +30,9 @@ jobs:
           
       - name: Install the project dependencies
         run: poetry install
+
+      - name: Install DVC
+        run: pip install dvc
       
       - name: Download files tracked by DVC
         run: poetry run dvc pull
