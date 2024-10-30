@@ -34,8 +34,11 @@ jobs:
       - name: Install DVC
         run: pip install dvc
       
-      - name: Download files tracked by DVC
-        run: poetry run dvc pull models --force
+      - name: Download models tracked by DVC
+        run: poetry run dvc pull models 
+
+      - name: Download processed_data tracked by DVC
+        run: poetry run dvc pull data/processed
       
       - name: Run pytest
         run: poetry run pytest
