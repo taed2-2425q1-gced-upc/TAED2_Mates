@@ -49,9 +49,9 @@ def test_load_processed_data(mock_open, mock_pk_load, mock_create_batches):
     # Assertions
     assert mock_pk_load.call_count == 5
     mock_open.assert_any_call(PROCESSED_DATA_DIR / "output_shape.pkl", "rb")
-    mock_open.assert_any_call(PROCESSED_DATA_DIR / "x_train.pkl", "rb")
+    mock_open.assert_any_call(PROCESSED_DATA_DIR / "X_train.pkl", "rb")
     mock_open.assert_any_call(PROCESSED_DATA_DIR / "y_train.pkl", "rb")
-    mock_open.assert_any_call(PROCESSED_DATA_DIR / "x_valid.pkl", "rb")
+    mock_open.assert_any_call(PROCESSED_DATA_DIR / "X_valid.pkl", "rb")
     mock_open.assert_any_call(PROCESSED_DATA_DIR / "y_valid.pkl", "rb")
 
     assert output_shape == mock_output_shape

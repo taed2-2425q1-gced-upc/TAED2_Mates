@@ -66,11 +66,11 @@ def load_processed_data(batch_size: int):
     """
     with open(PROCESSED_DATA_DIR / "output_shape.pkl", "rb") as f:
         output_shape = pk.load(f)
-    with open(PROCESSED_DATA_DIR / "x_train.pkl", "rb") as f:
+    with open(PROCESSED_DATA_DIR / "X_train.pkl", "rb") as f:
         x_train = pk.load(f)
     with open(PROCESSED_DATA_DIR / "y_train.pkl", "rb") as f:
         y_train = pk.load(f)
-    with open(PROCESSED_DATA_DIR / "x_valid.pkl", "rb") as f:
+    with open(PROCESSED_DATA_DIR / "X_valid.pkl", "rb") as f:
         x_valid = pk.load(f)
     with open(PROCESSED_DATA_DIR / "y_valid.pkl", "rb") as f:
         y_valid = pk.load(f)

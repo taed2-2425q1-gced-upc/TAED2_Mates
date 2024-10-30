@@ -89,7 +89,8 @@ def single_train(params: dict):
             monitor=params["monitor"], patience=params["patience"]
         )
 
-        out_file = f"{params['model_name']}_{params['experiment_name']}_{params['batch_size']}_emissions.csv"
+        out_file = f"{params['model_name']}_{params['experiment_name']}_\
+            {params['batch_size']}_emissions.csv"
 
         # Track the CO2 emissions of training the model
         tracker = EmissionsTracker(
@@ -130,8 +131,13 @@ def single_train(params: dict):
 
         logger.success("Model training complete.")
         if params["save_model"]:
-            model.save(MODELS_DIR / f"{params['model_name']}_{params['experiment_name']}_{params['batch_size']}.h5")
-            mlflow.tensorflow.log_model(model, f"{params['model_name']}_{params['experiment_name']}_{params['batch_size']}")
+            model.save(
+                MODELS_DIR
+                / f"{params['model_name']}_{params['experiment_name']}_{params['batch_size']}.h5"
+            )
+            mlflow.tensorflow.log_model(
+                model, f"{params['model_name']}_{params['experiment_name']}_{params['batch_size']}"
+            )
 
 
 @app.command()

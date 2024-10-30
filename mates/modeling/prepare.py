@@ -85,12 +85,11 @@ def process_data():
         if params["save_processed"]:
             with open(PROCESSED_DATA_DIR / "output_shape.pkl", "wb") as f:
                 pk.dump(output_shape, f)
-
-            with open(PROCESSED_DATA_DIR / "x_train.pkl", "wb") as f:
+            with open(PROCESSED_DATA_DIR / "X_train.pkl", "wb") as f:
                 pk.dump(x_train, f)
             with open(PROCESSED_DATA_DIR / "y_train.pkl", "wb") as f:
                 pk.dump(y_train, f)
-            with open(PROCESSED_DATA_DIR / "x_valid.pkl", "wb") as f:
+            with open(PROCESSED_DATA_DIR / "X_valid.pkl", "wb") as f:
                 pk.dump(x_val, f)
             with open(PROCESSED_DATA_DIR / "y_valid.pkl", "wb") as f:
                 pk.dump(y_val, f)
