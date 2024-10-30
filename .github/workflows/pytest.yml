@@ -32,7 +32,7 @@ jobs:
         run: poetry install
       
       - name: Download files tracked by DVC
-        run: poetry dvc pull
+        run: poetry run dvc pull
       
       - name: Run pytest
         run: poetry run pytest
