@@ -32,7 +32,7 @@ jobs:
         run: poetry install
 
       - name: Install DVC
-        run: pip install dvc
+        run: pip install dvc --force
       
       - name: Download files tracked by DVC
         run: poetry run dvc pull models
