@@ -20,6 +20,7 @@ def dbc_model():
     """
     return load_model("mobilenet_exp_batch_62")
 
+
 @pytest.mark.skipif(
     IN_GITHUB_ACTIONS,
     reason="Test doesn't work in Github Actions. \

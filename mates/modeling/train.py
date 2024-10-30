@@ -89,7 +89,8 @@ def single_train(params: dict):
             monitor=params["monitor"], patience=params["patience"]
         )
 
-        out_file = f"{params['model_name']}_{params['experiment_name']}_{params['batch_size']}_emissions.csv"
+        out_file = f"{params['model_name']}_{params['experiment_name']}_\
+            {params['batch_size']}_emissions.csv"
 
         # Track the CO2 emissions of training the model
         tracker = EmissionsTracker(
