@@ -8,6 +8,7 @@ import pytest
 
 from mates.config import PROCESSED_DATA_DIR
 from mates.features.features import create_batches, load_model, load_processed_data
+from tests.test_predict_single import read_data
 
 IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
 
